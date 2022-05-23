@@ -1,0 +1,45 @@
+.side-bar-container {
+  width: 30%;
+  border-right: 1px solid black;
+  display: flex;
+  flex-direction: column;
+}
+
+.side-bar-header-container {
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.chat-preview-container {
+  flex-grow: 1;
+}
+
+.new-convo-container {
+  margin-bottom: 20px;
+  border-top: 1px solid black;
+  padding: 10px 5px 0px 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chat-icon-container {
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid gray;
+
+  // To add better styles when hovering over the button
+
+  .chat-icon {
+    border-radius: 50%;
+  }
+  .chat-icon:hover {
+    cursor: pointer;
+  }
+}
