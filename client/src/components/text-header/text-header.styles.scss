@@ -1,0 +1,23 @@
+.text-header-container {
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+  height: 50px;
+  background-color: aliceblue;
+}
+
+.to-text-recipient {
+}
+
+.recipient-container {
+  background-color: rgb(143, 127, 142);
+  color: white;
+  margin-left: 8px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  border: 1px solid black;
+}
+
+.text-recipient {
+  font-size: 18px;
+}

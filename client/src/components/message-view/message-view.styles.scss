@@ -1,0 +1,19 @@
+.message-view-container {
+  overflow-y: scroll;
+  border: 1px solid black;
+  border-left: 0px;
+  padding-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 70vh;
+  padding-bottom: 8px;
+}
+
+.message-view-text {
+  width: 150px;
+  padding: 8px;
+  border-radius: 4px;
+  margin-left: 10px;
+  border: 1px solid black;
+}
