@@ -1,12 +1,12 @@
 .chat-preview-list {
-  display: flex;
-  flex-direction: column;
   list-style: none;
   padding-left: 0px;
+  overflow-y: scroll;
+  height: 82vh;
 }
 
 .chat-preview-item {
-  height: 50px;
+  height: 70px;
   // background-color: #333;
   border-top: 1px solid gray;
   display: flex;
@@ -15,5 +15,9 @@
 
   &:last-child {
     border-bottom: 1px solid gray;
+  }
+
+  &:first-child {
+    border-top: 0px;
   }
 }

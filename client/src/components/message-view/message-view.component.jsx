@@ -4,28 +4,22 @@ const MessageView = () => {
   // Somehow we are going to have to get all of the message in a conversation potentially and then mark whether or not they are your messages or someone else's to style accordingly;
   return (
     <div className="message-view-container">
-      <p className="message-view-text">Sample text</p>
-      <p className="message-view-text">Sample text</p>
-      <p className="message-view-text">Sample text</p>
-      <p className="message-view-text">Sample text</p>
-      <p className="message-view-text">Sample text</p>
-      <p className="message-view-text">Sample text</p>
-      <p className="message-view-text">Sample text</p>
-      <p className="message-view-text">Sample text</p>
-      <p className="message-view-text">Sample text</p>
-      <p className="message-view-text">Sample text</p>
-      <p className="message-view-text">Sample text</p>
-      <p className="message-view-text">Sample text</p>
-      <p className="message-view-text">Sample text</p>
-      <p className="message-view-text">Sample text</p>
-      <p className="message-view-text">Sample text</p>
-      <p className="message-view-text">Sample text</p>
-      <p className="message-view-text">Sample text</p>
-      <p className="message-view-text">Sample text</p>
-      <p className="message-view-text">Sample text</p>
-      <p className="message-view-text">Sample text</p>
-      <p className="message-view-text">Sample text</p>
-      <p className="message-view-text">Sample text</p>
+      <div className="message-view-text-container">
+        <div className="message-view-text">
+          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nisi, labore
+          commodi, quidem dignissimos inventore officiis tenetur, consequatur
+          officia quod ipsum amet dolores! Nesciunt accusantium sit est
+          excepturi totam quam corporis.
+        </div>
+      </div>
+      <div className="message-view-text-container">
+        <div className="message-view-text">
+          Lorem ipsum dolor sit, amet consectetur
+        </div>
+      </div>
+      <div className="message-view-text-container">
+        <div className="message-view-text">Lorem</div>
+      </div>
     </div>
   );
 };

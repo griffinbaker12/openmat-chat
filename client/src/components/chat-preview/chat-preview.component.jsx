@@ -10,6 +10,46 @@ const ChatPreview = () => {
     <ul className="chat-preview-list">
       <li className="chat-preview-item">Test</li>
       <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
+      <li className="chat-preview-item">Test</li>
     </ul>
     // </div>
   );

@@ -12,9 +12,7 @@ const SideBar = () => {
         <div className="contacts">Contacts</div>
       </div>
 
-      <div className="chat-preview-container">
-        <ChatPreview />
-      </div>
+      <ChatPreview />
 
       <div className="new-convo-container">
         <p className="username">@griffinbaker12</p>
