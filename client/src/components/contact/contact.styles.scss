@@ -1,0 +1,24 @@
+.contact-list-item {
+  height: 70px;
+  border-top: 1px solid rgb(238, 238, 238);
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+
+  &:last-child {
+    border-bottom: 1px solid rgb(238, 238, 238);
+  }
+
+  &:first-child {
+    border-top: 0px;
+  }
+}
+
+.contact-list-item:hover {
+  cursor: pointer;
+}
+
+.contact.active {
+  background-color: blue;
+  color: white;
+}

@@ -53,7 +53,7 @@
 
 .new-convo-container {
   border-top: 1px solid #ddd;
-  flex: 1;
+  height: 110px;
   flex-wrap: wrap;
   display: flex;
 
@@ -77,25 +77,6 @@
 
   button:hover {
     opacity: 0.8;
-    cursor: pointer;
-  }
-}
-
-.chat-icon-container {
-  height: 30px;
-  width: 30px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 2px solid gray;
-
-  // To add better styles when hovering over the button
-
-  .chat-icon {
-    border-radius: 50%;
-  }
-  .chat-icon:hover {
     cursor: pointer;
   }
 }

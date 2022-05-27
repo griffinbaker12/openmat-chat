@@ -1,19 +1,23 @@
-.add-friend-modal-container {
-  display: none;
-  position: fixed;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  // display: flex;
-  // align-items: center;
-  // justify-content: center;
-}
+.add-friend-modal-body {
+  form {
+    display: flex;
+    flex-direction: column;
+    padding: 12px 24px;
+    gap: 8px;
 
-.add-friend-modal-container.active {
-  display: block;
-  opacity: 1;
-  overflow-x: hidden;
-  overflow-y: auto;
+    input {
+      margin-bottom: 8px;
+      height: 30px;
+    }
+
+    button {
+      margin: 0 auto;
+      height: 40px;
+      width: 80px;
+    }
+
+    button:hover {
+      cursor: pointer;
+    }
+  }
 }

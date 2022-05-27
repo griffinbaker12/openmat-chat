@@ -1,14 +1,12 @@
 import { useState } from 'react';
-import { ReactComponent as ChatIcon } from '../../assets/chat-icon.svg';
 import ChatPreview from '../chat-preview/chat-preview.component';
-import AddFriendModal from '../add-friend-modal/add-friend-modal.component';
-import NewConversationModal from '../new-conversation-modal/new-conversation-modal.component';
+import Modal from '../modal/modal.component';
 import './side-bar.styles.scss';
+import ContactPreview from '../contact-preview/contact-preview.component';
 
 const SideBar = () => {
   const [sideBarCategory, setSideBarCategory] = useState('conversations');
   const [showModal, setShowModal] = useState(false);
-  console.log(showModal, sideBarCategory);
 
   const closeModal = () => setShowModal(false);
 
@@ -46,7 +44,11 @@ const SideBar = () => {
         </div>
       </div>
 
-      <ChatPreview />
+      {sideBarCategory === 'conversations' ? (
+        <ChatPreview />
+      ) : (
+        <ContactPreview />
+      )}
 
       <div className="new-convo-container">
         <div className="username">@griffinbaker12</div>
@@ -57,11 +59,13 @@ const SideBar = () => {
         </button>
       </div>
 
-      {sideBarCategory === 'conversations' ? (
-        <NewConversationModal showModal={showModal} closeModal={closeModal} />
-      ) : (
-        <AddFriendModal showModal={showModal} closeModal={closeModal} />
-      )}
+      {
+        <Modal
+          showModal={showModal}
+          closeModal={closeModal}
+          sideBarCategory={sideBarCategory}
+        />
+      }
     </div>
   );
 };
