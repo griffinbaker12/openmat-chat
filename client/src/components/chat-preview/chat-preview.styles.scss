@@ -1,8 +1,8 @@
 .chat-preview-list {
   list-style: none;
   padding-left: 0px;
-  overflow-y: scroll;
-  height: 82vh;
+  overflow: auto;
+  height: 80vh;
 }
 
 .chat-preview-item {

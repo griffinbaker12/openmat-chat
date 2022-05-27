@@ -1,10 +1,16 @@
 import { useState } from 'react';
 import { ReactComponent as ChatIcon } from '../../assets/chat-icon.svg';
 import ChatPreview from '../chat-preview/chat-preview.component';
+import AddFriendModal from '../add-friend-modal/add-friend-modal.component';
+import NewConversationModal from '../new-conversation-modal/new-conversation-modal.component';
 import './side-bar.styles.scss';
 
 const SideBar = () => {
   const [sideBarCategory, setSideBarCategory] = useState('conversations');
+  const [showModal, setShowModal] = useState(false);
+  console.log(showModal, sideBarCategory);
+
+  const closeModal = () => setShowModal(false);
 
   const handleCategoryChange = () =>
     setSideBarCategory(prevState =>
@@ -16,6 +22,8 @@ const SideBar = () => {
   // Chat state and then map over to add in all of the different chat previews
 
   // Need to keep a state of which button is active
+
+  // To make the cursor what you want it to be may also have to do something where you just add on the additional "active" or not.
 
   return (
     <div className="side-bar-container">
@@ -41,11 +49,19 @@ const SideBar = () => {
       <ChatPreview />
 
       <div className="new-convo-container">
-        <p className="username">@griffinbaker12</p>
-        <div className="chat-icon-container">
-          <ChatIcon className="chat-icon" />
-        </div>
+        <div className="username">@griffinbaker12</div>
+        <button onClick={() => setShowModal(true)} type="button">
+          {sideBarCategory === 'conversations'
+            ? 'New Conversation'
+            : 'Add Friend'}
+        </button>
       </div>
+
+      {sideBarCategory === 'conversations' ? (
+        <NewConversationModal showModal={showModal} closeModal={closeModal} />
+      ) : (
+        <AddFriendModal showModal={showModal} closeModal={closeModal} />
+      )}
     </div>
   );
 };

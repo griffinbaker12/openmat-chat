@@ -1,0 +1,45 @@
+.new-conversation-modal-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  opacity: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  transition: all 800ms ease-in-out;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.new-conversation-modal-container.active {
+  opacity: 1;
+  pointer-events: visible;
+}
+
+.new-conversation-modal-content {
+  display: flex;
+  flex-direction: column;
+  height: 400px;
+  width: 400px;
+  border: 1px solid #444;
+  border-radius: 4px;
+  background-color: white;
+}
+
+.new-conversation-modal-header {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding: 6px 4px;
+
+  button {
+    border: none;
+    background-color: transparent;
+  }
+
+  button:hover {
+    cursor: pointer;
+    font-weight: bold;
+  }
+}
