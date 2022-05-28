@@ -6,13 +6,17 @@ export const useConversations = () => useContext(ConversationsContext);
 
 export const ConversationsProvider = ({ children }) => {
   const [conversations, setConversations] = useState([]);
-  const [activeConversation, setActiveConversation] = useState('');
+  const [activeConversation, setActiveConversation] = useState();
+
+  // I feel like here you almost need an id to recognize what chat it is so that you can access this from the other component?
 
   const createConversation = recipients =>
     setConversations(prevState => [...prevState, { recipients, messages: [] }]);
 
   const setConversation = conversationAttribute =>
     setActiveConversation(conversationAttribute);
+
+  // On this object, you almost want the recipients, and the messages
 
   return (
     <ConversationsContext.Provider

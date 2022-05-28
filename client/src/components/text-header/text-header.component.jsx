@@ -1,7 +1,10 @@
+import { useConversations } from '../../contexts/conversations-context';
 import './text-header.styles.scss';
 
 const TextHeader = () => {
   // If there is an overflow of people in a chat make sure that you either just say + however many more, or you actually allow people to scroll to the right to be able to see
+  const { activeConversation } = useConversations();
+  console.log(activeConversation);
 
   return (
     <div className="text-header-container">

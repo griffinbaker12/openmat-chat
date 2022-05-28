@@ -2,15 +2,12 @@ import { useState } from 'react';
 import { useConversations } from '../../contexts/conversations-context';
 import './chat-preview.styles.scss';
 
-const ChatPreview = ({ sideBarCategory }) => {
+const ChatPreview = () => {
   // And then we can also pull the active conversation up into higher state or into a context just so that we can actually store this variable without losing it when we switch between categories b/c that triggers a re-render
   const { conversations, activeConversation, setConversation } =
     useConversations();
 
-  console.log(conversations, activeConversation);
-
   const handleClick = e => setConversation(e.target.getAttribute('name'));
-
   // Need to create 2 components, one for the friends view and one for the convo preview view
   // Also going to need a map down below where I map over all of the data that I am pulling in and then add the class to the right; could also do a name function as well where you get the name off of the element that was clicked and then set it to the active one
 
@@ -21,9 +18,9 @@ const ChatPreview = ({ sideBarCategory }) => {
         conversations.map((conversation, id) => (
           <div
             key={id}
-            name={`conversation-${id}`}
+            name={id}
             className={`chat-preview-list ${
-              activeConversation === `conversation-${id}` ? 'active' : ''
+              activeConversation === `${id}` ? 'active' : ''
             }`}
           >
             {conversation.recipients

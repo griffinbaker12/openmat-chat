@@ -1,12 +1,15 @@
 import SideBar from '../side-bar/side-bar.component';
 import ChatView from '../chat-view/chat-view.component';
 import './application-view.styles.scss';
+import { useConversations } from '../../contexts/conversations-context';
 
 const ApplicationView = () => {
+  const { activeConversation, conversations } = useConversations();
+
   return (
     <div className="application-view-container">
       <SideBar />
-      <ChatView />
+      {activeConversation && <ChatView />}
     </div>
   );
 };
