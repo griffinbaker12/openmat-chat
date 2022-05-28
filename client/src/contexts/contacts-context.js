@@ -7,8 +7,8 @@ export const useContacts = () => useContext(ContactsContext);
 export const ContactsProvider = ({ children }) => {
   const [contacts, setContacts] = useState([]);
 
-  const createContact = username =>
-    setContacts(prevState => [...prevState, { username }]);
+  const createContact = userName =>
+    setContacts(prevState => [...prevState, { userName }]);
 
   return (
     <ContactsContext.Provider value={{ contacts, createContact }}>

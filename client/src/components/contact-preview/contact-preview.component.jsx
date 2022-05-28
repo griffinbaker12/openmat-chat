@@ -6,7 +6,6 @@ import './contact-preview.styles.scss';
 const ContactPreview = () => {
   const [currentContact, setCurrentContact] = useState('');
   const { contacts } = useContacts();
-  console.log('the current contact is', currentContact);
 
   const handleClick = e => {
     setCurrentContact(e.target.getAttribute('name'));
@@ -17,7 +16,7 @@ const ContactPreview = () => {
       {contacts.length > 0 &&
         contacts.map((contact, i) => (
           <Contact
-            active={contact.username === currentContact ? true : false}
+            active={contact.userName === currentContact ? true : false}
             key={i}
             contact={contact}
           />

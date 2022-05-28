@@ -1,12 +1,12 @@
 import './contact.styles.scss';
 
-const Contact = ({ active, contact: { username } }) => {
+const Contact = ({ active, contact: { userName } }) => {
   return (
     <li
-      name={username}
+      name={userName}
       className={`contact-list-item ${active ? 'active' : ''}`}
     >
-      {username}
+      {userName}
     </li>
   );
 };

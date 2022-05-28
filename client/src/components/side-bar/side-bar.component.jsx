@@ -51,7 +51,7 @@ const SideBar = () => {
       )}
 
       <div className="new-convo-container">
-        <div className="username">@griffinbaker12</div>
+        <div className="userName">@griffinbaker12</div>
         <button onClick={() => setShowModal(true)} type="button">
           {sideBarCategory === 'conversations'
             ? 'New Conversation'

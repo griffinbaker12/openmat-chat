@@ -4,22 +4,22 @@ import './add-friend-modal.styles.scss';
 
 const AddFriendModal = ({ closeModal }) => {
   const { createContact } = useContacts();
-  const usernameRef = useRef();
+  const userNameRef = useRef();
   // const nameRef = useRef();
 
   const handleSubmit = e => {
     e.preventDefault();
-    createContact(usernameRef.current.value);
+    createContact(userNameRef.current.value);
     closeModal();
     // Also need to clear the form here as well
-    usernameRef.current.value = '';
+    userNameRef.current.value = '';
   };
 
   return (
     <div className="add-friend-modal-body">
       <form onSubmit={handleSubmit}>
         <label>Username</label>
-        <input ref={usernameRef} type="text" required />
+        <input ref={userNameRef} type="text" required />
         <button type="submit">Add</button>
       </form>
     </div>
