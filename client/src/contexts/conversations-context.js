@@ -4,7 +4,7 @@ const ConversationsContext = createContext();
 
 export const useConversations = () => useContext(ConversationsContext);
 
-export const ConversationsProvider = ({ children }) => {
+export const ConversationsProvider = ({ userName, children }) => {
   const [conversations, setConversations] = useState([]);
   const [activeConversation, setActiveConversation] = useState();
 
@@ -15,8 +15,17 @@ export const ConversationsProvider = ({ children }) => {
 
   const setConversation = conversationAttribute =>
     setActiveConversation(conversationAttribute);
-
   // On this object, you almost want the recipients, and the messages
+
+  const addMessageToConversation = ({ recipients, text, sender }) => {
+    setConversations(prevState => {
+      console.log(prevState);
+    });
+  };
+
+  const sendMessage = (recipients, text) => {
+    addMessageToConversation({ recipients, text, sender: userName });
+  };
 
   return (
     <ConversationsContext.Provider
@@ -25,6 +34,7 @@ export const ConversationsProvider = ({ children }) => {
         createConversation,
         activeConversation,
         setConversation,
+        sendMessage,
       }}
     >
       {children}

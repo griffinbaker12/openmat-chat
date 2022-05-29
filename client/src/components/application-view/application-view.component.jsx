@@ -4,7 +4,7 @@ import './application-view.styles.scss';
 import { useConversations } from '../../contexts/conversations-context';
 
 const ApplicationView = () => {
-  const { activeConversation, conversations } = useConversations();
+  const { activeConversation } = useConversations();
 
   return (
     <div className="application-view-container">

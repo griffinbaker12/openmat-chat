@@ -1,9 +1,9 @@
 .message-view-container {
   overflow: auto;
-  border: 1px solid black;
+  border-top: 1px solid black;
   border-left: 0px;
   padding-top: 8px;
-  height: 70vh;
+  flex: 1;
   padding-bottom: 8px;
   padding-left: 4px;
   display: flex;

@@ -1,16 +1,41 @@
 .send-message-container {
+  color: lightgray;
   display: flex;
-  justify-content: center;
   align-items: center;
-  border-top: 1px solid black;
+  justify-content: space-between;
+  padding: 5px 15px;
+  margin: 10px;
+  border-radius: 5px;
+  // If I end up putting a background color then by all means add this back so that it actually shows up
+  // border-top: 1px solid gray;
+  background-color: #474b53;
+}
+
+.send-message-container > form {
+  display: flex;
   flex: 1;
+  flex-wrap: wrap;
+}
+
+.send-message-container > form > input {
+  flex: 1;
+  padding: 15px;
+  background: transparent;
+  border: none;
+  outline-width: 0;
+  color: white;
+  font-size: large;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .send-input {
-  border: 3px solid black;
+  flex: 1;
+  border: 2px solid black;
   border-right: 0px;
-  height: 120px;
-  width: 400px;
+  height: 50px;
+  resize: none;
+
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
   background-color: gray;
@@ -18,23 +43,9 @@
 
   &:focus-visible {
     outline: none;
-    // outline: 1px blue;
   }
-  // border-top-left-radius: 10%;
 }
 
 .send-button {
-  border: 3px solid black;
-  border-left: 0px;
-  height: 120px;
-  border-top-right-radius: 4px;
-  border-bottom-right-radius: 4px;
-  transition: filter 300ms;
-  background-color: black;
-  color: white;
-  transition: background-color 300ms;
-
-  &:hover {
-    background-color: darkgray;
-  }
+  display: none;
 }
