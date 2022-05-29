@@ -5,15 +5,12 @@ import './send-message.styles.scss';
 const SendMessage = () => {
   // Make this a controlled component so that you can clear the text of the message button after hitting send and then add it up top in the sample text section.
   const { conversations, activeConversation, sendMessage } = useConversations();
-  console.log(conversations[activeConversation]);
   const inputRef = useRef();
 
   const handleSubmit = e => {
     e.preventDefault();
     sendMessage(
-      conversations[activeConversation].recipients.map(
-        recipient => recipient.userName
-      ),
+      conversations[activeConversation].recipients,
       inputRef.current.value
     );
 

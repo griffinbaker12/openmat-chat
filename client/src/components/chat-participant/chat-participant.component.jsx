@@ -1,9 +1,7 @@
 import './chat-participant.styles.scss';
 
 const ChatParticipant = ({ chatParticipant }) => {
-  const { userName } = chatParticipant;
-
-  return <div className="chat-participant-content">{userName}</div>;
+  return <div className="chat-participant-content">{chatParticipant}</div>;
 };
 
 export default ChatParticipant;

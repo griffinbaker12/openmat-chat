@@ -7,6 +7,8 @@ const ChatPreview = () => {
   const { conversations, activeConversation, setConversation } =
     useConversations();
 
+  console.log('conversations from chat-preview', conversations);
+
   const handleClick = e => setConversation(e.target.getAttribute('name'));
   // Need to create 2 components, one for the friends view and one for the convo preview view
   // Also going to need a map down below where I map over all of the data that I am pulling in and then add the class to the right; could also do a name function as well where you get the name off of the element that was clicked and then set it to the active one
@@ -23,9 +25,7 @@ const ChatPreview = () => {
               activeConversation === `${id}` ? 'active' : ''
             }`}
           >
-            {conversation.recipients
-              .map(recipient => recipient.userName)
-              .join(', ')}
+            {conversation.recipients.map(recipient => recipient).join(', ')}
           </div>
         ))}
     </div>

@@ -16,6 +16,7 @@ const NewConversationModal = ({ closeModal }) => {
   // This is fine for now, I guess at some point I need to make it clear whether or not you can submit this when you hit enter, or whether hitting enter adds people to the chat if there are none, but then it probably should stary like that as well even afterwards so may make the other button a button type as well
 
   const handleSubmit = e => {
+    // Will need to check somewhere to see if this person has already been added to the conversation, if they have, then don't allow them to create the convo. I also need a better UI that allows you to hit the enter button to add a user, but not submit the form and close the modal.
     e.preventDefault();
     createConversation(chatParticipants);
     closeModal();
@@ -29,7 +30,7 @@ const NewConversationModal = ({ closeModal }) => {
     // Will need to do some check to see if the actual user exists in the database or not
     // If they do exist...
     // This user may also at some point may also have some data on them besides just the userName, but suffices for now
-    setChatParticipants(prevState => [...prevState, { userName: user }]);
+    setChatParticipants(prevState => [...prevState, user]);
     userNameRef.current.value = '';
   };
 

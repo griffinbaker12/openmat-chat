@@ -11,7 +11,7 @@ const TextHeader = () => {
       <div className="recipient-container">
         {conversations[activeConversation].recipients.map((recipient, i) => (
           <div key={i} className="text-recipient">
-            {recipient.userName}
+            {recipient}
           </div>
         ))}
       </div>
