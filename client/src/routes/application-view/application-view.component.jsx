@@ -1,5 +1,5 @@
-import SideBar from '../side-bar/side-bar.component';
-import ChatView from '../chat-view/chat-view.component';
+import SideBar from '../../components/side-bar/side-bar.component';
+import ChatView from '../../components/chat-view/chat-view.component';
 import './application-view.styles.scss';
 import { useConversations } from '../../contexts/conversations-context';
 
