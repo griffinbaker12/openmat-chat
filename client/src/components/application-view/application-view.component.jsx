@@ -4,12 +4,12 @@ import './application-view.styles.scss';
 import { useConversations } from '../../contexts/conversations-context';
 
 const ApplicationView = () => {
-  const { activeConversation } = useConversations();
+  const { currentConversation } = useConversations();
 
   return (
     <div className="application-view-container">
       <SideBar />
-      {activeConversation && <ChatView />}
+      {currentConversation && <ChatView />}
     </div>
   );
 };

@@ -4,14 +4,18 @@ import './send-message.styles.scss';
 
 const SendMessage = () => {
   // Make this a controlled component so that you can clear the text of the message button after hitting send and then add it up top in the sample text section.
-  const { conversations, activeConversation, sendMessage } = useConversations();
+  const { currentConversation, sendMessage } = useConversations();
   const inputRef = useRef();
 
   const handleSubmit = e => {
+    const timeMsgSent = new Date().toLocaleTimeString().split('');
+    timeMsgSent.splice(4, 3).join();
+
     e.preventDefault();
     sendMessage(
-      conversations[activeConversation].recipients,
-      inputRef.current.value
+      currentConversation.recipients,
+      inputRef.current.value,
+      timeMsgSent
     );
 
     inputRef.current.value = '';
