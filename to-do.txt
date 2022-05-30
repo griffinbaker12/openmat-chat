@@ -1,0 +1,10 @@
+1) First things first is to make
+
+- Include a sign in and sign up page very similar to the one that we used for the smart-brain app, this time using mongodb
+-> Once this person signs in, we receive an id back from mongo that can be the identifier for that person
+-> Can secure the password as well using bcrypt
+
+- In the application itself, obviously need to make everything work so that the messages for each chat show up
+
+DATA ORGANIZATION:
+- I am thinking that each chat room will also have an identifier saved with it as well

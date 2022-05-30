@@ -1,9 +1,8 @@
 .message-view-container {
-  overflow: auto;
-  flex: 1;
-  flex-basis: 0;
   display: flex;
   flex-direction: column;
+  overflow: auto;
+  flex: 1;
   gap: 10px;
   height: 100%;
   padding: 8px 10px 0px 10px;

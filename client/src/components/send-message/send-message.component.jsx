@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import { useConversations } from '../../contexts/conversations-context';
 import './send-message.styles.scss';
 
@@ -11,8 +11,10 @@ const SendMessage = () => {
     e.preventDefault();
     if (!inputRef.current.value) return;
 
+    // It would actually be pretty tough as well to update all the messages when a new day occurs, or how many days ago, and have that update live, that is not easy to do. The date itself would be easy, but how many days ago...not so much
+
     const timeMsgSent = new Date().toLocaleTimeString().split('');
-    timeMsgSent.splice(4, 3).join();
+    timeMsgSent.splice(5, 3).join();
 
     sendMessage(
       currentConversation.recipients,
