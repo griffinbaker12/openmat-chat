@@ -8,10 +8,12 @@ const SendMessage = () => {
   const inputRef = useRef();
 
   const handleSubmit = e => {
+    e.preventDefault();
+    if (!inputRef.current.value) return;
+
     const timeMsgSent = new Date().toLocaleTimeString().split('');
     timeMsgSent.splice(4, 3).join();
 
-    e.preventDefault();
     sendMessage(
       currentConversation.recipients,
       inputRef.current.value,

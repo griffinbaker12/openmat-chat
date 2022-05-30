@@ -22,6 +22,7 @@ const NewConversationModal = ({ closeModal }) => {
   };
 
   const handleChatCreation = () => {
+    if (chatParticipants.length === 0) return;
     createConversation(chatParticipants);
     closeModal();
     userNameRef.current.value = '';
@@ -30,6 +31,7 @@ const NewConversationModal = ({ closeModal }) => {
 
   const handleAddUser = () => {
     const user = userNameRef.current.value;
+    if (!user) return;
     // Will need to do some check to see if the actual user exists in the database or not
     // If they do exist...
     // This user may also at some point may also have some data on them besides just the userName, but suffices for now
