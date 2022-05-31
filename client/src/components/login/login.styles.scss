@@ -1,0 +1,113 @@
+.login-article {
+  display: flex;
+  justify-content: center;
+  width: 350px;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 150px;
+  box-shadow: 4px 4px 8px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 0.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.login-main {
+  padding: 2rem;
+  color: rgba(0, 0, 0, 0.8);
+  display: block;
+  text-align: center;
+}
+
+.login-measure {
+  max-width: 30em;
+}
+
+.login-fieldset {
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 0;
+  padding-right: 0;
+  border: 1px solid transparent;
+}
+
+.login-legend {
+  font-size: 36px;
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 0;
+  padding-right: 0;
+  font-weight: 600;
+}
+
+.login-legend-input-container {
+  margin-top: 0.8rem;
+  display: block;
+}
+
+.login-legend-label {
+  display: block;
+  font-size: 18px;
+  line-height: 1.5;
+  font-weight: 600;
+}
+
+.login-legend-input {
+  padding: 0.5rem;
+  background-color: transparent;
+  width: 100%;
+  overflow: visible;
+  border: 1px solid black;
+
+  &:hover {
+    background-color: #000;
+    color: #fff;
+    border: 1px solid white;
+    border-radius: 0px;
+    outline: none;
+  }
+
+  &:focus {
+    background-color: #000;
+    color: #fff;
+    border: 1px solid gray;
+    outline: rgb(87, 87, 233) solid 2px;
+    border-radius: 2px;
+  }
+}
+
+.login-input {
+  font-size: 18px;
+  padding: 0.5rem;
+  border: 1px;
+  background-color: transparent;
+  font-weight: 600;
+  font-family: 'Courier New';
+  display: inline-block;
+  border: 1px solid black;
+  margin: 0px;
+  margin-top: 1rem;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  transition: transform 0.25s ease-in-out;
+
+  &:focus,
+  &:hover {
+    transform: scale(1.05);
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.register-text {
+  margin-top: 0.8rem;
+  line-height: 1.5;
+  transition: opacity 0.15s ease-in;
+  opacity: 1;
+  color: black;
+
+  &:hover {
+    cursor: pointer;
+    opacity: 0.5;
+  }
+}

@@ -1,4 +1,4 @@
-1) First things first is to make
+1) First things first is to make that login page so that I can generate an ID for each user, store them in the DB in the users collection
 
 - Include a sign in and sign up page very similar to the one that we used for the smart-brain app, this time using mongodb
 -> Once this person signs in, we receive an id back from mongo that can be the identifier for that person
@@ -8,3 +8,9 @@
 
 DATA ORGANIZATION:
 - I am thinking that each chat room will also have an identifier saved with it as well
+
+DIFFERENT IDS THAT I NEED:
+- USER ID
+- CHAT ID, WHICH CONTAINS THE USER IDS
+
+KEEP IN MIND THAT IN EACH FETCH THAT WE ARE GOING TO MAKE TO OUR BACKEND, THAT INSIDE THE FETCH WE CAN JUST ESSENTIALLY CONSTRUCT THESE ROUTES OURSELF AND WE NEED TO HAVE MATCHING ROUTES IN OUR BACKEND THAT CAN RESPOND WITH WHAT WE WANT THEM TO

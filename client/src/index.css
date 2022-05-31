@@ -1,8 +1,9 @@
 body {
   margin: 0;
-  font-family: 'Encode Sans Condensed', sans-serif;
+  font-family: 'Courier New', Courier, monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(89deg, #ff5eb1 0%, #04c8de 100%);
 }
 
 /* #root, */

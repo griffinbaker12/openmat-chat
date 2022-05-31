@@ -1,18 +1,11 @@
+import { useState } from 'react';
+import Login from '../../components/login/login.component';
 import './authentication.styles.scss';
 
 const Authentication = () => {
-  return (
-    <div className="authenticaition-container">
-      <div className="authentication-form-container">
-        <form className="authentication-form">
-          <label>
-            Username
-            <input type="text" />
-          </label>
-        </form>
-      </div>
-    </div>
-  );
+  const [activeAuth, setActiveAuth] = useState('login');
+
+  return <>{activeAuth === 'login' ? <Login /> : ''}</>;
 };
 
 export default Authentication;
