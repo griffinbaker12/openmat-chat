@@ -6,7 +6,9 @@ const Header = () => {
   return (
     <>
       <div className="header-container">
-        <img src={Logo} height="100px" width="100px" alt="open mat logo" />
+        <div className="logo-container">
+          <img src={Logo} height="100%" width="auto" alt="open mat logo" />
+        </div>
         <p className="title">OpenMat Chat</p>
       </div>
       <Outlet />

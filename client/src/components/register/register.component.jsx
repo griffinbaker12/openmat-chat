@@ -1,8 +1,21 @@
+import { useState } from 'react';
 import { useAuthentication } from '../../contexts/authentication-context';
 import './register.styles.scss';
 
 const Register = () => {
   const { changeAuth } = useAuthentication();
+
+  const [text, setText] = useState({ name: '', email: '', password: '' });
+
+  const handleChange = e => {
+    const name = e.target.getAttribute('name');
+    setText(prevState => {
+      return {
+        ...prevState,
+        [name]: e.target.value,
+      };
+    });
+  };
 
   return (
     <article className="register-article">
@@ -15,21 +28,25 @@ const Register = () => {
                 Name
               </label>
               <input
+                onChange={handleChange}
                 className="register-legend-input"
                 type="text"
                 name="name"
                 id="name"
+                required
               />
             </div>
             <div className="register-legend-input-container">
-              <label htmlFor="email-address" className="register-legend-label">
+              <label htmlFor="email" className="register-legend-label">
                 Email
               </label>
               <input
+                onChange={handleChange}
                 className="register-legend-input"
                 type="email"
-                name="email-address"
-                id="email-address"
+                name="email"
+                id="email"
+                required
               />
             </div>
             <div className="register-legend-input-container">
@@ -37,10 +54,12 @@ const Register = () => {
                 Password
               </label>
               <input
+                onChange={handleChange}
                 className="register-legend-input"
                 type="password"
                 name="password"
                 id="password"
+                required
               />
             </div>
           </fieldset>

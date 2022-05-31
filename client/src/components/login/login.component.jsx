@@ -1,8 +1,21 @@
+import { useState } from 'react';
 import { useAuthentication } from '../../contexts/authentication-context';
 import './login.styles.scss';
 
 const Login = () => {
   const { changeAuth } = useAuthentication();
+
+  const [text, setText] = useState({ email: '', password: '' });
+
+  const handleChange = e => {
+    const name = e.target.getAttribute('name');
+    setText(prevState => {
+      return {
+        ...prevState,
+        [name]: e.target.value,
+      };
+    });
+  };
 
   return (
     <article className="login-article">
@@ -11,14 +24,17 @@ const Login = () => {
           <fieldset className="login-fieldset">
             <legend className="login-legend">Sign In</legend>
             <div className="login-legend-input-container">
-              <label htmlFor="email-address" className="login-legend-label">
+              <label htmlFor="email" className="login-legend-label">
                 Email
               </label>
               <input
+                onChange={handleChange}
                 className="login-legend-input"
                 type="email"
-                name="email-address"
-                id="email-address"
+                name="email"
+                id="email"
+                value={text.email}
+                required
               />
             </div>
             <div className="login-legend-input-container">
@@ -26,10 +42,13 @@ const Login = () => {
                 Password
               </label>
               <input
+                onChange={handleChange}
                 className="login-legend-input"
                 type="password"
                 name="password"
                 id="password"
+                value={text.password}
+                required
               />
             </div>
           </fieldset>
