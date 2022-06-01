@@ -54,20 +54,18 @@
 
 const express = require('express');
 const dotenv = require('dotenv');
+const db = require('./config/db');
+const userRoutes = require('./routes/userRoutes');
 
 const app = express();
 dotenv.config();
 
-// So what I still need to do here is obviously create a new id for each chat that is generated, which I think mongo will be able to produce for me anyway, can store that on the front end, and then send that along here to the BE
-app.get('/chat/:id', (req, res) => {
-  // console.log(req.params.id);
-  const { id } = req.params;
-  const chat = [{ id: 12345, participants: ['joe', 'rob', 'steve'] }].find(
-    c => c.id === Number(id)
-  );
-  res.send(chat);
-});
+app.use(express.json());
+
+app.use('/api/user', userRoutes);
 
 const PORT = process.env.port || 4000;
 
-app.listen(PORT, console.log(`listening on port ${PORT}`));
+db()
+  .then(() => app.listen(PORT, console.log(`listening on port ${PORT}`)))
+  .catch(e => console.log(e));

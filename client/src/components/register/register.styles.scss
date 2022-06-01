@@ -52,6 +52,13 @@
   font-weight: 600;
 }
 
+// .register-legend-label-file {
+//   display: block;
+//   font-size: 18px;
+//   line-height: 1.5;
+//   font-weight: 600;
+// }
+
 .register-legend-input {
   padding: 0.5rem;
   background-color: transparent;
@@ -76,6 +83,32 @@
     border-radius: 2px;
   }
 }
+
+// .register-legend-input-file {
+//   text-align: center;
+//   padding: 0.5rem;
+//   background-color: transparent;
+//   width: 100%;
+//   overflow: visible;
+//   border: 1px solid white;
+//   color: white;
+
+//   &:hover {
+//     background-color: #000;
+//     color: #fff;
+//     border: 1px solid white;
+//     border-radius: 0px;
+//     outline: none;
+//   }
+
+//   &:focus {
+//     background-color: #000;
+//     color: #fff;
+//     border: 1px solid gray;
+//     outline: rgb(87, 87, 233) solid 2px;
+//     border-radius: 2px;
+//   }
+// }
 
 .register-input {
   display: block;
@@ -112,4 +145,36 @@
     cursor: pointer;
     opacity: 0.5;
   }
+}
+
+.register-legend-input-container-file {
+  display: flex;
+  flex-direction: column;
+  margin-top: 30px;
+  gap: 8px;
+}
+
+#profile-picture-button {
+  font-weight: 600;
+  padding: 10px;
+  color: white;
+  background-color: inherit;
+  border: 1px solid white;
+  cursor: pointer;
+  font-family: 'Courier New', Courier, monospace;
+  // transition: background-color 0.2s ease-in;
+
+  &:hover {
+    background-color: black;
+  }
+}
+
+.profile-picture-text-container {
+  width: 250px;
+  word-wrap: break-word;
+  margin: 0 auto;
+}
+
+#sign-in-text {
+  font-family: 'Courier New', Courier, monospace;
 }

@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useAuthentication } from '../../contexts/authentication-context';
 import './register.styles.scss';
 
 const Register = () => {
+  const hiddenInputRef = useRef();
+  const [fileText, setFileText] = useState('No file chosen, yet');
   const { changeAuth } = useAuthentication();
 
   const [text, setText] = useState({ name: '', email: '', password: '' });
@@ -15,6 +17,19 @@ const Register = () => {
         [name]: e.target.value,
       };
     });
+  };
+
+  const handleFileInputChange = e => {
+    if (hiddenInputRef.current.value) {
+      setFileText(hiddenInputRef.current.value);
+    } else {
+      setFileText('No file chosen, yet');
+    }
+  };
+
+  const handleImageUpload = () => {
+    // Simulate a click on hidden button
+    hiddenInputRef.current.click();
   };
 
   return (
@@ -34,6 +49,7 @@ const Register = () => {
                 name="name"
                 id="name"
                 required
+                value={text.name}
               />
             </div>
             <div className="register-legend-input-container">
@@ -47,6 +63,7 @@ const Register = () => {
                 name="email"
                 id="email"
                 required
+                value={text.email}
               />
             </div>
             <div className="register-legend-input-container">
@@ -60,7 +77,37 @@ const Register = () => {
                 name="password"
                 id="password"
                 required
+                value={text.password}
               />
+            </div>
+            <div className="register-legend-input-container-file">
+              {/* <label htmlFor="picture" className="register-legend-label-file">
+                Profile Picture
+                <input
+                  onChange={handleImageUpload}
+                  className="register-legend-input-file"
+                  type="file"
+                  accept="image/*"
+                  id="picture"
+                />
+              </label> */}
+              <input
+                ref={hiddenInputRef}
+                type="file"
+                id="profile-picture"
+                onChange={handleFileInputChange}
+                hidden
+              />
+              <button
+                onClick={handleImageUpload}
+                type="button"
+                id="profile-picture-button"
+              >
+                Select Profile Picture Image
+              </button>
+              <div className="profile-picture-text-container">
+                <span id="profile-picture-text">{fileText}</span>
+              </div>
             </div>
           </fieldset>
           <input className="register-input" value="Sign In" type="submit" />
