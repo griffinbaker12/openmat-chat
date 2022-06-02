@@ -1,13 +1,20 @@
 import { useRef, useState } from 'react';
 import { useAuthentication } from '../../contexts/authentication-context';
+import Spinner from '../spinner/spinner.component';
+import Toast from '../toast/toast.component.styles';
+import { TOAST_TYPE } from '../toast/toast.component.styles';
 import './register.styles.scss';
 
 const Register = () => {
-  const hiddenInputRef = useRef();
   const [picCloudUrl, setPicCloudUrl] = useState();
   const [text, setText] = useState({ name: '', email: '', password: '' });
   const [isPicLoading, setIsPicLoading] = useState(false);
+  const [toastType, setToastType] = useState();
+
   const { changeAuth } = useAuthentication();
+
+  const toastRef = useRef(null);
+  const hiddenInputRef = useRef();
 
   const handleChange = e => {
     const name = e.target.getAttribute('name');
@@ -52,10 +59,14 @@ const Register = () => {
       .then(data => {
         setPicCloudUrl(data.url.toString());
         setIsPicLoading(false);
+        toastRef.current.show();
+        setToastType(TOAST_TYPE.success);
       })
       .catch(err => {
         console.log(err);
         setIsPicLoading(false);
+        toastRef.current.show();
+        setToastType(TOAST_TYPE.failure);
       });
   };
 
@@ -111,7 +122,7 @@ const Register = () => {
               <input
                 ref={hiddenInputRef}
                 type="file"
-                accept="image/*"
+                accept="image/jpeg, image/png"
                 id="profile-picture"
                 onChange={handleFileInputChange}
                 hidden
@@ -130,7 +141,7 @@ const Register = () => {
                       src={picCloudUrl}
                       alt="profile"
                       style={{
-                        height: '100px',
+                        height: '80px',
                         width: 'auto',
                         marginTop: '5px',
                       }}
@@ -146,6 +157,19 @@ const Register = () => {
           <p onClick={changeAuth} className="sign-in-text">
             Back to Sign In
           </p>
+          <Toast
+            ref={toastRef}
+            message={
+              toastType === TOAST_TYPE.success
+                ? 'Image upload successful'
+                : 'Error uploading image'
+            }
+            type={
+              toastType === TOAST_TYPE.success
+                ? TOAST_TYPE.success
+                : TOAST_TYPE.failure
+            }
+          />
         </div>
       </main>
     </article>

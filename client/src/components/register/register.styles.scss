@@ -156,6 +156,9 @@
 
 #profile-picture-button {
   font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 10px;
   color: white;
   background-color: inherit;
