@@ -4,10 +4,10 @@ import './register.styles.scss';
 
 const Register = () => {
   const hiddenInputRef = useRef();
-  const [fileText, setFileText] = useState('No file chosen, yet');
-  const { changeAuth } = useAuthentication();
-
+  const [picCloudUrl, setPicCloudUrl] = useState();
   const [text, setText] = useState({ name: '', email: '', password: '' });
+  const [isPicLoading, setIsPicLoading] = useState(false);
+  const { changeAuth } = useAuthentication();
 
   const handleChange = e => {
     const name = e.target.getAttribute('name');
@@ -19,17 +19,44 @@ const Register = () => {
     });
   };
 
+  // https://api.cloudinary.com/v1_1/dhogrpl6c/upload
+
   const handleFileInputChange = e => {
-    if (hiddenInputRef.current.value) {
-      setFileText(hiddenInputRef.current.value);
-    } else {
-      setFileText('No file chosen, yet');
-    }
+    const picture = e.target.files[0];
+    if (e.target.files) {
+      postImageDetails(picture);
+    } else return;
   };
 
   const handleImageUpload = () => {
     // Simulate a click on hidden button
     hiddenInputRef.current.click();
+  };
+
+  const postImageDetails = picture => {
+    setIsPicLoading(true);
+    if (!picture) {
+      setIsPicLoading(false);
+      return;
+    }
+
+    const data = new FormData();
+    data.append('file', picture);
+    data.append('upload_preset', 'chat-app');
+
+    fetch('https://api.cloudinary.com/v1_1/dhogrpl6c/image/upload', {
+      method: 'post',
+      body: data,
+    })
+      .then(res => res.json())
+      .then(data => {
+        setPicCloudUrl(data.url.toString());
+        setIsPicLoading(false);
+      })
+      .catch(err => {
+        console.log(err);
+        setIsPicLoading(false);
+      });
   };
 
   return (
@@ -81,19 +108,10 @@ const Register = () => {
               />
             </div>
             <div className="register-legend-input-container-file">
-              {/* <label htmlFor="picture" className="register-legend-label-file">
-                Profile Picture
-                <input
-                  onChange={handleImageUpload}
-                  className="register-legend-input-file"
-                  type="file"
-                  accept="image/*"
-                  id="picture"
-                />
-              </label> */}
               <input
                 ref={hiddenInputRef}
                 type="file"
+                accept="image/*"
                 id="profile-picture"
                 onChange={handleFileInputChange}
                 hidden
@@ -103,10 +121,24 @@ const Register = () => {
                 type="button"
                 id="profile-picture-button"
               >
-                Select Profile Picture Image
+                {isPicLoading ? <Spinner /> : 'Select Profile Picture Image'}
               </button>
               <div className="profile-picture-text-container">
-                <span id="profile-picture-text">{fileText}</span>
+                <span id="profile-picture-text">
+                  {picCloudUrl ? (
+                    <img
+                      src={picCloudUrl}
+                      alt="profile"
+                      style={{
+                        height: '100px',
+                        width: 'auto',
+                        marginTop: '5px',
+                      }}
+                    />
+                  ) : (
+                    'No image uploaded yet'
+                  )}
+                </span>
               </div>
             </div>
           </fieldset>
