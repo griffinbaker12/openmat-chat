@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 // password
 // picture
 
+// Something here is that you would probably want to be able to store their friends so that they can add them to a chat. Should be able to message anybody, but also easily add them as a friend as well and can be able to view your friends
+
 const userSchema = mongoose.Schema(
   {
     name: { type: String, required: true },
@@ -14,6 +16,11 @@ const userSchema = mongoose.Schema(
       type: String,
       default:
         'https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg',
+    },
+    isChatCreator: {
+      type: Boolean,
+      required: true,
+      default: false,
     },
   },
   {

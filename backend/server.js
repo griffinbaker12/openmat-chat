@@ -57,6 +57,7 @@ const dotenv = require('dotenv');
 const db = require('./config/db');
 const cors = require('cors');
 const userRoutes = require('./routes/userRoutes');
+const chatRoutes = require('./routes/chatRoutes');
 
 const app = express();
 dotenv.config();
@@ -65,6 +66,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/user', userRoutes);
+app.use('/api/chat', chatRoutes);
 
 const PORT = process.env.port || 4000;
 

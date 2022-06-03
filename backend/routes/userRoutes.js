@@ -1,9 +1,15 @@
 const express = require('express');
-const { registerUser, loginUser } = require('../controllers/userController');
+const {
+  allUsers,
+  registerUser,
+  loginUser,
+} = require('../controllers/userController');
+const { decodeToken } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
-router.post('/', registerUser);
+router.route('/').post(registerUser);
+router.route('/').get(decodeToken, allUsers);
 router.post('/login', loginUser);
 
 module.exports = router;
