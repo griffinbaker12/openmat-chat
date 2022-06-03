@@ -1,15 +1,19 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthentication } from '../../contexts/authentication-context';
+import Spinner from '../spinner/spinner.component';
 import './login.styles.scss';
 
 const Login = () => {
   const [text, setText] = useState({ email: '', password: '' });
 
-  const { changeAuth, setCurrentUser } = useAuthentication();
+  const { changeAuth, setCurrentUser, isLoading, setIsLoading } =
+    useAuthentication();
   const navigate = useNavigate();
 
   const handleLogin = () => {
+    if (!text.email || !text.email) return;
+    setIsLoading(true);
     fetch('http://localhost:4000/api/user/login', {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
@@ -23,11 +27,17 @@ const Login = () => {
         setCurrentUser(data);
         // Until we and if we use redux with the persisted state, but otherwise we can just check to see if there is a current user
         localStorage.setItem('userInfo', JSON.stringify(data));
+        setIsLoading(false);
         navigate('/chat');
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err);
+        setIsLoading(false);
+      });
 
     // Definitely room here as well for showing a toast icon that will pop up when the user either is or is not successful in signing up and for what reason. For that reason alone and how clean it is it makes me want to use chakra ui.
+
+    // Same idea here, instead of an alert window, could just render a nice and clean toast icon that will either be on or off depending on the state that you can pass it as a property
   };
 
   const handleChange = e => {
@@ -75,12 +85,9 @@ const Login = () => {
               />
             </div>
           </fieldset>
-          <input
-            className="login-input"
-            value="Sign In"
-            type="button"
-            onClick={handleLogin}
-          />
+          <button className="login-input" type="button" onClick={handleLogin}>
+            {isLoading ? <Spinner /> : 'Sign In'}
+          </button>
           <p onClick={changeAuth} className="register-text">
             Register
           </p>

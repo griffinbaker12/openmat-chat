@@ -20,7 +20,7 @@
 }
 
 .register-measure {
-  max-width: 30em;
+  width: 17em;
 }
 
 .register-fieldset {
@@ -111,7 +111,10 @@
 // }
 
 .register-input {
-  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40%;
   color: white;
   font-size: 18px;
   padding: 0.5rem;
@@ -125,6 +128,7 @@
   backface-visibility: hidden;
   transform: translateZ(0);
   transition: transform 0.25s ease-in-out;
+  background-color: rgb(87, 87, 233);
 
   &:hover {
     transform: scale(1.05);
