@@ -13,7 +13,7 @@ const Toast = forwardRef((props, ref) => {
   useImperativeHandle(ref, () => ({
     show() {
       setIsToastShowing(true);
-      setTimeout(() => isToastShowing(false), 3000);
+      setTimeout(() => setIsToastShowing(false), 3000);
     },
   }));
 

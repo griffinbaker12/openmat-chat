@@ -1,11 +1,33 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuthentication } from '../../contexts/authentication-context';
 import './login.styles.scss';
 
 const Login = () => {
   const { changeAuth } = useAuthentication();
-
+  const navigate = useNavigate();
   const [text, setText] = useState({ email: '', password: '' });
+
+  const handleRegistration = () => {
+    fetch('http://localhost:4000/api/user/', {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: text.email,
+        password: text.password,
+      }),
+    })
+      .then(res => res.json())
+      .then(data => {
+        setCurrentUser(data);
+        // Until we and if we use redux with the persisted state, but otherwise we can just check to see if there is a current user
+        localStorage.setItem('userInfo', JSON.stringify(data));
+      })
+      .catch(err => console.log(err));
+
+    navigate('/chat');
+    // Definitely room here as well for showing a toast icon that will pop up when the user either is or is not successful in signing up and for what reason. For that reason alone and how clean it is it makes me want to use chakra ui.
+  };
 
   const handleChange = e => {
     const name = e.target.getAttribute('name');

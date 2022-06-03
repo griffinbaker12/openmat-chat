@@ -55,11 +55,13 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const db = require('./config/db');
+const cors = require('cors');
 const userRoutes = require('./routes/userRoutes');
 
 const app = express();
 dotenv.config();
 
+app.use(cors());
 app.use(express.json());
 
 app.use('/api/user', userRoutes);

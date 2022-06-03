@@ -13,16 +13,16 @@ import { AuthenticationProvider } from './contexts/authentication-context';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <AuthenticationProvider>
-      <SocketProvider>
-        <ContactsProvider>
-          <ConversationsProvider>
-            <BrowserRouter>
+    <BrowserRouter>
+      <AuthenticationProvider>
+        <SocketProvider>
+          <ContactsProvider>
+            <ConversationsProvider>
               <App />
-            </BrowserRouter>
-          </ConversationsProvider>
-        </ContactsProvider>
-      </SocketProvider>
-    </AuthenticationProvider>
+            </ConversationsProvider>
+          </ContactsProvider>
+        </SocketProvider>
+      </AuthenticationProvider>
+    </BrowserRouter>
   </React.StrictMode>
 );

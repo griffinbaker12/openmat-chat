@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuthentication } from '../../contexts/authentication-context';
 import Spinner from '../spinner/spinner.component';
 import Toast from '../toast/toast.component.styles';
@@ -10,11 +11,35 @@ const Register = () => {
   const [text, setText] = useState({ name: '', email: '', password: '' });
   const [isPicLoading, setIsPicLoading] = useState(false);
   const [toastType, setToastType] = useState();
+  const navigate = useNavigate();
 
-  const { changeAuth } = useAuthentication();
+  const { changeAuth, setCurrentUser } = useAuthentication();
 
   const toastRef = useRef(null);
   const hiddenInputRef = useRef();
+
+  const handleRegistration = () => {
+    fetch('http://localhost:4000/api/user', {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: text.email,
+        password: text.password,
+        name: text.name,
+        picture: picCloudUrl,
+      }),
+    })
+      .then(res => res.json())
+      .then(data => {
+        setCurrentUser(data);
+        // Until we and if we use redux with the persisted state, but otherwise we can just check to see if there is a current user
+        localStorage.setItem('userInfo', JSON.stringify(data));
+      })
+      .catch(err => console.log(err));
+
+    navigate('/chat');
+    // Definitely room here as well for showing a toast icon that will pop up when the user either is or is not successful in signing up and for what reason. For that reason alone and how clean it is it makes me want to use chakra ui.
+  };
 
   const handleChange = e => {
     const name = e.target.getAttribute('name');
@@ -153,7 +178,12 @@ const Register = () => {
               </div>
             </div>
           </fieldset>
-          <input className="register-input" value="Sign In" type="submit" />
+          <input
+            className="register-input"
+            value="Sign In"
+            type="button"
+            onClick={handleRegistration}
+          />
           <p onClick={changeAuth} className="sign-in-text">
             Back to Sign In
           </p>

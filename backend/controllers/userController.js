@@ -54,7 +54,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
   const isValidPassword = bcrypt.compareSync(password, user.hash);
 
-  if (user && isValidPassword) {
+  if (userExists && isValidPassword) {
     res.json({
       id: user._id,
       name: user.name,
