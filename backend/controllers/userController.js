@@ -69,12 +69,12 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const allUsers = asyncHandler(async (req, res) => {
-  console.log(req.headers);
-  const query = req.query.search
+  const { search } = req.query;
+  const query = search
     ? {
         $or: [
-          { name: { $regex: req.query.search, $options: 'i' } },
-          { email: { $regex: req.query.search, $options: 'i' } },
+          { name: { $regex: search, $options: 'i' } },
+          { email: { $regex: search, $options: 'i' } },
         ],
       }
     : {};
