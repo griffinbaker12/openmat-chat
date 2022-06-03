@@ -4,12 +4,13 @@ import { useAuthentication } from '../../contexts/authentication-context';
 import './login.styles.scss';
 
 const Login = () => {
-  const { changeAuth } = useAuthentication();
-  const navigate = useNavigate();
   const [text, setText] = useState({ email: '', password: '' });
 
-  const handleRegistration = () => {
-    fetch('http://localhost:4000/api/user/', {
+  const { changeAuth, setCurrentUser } = useAuthentication();
+  const navigate = useNavigate();
+
+  const handleLogin = () => {
+    fetch('http://localhost:4000/api/user/login', {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -22,10 +23,10 @@ const Login = () => {
         setCurrentUser(data);
         // Until we and if we use redux with the persisted state, but otherwise we can just check to see if there is a current user
         localStorage.setItem('userInfo', JSON.stringify(data));
+        navigate('/chat');
       })
       .catch(err => console.log(err));
 
-    navigate('/chat');
     // Definitely room here as well for showing a toast icon that will pop up when the user either is or is not successful in signing up and for what reason. For that reason alone and how clean it is it makes me want to use chakra ui.
   };
 
@@ -74,7 +75,12 @@ const Login = () => {
               />
             </div>
           </fieldset>
-          <input className="login-input" value="Sign In" type="submit" />
+          <input
+            className="login-input"
+            value="Sign In"
+            type="button"
+            onClick={handleLogin}
+          />
           <p onClick={changeAuth} className="register-text">
             Register
           </p>
