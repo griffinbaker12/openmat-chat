@@ -25,7 +25,7 @@ const decodeToken = asyncHandler(async (req, res, next) => {
       next();
     } catch (error) {
       res.status(401);
-      throw new Error('Not authorized, invalidd token');
+      throw new Error('Not authorized, invalid token');
     }
   }
 
