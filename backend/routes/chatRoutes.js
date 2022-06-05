@@ -3,6 +3,9 @@ const {
   accessChat,
   createChat,
   fetchChats,
+  renameChat,
+  addUserToChat,
+  removeUserFromChat,
 } = require('../controllers/chatController');
 const { decodeToken } = require('../middleware/authMiddleware');
 // const { decodeToken } = require('../middleware/authMiddleware');
@@ -15,8 +18,8 @@ router.route('/createChat').post(decodeToken, createChat);
 
 router.route('/').get(decodeToken, fetchChats);
 
-// router.route('/removeUserFromchat').put(decodeToken, removeUserFromChat);
-// router.route('/addUserToChat').put(decodeToken, addUserToChat);
-// router.route('/renameChat').put(decodeToken, renameChat);
+router.route('/renameChat').put(decodeToken, renameChat);
+router.route('/addUserToChat').put(decodeToken, addUserToChat);
+router.route('/removeUserFromChat').put(decodeToken, removeUserFromChat);
 
 module.exports = router;
