@@ -1,9 +1,11 @@
 import { forwardRef, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuthentication } from '../../contexts/authentication-context';
 import './account-dropdown.styles.scss';
 
 const AccountDropdown = forwardRef(({ handleDropdown }, ref) => {
   const { currentUser } = useAuthentication();
+  const navigate = useNavigate();
   const { picture, name } = currentUser;
   const dropDownRef = useRef();
 
@@ -21,6 +23,11 @@ const AccountDropdown = forwardRef(({ handleDropdown }, ref) => {
     return () => document.removeEventListener('mousedown', handleClick);
   });
 
+  const signOutUser = () => {
+    localStorage.removeItem('userInfo');
+    navigate('/');
+  };
+
   return (
     <div ref={dropDownRef} className="account-dropdown-container">
       <div className="account-dropdown-content-container">
@@ -30,7 +37,9 @@ const AccountDropdown = forwardRef(({ handleDropdown }, ref) => {
           </div>
           <p>{name}</p>
         </div>
-        <button type="button">Sign Out</button>
+        <button onClick={signOutUser} type="button">
+          Sign Out
+        </button>
       </div>
     </div>
   );
