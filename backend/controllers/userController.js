@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcrypt-nodejs');
 const User = require('../models/userModel');
+const Message = require('../models/messageModel');
 const generateToken = require('../config/generateToken');
 
 const registerUser = asyncHandler(async (req, res) => {
@@ -69,23 +70,22 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 });
 
+// This name sucks, need to change it
+
 const allUsers = asyncHandler(async (req, res) => {
   const { search } = req.query;
-  const query = search
-    ? {
-        $or: [
-          { name: { $regex: search, $options: 'i' } },
-          { email: { $regex: search, $options: 'i' } },
-        ],
-      }
-    : {};
+  if (!search) return;
+
+  const userQuery = { name: { $regex: search, $options: 'i' } };
+  const messageQuery = { text: { $regex: search, $options: 'i' } };
 
   // Means that we need to pass in the current user id
   // We also pass the user back a token after they sign in, but we don't want this to be revealed to anyone else I guess, but once we get someone's _id, we can just generate the exact same token again to verify them which is pretty sweet and why it is useful
 
   // This makes it so that the user who actually sends the request does not get any data back about themselves, and we do this by running it through the middleware. This is so sick, is a means of us being able to authorize what data is available to the person that is currently logged in and will change depending on who is actually logged in..super cool b/c then we can just run this whenever we want to actually remove the user themselves from any searches
-  const users = await User.find(query).find({ _id: { $ne: req.user._id } });
-  res.send(users);
+  const users = await User.find(userQuery).find({ _id: { $ne: req.user._id } });
+  const messages = await Message.find(messageQuery);
+  res.send({ users, messages });
 });
 
 module.exports = { registerUser, loginUser, allUsers };

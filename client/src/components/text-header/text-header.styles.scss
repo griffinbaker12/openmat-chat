@@ -1,9 +1,12 @@
 .text-header-container {
   display: flex;
   align-items: center;
+  justify-content: center;
   padding-left: 8px;
   height: 50px;
-  background-color: aliceblue;
+  border-bottom: 1px solid gray;
+  color: white;
+  font-weight: bold;
 }
 
 .to-text-recipient {

@@ -1,32 +1,62 @@
 import { useState } from 'react';
+import { ReactComponent as SearchIcon } from '../../assets/search.svg';
 import ChatPreview from '../chat-preview/chat-preview.component';
 import Modal from '../modal/modal.component';
 import './side-bar.styles.scss';
 import ContactPreview from '../contact-preview/contact-preview.component';
+import {
+  SIDEBAR_CATEGORY_TYPE,
+  useSidebar,
+} from '../../contexts/sidebar-context';
+
+// Can extract the useEffect functionality to search for whatever it is that we need to search for in the actual context itself where the data lives / is stored
 
 const SideBar = () => {
-  const [sideBarCategory, setSideBarCategory] = useState('conversations');
-  const [showModal, setShowModal] = useState(false);
+  const {
+    search,
+    setSearch,
+    isLoading,
+    searchResults,
+    sideBarCategory,
+    setSideBarCategory,
+    setIsLoading,
+    updateSearchValue,
+    showModal,
+    setShowModal,
+    handleSearchSubmit,
+  } = useSidebar();
+
+  console.log(searchResults);
 
   const closeModal = () => setShowModal(false);
 
-  const handleCategoryChange = () =>
-    setSideBarCategory(prevState =>
-      prevState === 'conversations' ? 'friends' : 'conversations'
-    );
+  const handleCategoryChange = e => {
+    const clickedCategory = e.target.getAttribute('name');
+    setSideBarCategory(clickedCategory);
+  };
 
-  // The best way to do this is to actually change the active one to the one that is actually clicked so that you can't toggle like it currently is
-
-  // Chat state and then map over to add in all of the different chat previews
-
-  // Need to keep a state of which button is active
-
-  // To make the cursor what you want it to be may also have to do something where you just add on the additional "active" or not.
+  // submit just get whatever that value was and actually set the search loading to true and all that jazz
 
   return (
     <div className="side-bar-container">
+      <div className="side-bar-search-container">
+        <form onSubmit={handleSearchSubmit}>
+          <input
+            onChange={updateSearchValue}
+            value={search}
+            type="search"
+            placeholder="Search conversations and friends ..."
+          />
+          <SearchIcon className="search-icon" />
+        </form>
+        {/* You always want to search and query for the results, load a spinner in the mean time, and then when there is actually a result, just map over the results and render them here and then either open up the conversation or the profile of the person for which you are searching  
+        
+        - Handle the loading of the spinner, handle the displaying of the results with a new component inside if the actual header itself in a nice little dropdown
+        */}
+      </div>
       <div onClick={handleCategoryChange} className="side-bar-header-container">
         <div
+          name="conversations"
           className={`side-bar-category ${
             sideBarCategory === 'conversations'
               ? 'side-bar-category-active'
@@ -36,6 +66,7 @@ const SideBar = () => {
           Conversations
         </div>
         <div
+          name="friends"
           className={`side-bar-category ${
             sideBarCategory === 'friends' ? 'side-bar-category-active' : ''
           } contacts`}
@@ -50,14 +81,15 @@ const SideBar = () => {
         <ContactPreview />
       )}
 
-      <div className="new-convo-container">
-        <div className="userName">@griffinbaker12</div>
-        <button onClick={() => setShowModal(true)} type="button">
-          {sideBarCategory === 'conversations'
-            ? 'New Conversation'
-            : 'Add Friend'}
-        </button>
-      </div>
+      <button
+        className="side-bar-container-generate-button"
+        onClick={() => setShowModal(true)}
+        type="button"
+      >
+        {sideBarCategory === 'conversations'
+          ? 'New Conversation'
+          : 'Add Friend'}
+      </button>
 
       {
         <Modal

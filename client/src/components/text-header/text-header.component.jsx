@@ -7,14 +7,14 @@ const TextHeader = () => {
 
   return (
     <div className="text-header-container">
-      <p className="to-text-recipient">To: </p>
-      <div className="recipient-container">
+      <p className="to-text-recipient">{currentConversation.recipients[0]} </p>
+      {/* <div className="recipient-container">
         {currentConversation.recipients.map((recipient, i) => (
           <div key={i} className="text-recipient">
             {recipient}
           </div>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };

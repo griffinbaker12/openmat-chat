@@ -28,9 +28,10 @@
   word-wrap: break-word;
   padding: 8px;
   border-radius: 5px;
-  border: 1px solid black;
+  border: 1px solid gray;
   max-width: 40%;
   align-self: flex-end;
+  color: white;
 }
 
 .message-view-text-info {
@@ -38,5 +39,5 @@
   justify-content: flex-end;
   font-size: smaller;
   gap: 2px;
-  color: gray;
+  color: #999;
 }
