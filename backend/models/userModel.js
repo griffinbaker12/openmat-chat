@@ -17,6 +17,14 @@ const userSchema = mongoose.Schema(
       default:
         'https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg',
     },
+    friends: [
+      {
+        // Will contain the id of the particular user
+        type: mongoose.Schema.Types.ObjectId,
+        // Reference to the user model
+        ref: 'User',
+      },
+    ],
   },
   {
     timestamps: true,

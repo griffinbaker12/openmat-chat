@@ -27,6 +27,8 @@ const SideBar = () => {
     handleSearchSubmit,
     chats,
     setChats,
+    modalType,
+    setModalType,
   } = useSidebar();
 
   const closeModal = () => setShowModal(false);
@@ -104,6 +106,7 @@ const SideBar = () => {
         <Modal
           showModal={showModal}
           closeModal={closeModal}
+          modalType={modalType}
           sideBarCategory={sideBarCategory}
         />
       }

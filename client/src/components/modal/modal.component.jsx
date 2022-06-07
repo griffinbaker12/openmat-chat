@@ -3,6 +3,8 @@ import NewConversationModal from '../new-conversation-modal/new-conversation-mod
 import AddFriendModal from '../add-friend-modal/add-friend-modal.component';
 import './modal.styles.scss';
 
+// This is what I am going to think about tonight, how to make it so that the modal can either be to add friends and start chats, or to view other people's accounts
+
 const Modal = ({ showModal, closeModal, sideBarCategory }) => {
   return (
     <div

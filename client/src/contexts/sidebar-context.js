@@ -10,6 +10,11 @@ export const SIDEBAR_CATEGORY_TYPE = {
   friends: 'friends',
 };
 
+export const MODAL_TYPE = {
+  sidebar: 'sidebar',
+  user: 'user',
+};
+
 export const SidebarProvider = ({ children }) => {
   const [search, setSearch] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -18,6 +23,7 @@ export const SidebarProvider = ({ children }) => {
     SIDEBAR_CATEGORY_TYPE.conversations
   );
   const [showModal, setShowModal] = useState(false);
+  const [modalType, setModalType] = useState('');
   const [chats, setChats] = useState([]);
   const { currentUser } = useAuthentication();
 
@@ -25,7 +31,6 @@ export const SidebarProvider = ({ children }) => {
 
   const fetchChats = async () => {
     try {
-      console.log('running');
       const response = await fetch(`http://localhost:4000/api/chat`, {
         method: 'get',
         headers: { Authorization: `Bearer ${currentUser.token}` },
@@ -67,6 +72,8 @@ export const SidebarProvider = ({ children }) => {
   // Fetch the chats once, and then otherwise just add the chats to the data, don't need to re-fetch or anything like that. Could keep this here or do something where you only fetch the chats and the friends once the user is actually signed in. That could also be a route where you just find these two things
 
   useEffect(() => {
+    // Make sure that that is right?
+    if (!currentUser) return;
     if (currentUser._id) {
       fetchChats();
     }
@@ -89,6 +96,8 @@ export const SidebarProvider = ({ children }) => {
         handleSearchSubmit,
         chats,
         setChats,
+        modalType,
+        setModalType,
       }}
     >
       {children}

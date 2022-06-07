@@ -45,14 +45,13 @@ const registerUser = asyncHandler(async (req, res) => {
 
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-  console.log(email, password);
 
   if (!email || !password) {
     res.status(400);
     throw new Error('Please enter all the fields');
   }
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).populate('friends', '-hash');
 
   const isValidPassword = bcrypt.compareSync(password, user.hash);
 
@@ -63,6 +62,7 @@ const loginUser = asyncHandler(async (req, res) => {
       email: user.email,
       picture: user.picture,
       token: generateToken(user._id),
+      friends: user.friends,
     });
   } else {
     res.status(401);
@@ -88,4 +88,36 @@ const allUsers = asyncHandler(async (req, res) => {
   res.send({ users, messages });
 });
 
-module.exports = { registerUser, loginUser, allUsers };
+const addFriend = asyncHandler(async (req, res) => {
+  const { userId } = req.body;
+
+  const addedFriend = await User.findByIdAndUpdate(
+    req.user._id,
+    { $push: { friends: userId } },
+    { new: true }
+  ).populate('friends', '-hash');
+
+  if (!addFriend) {
+    throw new Error('Error adding friend');
+  }
+
+  res.json(addedFriend);
+});
+
+const removeFriend = asyncHandler(async (req, res) => {
+  const { userId } = req.body;
+
+  const userWithFriendRemoved = await User.findByIdAndUpdate(
+    req.user._id,
+    { $pull: { friends: userId } },
+    { new: true }
+  ).populate('friends', '-hash');
+
+  if (!userWithFriendRemoved) {
+    throw new Error('Error removing friend');
+  }
+
+  res.json(userWithFriendRemoved);
+});
+
+module.exports = { registerUser, loginUser, allUsers, addFriend, removeFriend };
