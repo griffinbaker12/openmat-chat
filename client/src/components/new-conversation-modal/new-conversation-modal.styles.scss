@@ -1,13 +1,25 @@
+/// On the little guys that I add in for the create chat room I need to be able to delete the people which I would like to add and could be clean to have a nice little wrapper around them as well with a different background color to make things clear and consider adding just a margin around them to make the spacing how I would like and leave the rest of this alone
+
 .new-conversation-modal-body {
   form {
     display: flex;
     flex-direction: column;
     padding: 12px 24px;
-    gap: 8px;
+    gap: 6px;
 
     input {
       margin-bottom: 4px;
       height: 30px;
+      background-color: black;
+      color: white;
+      outline: 1px solid gray;
+      padding: 6px;
+      border-radius: 4px;
+      border: 0;
+    }
+
+    input:focus {
+      outline: 1px solid rgb(81, 81, 197);
     }
   }
 }
@@ -19,10 +31,15 @@
   button {
     flex: 1;
     height: 40px;
+    background-color: black;
+    border: 1px solid white;
+    border-radius: 4px;
+    color: white;
   }
 
   button:hover {
     cursor: pointer;
+    filter: brightness(0.8);
   }
 }
 

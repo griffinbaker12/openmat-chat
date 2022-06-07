@@ -1,4 +1,4 @@
-.modal-container {
+.sidebar-modal-container {
   position: fixed;
   top: 0;
   right: 0;
@@ -13,12 +13,12 @@
   pointer-events: none;
 }
 
-.modal-container.active {
+.sidebar-modal-container.active {
   opacity: 1;
   pointer-events: visible;
 }
 
-.modal-content {
+.sidebar-modal-content {
   display: flex;
   flex-direction: column;
   width: 400px;
@@ -28,7 +28,7 @@
   color: white;
 }
 
-.modal-header {
+.sidebar-modal-header {
   display: flex;
   width: 100%;
   justify-content: space-between;

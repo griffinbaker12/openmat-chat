@@ -6,6 +6,7 @@ import './side-bar.styles.scss';
 import ContactPreview from '../contact-preview/contact-preview.component';
 import {
   SIDEBAR_CATEGORY_TYPE,
+  MODAL_TYPE,
   useSidebar,
 } from '../../contexts/sidebar-context';
 import Spinner from '../spinner/spinner.component';
@@ -29,9 +30,8 @@ const SideBar = () => {
     setChats,
     modalType,
     setModalType,
+    handleModal,
   } = useSidebar();
-
-  const closeModal = () => setShowModal(false);
 
   const handleCategoryChange = e => {
     const clickedCategory = e.target.getAttribute('name');
@@ -94,7 +94,7 @@ const SideBar = () => {
 
       <button
         className="side-bar-container-generate-button"
-        onClick={() => setShowModal(true)}
+        onClick={e => handleModal(e, MODAL_TYPE.sidebar)}
         type="button"
       >
         {sideBarCategory === 'conversations'
@@ -102,14 +102,7 @@ const SideBar = () => {
           : 'Add Friend'}
       </button>
 
-      {
-        <Modal
-          showModal={showModal}
-          closeModal={closeModal}
-          modalType={modalType}
-          sideBarCategory={sideBarCategory}
-        />
-      }
+      {<Modal />}
     </div>
   );
 };

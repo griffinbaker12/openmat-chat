@@ -1,8 +1,10 @@
 import { useRef } from 'react';
 import { useContacts } from '../../contexts/contacts-context';
+import { useSidebar } from '../../contexts/sidebar-context';
 import './add-friend-modal.styles.scss';
 
-const AddFriendModal = ({ closeModal }) => {
+const AddFriendModal = () => {
+  const { closeModal } = useSidebar();
   const { createContact } = useContacts();
   const userNameRef = useRef();
   // const nameRef = useRef();

@@ -42,6 +42,13 @@ export const SidebarProvider = ({ children }) => {
     }
   };
 
+  const handleModal = (e, modalType) => {
+    setModalType(modalType);
+    setShowModal(true);
+  };
+
+  const closeModal = () => setShowModal(false);
+
   const handleSearchSubmit = async e => {
     e.preventDefault();
     if (!search) return;
@@ -98,6 +105,8 @@ export const SidebarProvider = ({ children }) => {
         setChats,
         modalType,
         setModalType,
+        handleModal,
+        closeModal,
       }}
     >
       {children}

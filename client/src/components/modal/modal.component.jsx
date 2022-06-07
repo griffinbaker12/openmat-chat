@@ -1,35 +1,19 @@
-import { useRef } from 'react';
-import NewConversationModal from '../new-conversation-modal/new-conversation-modal.component';
-import AddFriendModal from '../add-friend-modal/add-friend-modal.component';
-import './modal.styles.scss';
+import UserInfoModal from '../user-info-modal/user-info-modal.components';
+import SidebarModal from '../sidebar-modal/sidebar-modal.components';
+import { useSidebar } from '../../contexts/sidebar-context';
 
 // This is what I am going to think about tonight, how to make it so that the modal can either be to add friends and start chats, or to view other people's accounts
 
-const Modal = ({ showModal, closeModal, sideBarCategory }) => {
-  return (
-    <div
-      className={`modal-container ${showModal ? 'active' : ''}`}
-      onClick={closeModal}
-    >
-      <div className="modal-content" onClick={e => e.stopPropagation()}>
-        <div className="modal-header">
-          <p>
-            {sideBarCategory === 'conversations'
-              ? 'Create Chat Room'
-              : 'Add Friend'}
-          </p>
-          <button onClick={closeModal} type="button" style={{ color: 'white' }}>
-            &#x2715;
-          </button>
-        </div>
-        {sideBarCategory === 'conversations' ? (
-          <NewConversationModal closeModal={closeModal} />
-        ) : (
-          <AddFriendModal closeModal={closeModal} />
-        )}
-      </div>
-    </div>
-  );
+const Modal = ({ closeModal }) => {
+  // OLD
+  // const { showModal, sideBarCategory, modalType } = useSidebar();
+
+  // Only need the modal type and show modal type; maybe I don't need show modal.., only in the actual modal themselves
+  const { modalType } = useSidebar();
+
+  console.log(modalType);
+
+  return modalType === 'sidebar' ? <SidebarModal /> : <UserInfoModal />;
 };
 
 export default Modal;

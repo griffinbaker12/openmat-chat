@@ -2,12 +2,14 @@ import { useRef, useState } from 'react';
 import ChatParticipant from '../chat-participant/chat-participant.component';
 import { useConversations } from '../../contexts/conversations-context';
 import './new-conversation-modal.styles.scss';
+import { useSidebar } from '../../contexts/sidebar-context';
 
 // There seems to also totally be room to just have one modal component, and also a genreal button component as well, but for the modal, essentially I can just pass in the name of the modal itself, and then the body of the modal. The 'children' can just be the unique part of the actual form for these components that gets inserted into the overall block of the component
 
 // Will also need to add something where I can check if the user exists and as the person types have a little dropdown that can fill in suggestions? May not be necessary, but I know that discord does that and you can always @someone in that way, would be a nice feature to try and implement
 
-const NewConversationModal = ({ closeModal }) => {
+const NewConversationModal = () => {
+  const { closeModal } = useSidebar();
   const { createConversation } = useConversations();
   const [chatParticipants, setChatParticipants] = useState([]);
   const userNameRef = useRef();
