@@ -18,3 +18,15 @@
     }
   }
 }
+
+.search-spinner-container {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  align-items: center;
+
+  .spinner-container {
+    width: 60px;
+    height: 60px;
+  }
+}

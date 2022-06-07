@@ -8,6 +8,7 @@ import {
   SIDEBAR_CATEGORY_TYPE,
   useSidebar,
 } from '../../contexts/sidebar-context';
+import Spinner from '../spinner/spinner.component';
 
 // Can extract the useEffect functionality to search for whatever it is that we need to search for in the actual context itself where the data lives / is stored
 
@@ -24,9 +25,9 @@ const SideBar = () => {
     showModal,
     setShowModal,
     handleSearchSubmit,
+    chats,
+    setChats,
   } = useSidebar();
-
-  console.log(searchResults);
 
   const closeModal = () => setShowModal(false);
 
@@ -75,11 +76,19 @@ const SideBar = () => {
         </div>
       </div>
 
-      {sideBarCategory === 'conversations' ? (
-        <ChatPreview />
-      ) : (
-        <ContactPreview />
-      )}
+      <div style={{ flex: '1' }}>
+        {sideBarCategory === 'conversations' ? (
+          isLoading ? (
+            <Spinner type="search" />
+          ) : (
+            <ChatPreview />
+          )
+        ) : isLoading ? (
+          <Spinner type="search" />
+        ) : (
+          <ContactPreview />
+        )}
+      </div>
 
       <button
         className="side-bar-container-generate-button"

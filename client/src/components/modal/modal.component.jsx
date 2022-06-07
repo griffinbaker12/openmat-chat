@@ -16,7 +16,7 @@ const Modal = ({ showModal, closeModal, sideBarCategory }) => {
               ? 'Create Chat Room'
               : 'Add Friend'}
           </p>
-          <button onClick={closeModal} type="button">
+          <button onClick={closeModal} type="button" style={{ color: 'white' }}>
             &#x2715;
           </button>
         </div>

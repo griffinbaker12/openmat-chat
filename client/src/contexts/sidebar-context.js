@@ -18,13 +18,27 @@ export const SidebarProvider = ({ children }) => {
     SIDEBAR_CATEGORY_TYPE.conversations
   );
   const [showModal, setShowModal] = useState(false);
+  const [chats, setChats] = useState([]);
   const { currentUser } = useAuthentication();
 
   const updateSearchValue = e => setSearch(e.target.value);
 
+  const fetchChats = async () => {
+    try {
+      console.log('running');
+      const response = await fetch(`http://localhost:4000/api/chat`, {
+        method: 'get',
+        headers: { Authorization: `Bearer ${currentUser.token}` },
+      });
+      const data = await response.json();
+      setChats(data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const handleSearchSubmit = async e => {
     e.preventDefault();
-    console.log('hello');
     if (!search) return;
 
     // Spinner until you get the results, fetch them
@@ -48,22 +62,16 @@ export const SidebarProvider = ({ children }) => {
     } catch (e) {
       console.log(e, 'Failed to load search results');
     }
-
-    // Fetch logic
   };
 
+  // Fetch the chats once, and then otherwise just add the chats to the data, don't need to re-fetch or anything like that. Could keep this here or do something where you only fetch the chats and the friends once the user is actually signed in. That could also be a route where you just find these two things
+
   useEffect(() => {
-    // Fetch depending on the value in the search for both posts and users
-    // fetch('http://localhost:4000/api/user', {
-    //   method: 'post',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({
-    //     email: text.email,
-    //     password: text.password,
-    //     name: text.name,
-    //     picture: picCloudUrl,
-    //   }),
-  }, [search]);
+    if (currentUser._id) {
+      fetchChats();
+    }
+    return;
+  }, [currentUser]);
 
   return (
     <SidebarContext.Provider
@@ -79,6 +87,8 @@ export const SidebarProvider = ({ children }) => {
         showModal,
         setShowModal,
         handleSearchSubmit,
+        chats,
+        setChats,
       }}
     >
       {children}
