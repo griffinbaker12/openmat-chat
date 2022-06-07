@@ -28,6 +28,7 @@
   font-weight: bold;
   flex: 1;
   text-align: center;
+  font-size: 22px;
 }
 
 .header-chat-links {
@@ -49,6 +50,8 @@
 .notification-bell {
   fill: white;
   position: relative;
+  // height: 24px;
+  // width: 24px;
 }
 
 .notification-count {
@@ -63,13 +66,13 @@
   border-radius: 50%;
   width: 15px;
   background-color: red;
-  bottom: 10px;
-  right: 8px;
+  bottom: 12px;
+  right: 10px;
 }
 
 .header-user-account-container {
-  height: 25px;
-  width: 25px;
+  height: 32px;
+  width: 32px;
   display: flex;
   align-items: center;
   border-radius: 50%;
