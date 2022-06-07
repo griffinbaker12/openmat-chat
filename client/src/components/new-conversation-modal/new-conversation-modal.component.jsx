@@ -1,5 +1,7 @@
+import { Fragment } from 'react';
 import { useRef, useState } from 'react';
 import ChatParticipant from '../chat-participant/chat-participant.component';
+import SearchResult from '../search-result/search-result-component';
 import { useConversations } from '../../contexts/conversations-context';
 import './new-conversation-modal.styles.scss';
 import { useSidebar } from '../../contexts/sidebar-context';
@@ -39,11 +41,11 @@ const NewConversationModal = () => {
 
   const handleChange = async e => {
     const field = e.target.getAttribute('name');
-    setFormInput(prevState => ({ ...prevState, [field]: e.target.value }));
+    const query = e.target.value;
+    setFormInput(prevState => ({ ...prevState, [field]: query }));
 
     // If we are typing into the name field, then we want to make a fetch reqeust with the current value of the input
     if (field !== 'name') return;
-    const query = formInput.name;
 
     try {
       fetch('');
@@ -62,13 +64,25 @@ const NewConversationModal = () => {
     } catch (e) {}
   };
 
-  const handleAddUser = () => {
-    // const user = userNameRef.current.value;
-    if (!formInput.name) return;
-    // Will need to do some check to see if the actual user exists in the database or not
-    // If they do exist...
-    // This user may also at some point may also have some data on them besides just the userName, but suffices for now
-    setChatParticipants(prevState => [...prevState, formInput.name]);
+  const handleAddUser = e => {
+    const selectedId = e.target.getAttribute('name');
+    const alreadyExists = chatParticipants.some(
+      participant => participant._id === selectedId
+    );
+
+    if (alreadyExists) {
+      return;
+    }
+
+    console.log('results are', searchResults);
+
+    const selectedUser = searchResults.find(
+      result => result?._id === selectedId
+    );
+
+    // console.log(selectedUser);
+
+    setChatParticipants(prevState => [...prevState, selectedUser]);
     setFormInput(prevState => ({ ...prevState, name: '' }));
   };
 
@@ -94,22 +108,29 @@ const NewConversationModal = () => {
         {/* So in here we need the searched users as well as the selected users */}
         <div className="new-conversation-modal-chat-participant-container">
           {chatParticipants.length !== 0 &&
-            chatParticipants.map((chatParticipant, i) => (
-              <ChatParticipant key={i} chatParticipant={chatParticipant} />
+            chatParticipants.map(chatParticipant => (
+              <Fragment key={chatParticipant._id}>
+                <ChatParticipant chatParticipant={chatParticipant} />
+              </Fragment>
             ))}
         </div>
-        <div className="new-conversation-modal-chat-search-result-container">
-          {isLoading ? searchResults.length !== 0 &&
-            chatParticipants.map((chatParticipant, i) => (
-              <ChatParticipant key={i} chatParticipant={chatParticipant} />
+        {searchResults.length === 0 ? (
+          ''
+        ) : (
+          <div className="new-conversation-modal-chat-search-result-container">
+            {searchResults.map(searchResult => (
+              <Fragment key={searchResult._id}>
+                <SearchResult
+                  handleAddUser={handleAddUser}
+                  searchResult={searchResult}
+                />
+              </Fragment>
             ))}
-        </div>
+          </div>
+        )}
         <div className="new-conversation-modal-buttons">
-          <button onClick={handleAddUser} type="button">
-            Add User
-          </button>
           <button type="button" onClick={handleChatCreation}>
-            Create
+            Create Chat
           </button>
         </div>
       </form>

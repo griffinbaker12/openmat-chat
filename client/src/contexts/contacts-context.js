@@ -11,7 +11,7 @@ export const ContactsProvider = ({ children }) => {
   const [friends, setFriends] = useState([]);
 
   useEffect(() => {
-    setFriends(currentUser.friends);
+    setFriends(currentUser?.friends);
   }, [currentUser]);
 
   // Also need a route where you can add the friend of a person and check if the id of the person is already there amongst your friends, and if it is then do not send the request

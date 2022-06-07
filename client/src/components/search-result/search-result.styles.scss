@@ -1,0 +1,25 @@
+.search-result-container {
+  display: flex;
+  color: white;
+  background-color: black;
+  border-radius: 8px;
+  padding: 12px 12px;
+  box-shadow: 0px 0px 1px 1px rgba(158, 158, 158, 0.527);
+  align-items: center;
+  gap: 12px;
+}
+
+.search-result-container:hover {
+  cursor: pointer;
+  background-color: rgb(40, 44, 53);
+}
+
+.search-result-name {
+}
+
+.search-result-image-container {
+  height: 32px;
+  width: 32px;
+  overflow: hidden;
+  border-radius: 50%;
+}
