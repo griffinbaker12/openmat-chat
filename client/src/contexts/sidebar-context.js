@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useAuthentication } from './authentication-context';
+import { useContacts } from './contacts-context';
 
 const SidebarContext = createContext();
 
@@ -25,7 +26,9 @@ export const SidebarProvider = ({ children }) => {
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState('');
   const [chats, setChats] = useState([]);
+
   const { currentUser } = useAuthentication();
+  const { friends, activeFriend, setActiveFriend } = useContacts();
 
   const updateSearchValue = e => setSearch(e.target.value);
 
@@ -42,7 +45,10 @@ export const SidebarProvider = ({ children }) => {
     }
   };
 
-  const handleModal = (e, modalType) => {
+  const handleModal = (e, modalType, friendId = null) => {
+    // If the friend has not changed, do not do this loop
+    const friend = friends.find(friend => friend._id === friendId);
+    setActiveFriend(friend);
     setModalType(modalType);
     setShowModal(true);
   };

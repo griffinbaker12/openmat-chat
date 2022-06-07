@@ -7,29 +7,29 @@ import { MODAL_TYPE } from '../../contexts/sidebar-context';
 import './contact-preview.styles.scss';
 
 const ContactPreview = () => {
-  const { friends, activeFriend, setActiveFriend } = useContacts();
+  const { friends } = useContacts();
   const { handleModal } = useSidebar();
 
-  const handleClick = e => {
-    const friendId = e.target.getAttribute('name');
-    const activeFriend = friends.find(friend => friend._id === friendId);
-    setActiveFriend(activeFriend);
-  };
+  // const handleClick = e => {
+  //   console.log('hey');
+  //   const friendId = e.target.getAttribute('name');
+  //   console.log(friendId);
+  //   const activeFriend = friends.find(friend => friend._id === friendId);
+  //   setActiveFriend(activeFriend);
+  // };
 
   return (
-    <div className="contact-preview-container" onClick={handleClick}>
+    <div className="contact-preview-container">
       {friends.length > 0 &&
         friends.map(({ _id, name, picture }) => (
           <div
-            onClick={() => handleModal(MODAL_TYPE.user)}
+            onClick={e => handleModal(e, MODAL_TYPE.user, _id)}
             key={_id}
             name={_id}
-            className={`contact-preview-list ${
-              _id === activeFriend?._id ? 'active' : ''
-            }`}
+            className="contact-preview-list"
           >
             <div className="contact-preview-image-container">
-              <img height="35px" src={picture} alt="profile" />
+              <img height="100%" src={picture} alt="profile" />
             </div>
             <p>{name}</p>
           </div>

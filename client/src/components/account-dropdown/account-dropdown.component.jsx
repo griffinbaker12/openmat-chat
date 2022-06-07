@@ -33,7 +33,7 @@ const AccountDropdown = forwardRef(({ handleDropdown }, ref) => {
       <div className="account-dropdown-content-container">
         <div className="account-dropdown-header-container">
           <div className="account-dropdown-image-container">
-            <img height="30px" src={picture} alt="profile" />
+            <img height="100%" src={picture} alt="profile" />
           </div>
           <p>{name}</p>
         </div>

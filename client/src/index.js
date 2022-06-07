@@ -16,15 +16,15 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthenticationProvider>
-        <SidebarProvider>
-          <SocketProvider>
-            <ContactsProvider>
+        <ContactsProvider>
+          <SidebarProvider>
+            <SocketProvider>
               <ConversationsProvider>
                 <App />
               </ConversationsProvider>
-            </ContactsProvider>
-          </SocketProvider>
-        </SidebarProvider>
+            </SocketProvider>
+          </SidebarProvider>
+        </ContactsProvider>
       </AuthenticationProvider>
     </BrowserRouter>
   </React.StrictMode>
