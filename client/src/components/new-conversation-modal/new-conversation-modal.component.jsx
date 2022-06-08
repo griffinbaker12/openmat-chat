@@ -25,21 +25,28 @@ const NewConversationModal = () => {
 
   // This is fine for now, I guess at some point I need to make it clear whether or not you can submit this when you hit enter, or whether hitting enter adds people to the chat if there are none, but then it probably should stary like that as well even afterwards so may make the other button a button type as well
 
-  const handleChatCreation = () => {
+  const resetForm = () => {
+    closeModal();
+    setChatParticipants([]);
+    setSearchResults([]);
+    setFormInput({ chatName: '', name: '' });
+  };
+
+  const handleChatCreation = async () => {
     if (chatParticipants.length === 0) return;
 
-    console.log(chats, 'chats');
+    // console.log(chats, 'chats');
 
     // I need to get the ids out of everyone in the current chat
     const mappedChatWithNames = chats.map(chat =>
       chat.users.map(({ userName }) => userName).sort()
     );
-    console.log(mappedChatWithNames, 'sorted uns');
+    // console.log(mappedChatWithNames, 'sorted uns');
 
     const sortedChatParticipants = [currentUser, ...chatParticipants]
       .map(user => user.userName)
       .sort();
-    console.log(sortedChatParticipants, 'sorted chat ps');
+    // console.log(sortedChatParticipants, 'sorted chat ps');
 
     const exists = mappedChatWithNames.some(chat => {
       if (chat.length !== sortedChatParticipants.length) return false;
@@ -51,6 +58,33 @@ const NewConversationModal = () => {
       return;
     }
 
+    const chatParticipantIds = chatParticipants.map(({ _id }) => _id);
+    const payload = {
+      chatName: formInput.chatName,
+      users: chatParticipantIds,
+    };
+
+    console.log(payload);
+
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/chat/createChat`,
+        {
+          method: 'post',
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+      const newChat = await response.json();
+
+      setChats(prevState => [...prevState, newChat]);
+      resetForm();
+    } catch (e) {
+      console.log(e);
+    }
     // createConversation(chatParticipants);
     // closeModal();
     // setFormInput({ chatName: '', name: '' });

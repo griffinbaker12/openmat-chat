@@ -70,8 +70,15 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new Error('Please enter all the fields');
   }
 
+  // const user = await User.findOne({
+  //   or: [
+  //     { email: { $eq: emailOrUserName } },
+  //     { userName: { $eq: emailOrUserName } },
+  //   ],
+  // }).populate('friends', '-hash');
+
   const user = await User.findOne({
-    or: [
+    $or: [
       { email: { $eq: emailOrUserName } },
       { userName: { $eq: emailOrUserName } },
     ],

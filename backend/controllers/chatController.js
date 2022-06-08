@@ -20,8 +20,6 @@ const accessChat = asyncHandler(async (req, res) => {
     select: 'name picture email',
   });
 
-  console.log(isChat, 'with populate');
-
   if (isChat.length > 0) {
     res.send(isChat[0]);
   } else {
@@ -53,7 +51,7 @@ const createChat = asyncHandler(async (req, res) => {
   const { users, chatName } = req.body;
 
   // We are going to send an array, but we cannot just send an array directly, so need to send it in the stringified format so we need to parse it here
-  const parsedUsersArray = JSON.parse(users);
+  // const parsedUsersArray = JSON.parse(users);
   // console.log(parsedUsersArray, 'parsed chat participant array');
   // console.log('current user', req.user._id);
 
@@ -61,7 +59,8 @@ const createChat = asyncHandler(async (req, res) => {
     return res.status(400).send({ message: 'Please fill all the fields' });
   }
 
-  parsedUsersArray.push(req.user);
+  users.push(req.user);
+
   // Really pretty cool, it extracts the Object Id from the current user property on the request object
   // console.log('this is the parsed user array', parsedUsersArray);
 
@@ -74,7 +73,7 @@ const createChat = asyncHandler(async (req, res) => {
 
     const newChat = await Chat.create({
       chatName,
-      users: parsedUsersArray,
+      users,
       chatCreator: req.user,
     });
 
