@@ -8,7 +8,14 @@ import './register.styles.scss';
 
 const Register = () => {
   const [picCloudUrl, setPicCloudUrl] = useState();
-  const [text, setText] = useState({ name: '', email: '', password: '' });
+  const [text, setText] = useState({
+    name: '',
+    email: '',
+    userName: '',
+    password: '',
+  });
+  const [userNameUnique, setUserNameUnique] = useState();
+  const [isUserNameResultShowing, setIsUserNameResultShowing] = useState(false);
   const [isPicLoading, setIsPicLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -34,6 +41,7 @@ const Register = () => {
         email: text.email,
         password: text.password,
         name: text.name,
+        userName: text.userName,
         picture: picCloudUrl,
       }),
     })
@@ -57,7 +65,7 @@ const Register = () => {
     // Definitely room here as well for showing a toast icon that will pop up when the user either is or is not successful in signing up and for what reason. For that reason alone and how clean it is it makes me want to use chakra ui.
   };
 
-  const handleChange = e => {
+  const handleChange = async e => {
     const name = e.target.getAttribute('name');
     setText(prevState => {
       return {
@@ -65,6 +73,29 @@ const Register = () => {
         [name]: e.target.value,
       };
     });
+    if (name !== 'userName') return;
+    const userName = e.target.value;
+    if (userName === '') {
+      setIsUserNameResultShowing(false);
+      return;
+    }
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/user/validateUserName`,
+        {
+          method: 'post',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userName,
+          }),
+        }
+      );
+      const exists = await response.json();
+      setUserNameUnique(!exists);
+      setIsUserNameResultShowing(true);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // https://api.cloudinary.com/v1_1/dhogrpl6c/upload
@@ -143,6 +174,43 @@ const Register = () => {
                 required
                 value={text.email}
               />
+            </div>
+            <div className="register-legend-input-container">
+              <label htmlFor="userName" className="register-legend-label">
+                Username
+              </label>
+              <input
+                onChange={handleChange}
+                className="register-legend-input"
+                type="text"
+                name="userName"
+                id="userName"
+                required
+                value={text.userName}
+              />
+              {isUserNameResultShowing && (
+                <div
+                  className={`username-checkmark-container ${
+                    userNameUnique ? 'available' : 'not-available'
+                  }`}
+                >
+                  {userNameUnique ? (
+                    <>
+                      <span className="username-indicator">&#10003;</span>
+                      <span className="username-response-text">
+                        Username is available
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="username-indicator">&#x2715;</span>
+                      <span className="username-response-text">
+                        Username is not available
+                      </span>
+                    </>
+                  )}
+                </div>
+              )}
             </div>
             <div className="register-legend-input-container">
               <label htmlFor="password" className="register-legend-label">

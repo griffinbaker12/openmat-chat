@@ -185,3 +185,9 @@
 #sign-in-text {
   font-family: 'Courier New', Courier, monospace;
 }
+
+.username-checkmark-container {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}

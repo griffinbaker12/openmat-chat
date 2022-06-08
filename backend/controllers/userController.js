@@ -4,18 +4,35 @@ const User = require('../models/userModel');
 const Message = require('../models/messageModel');
 const generateToken = require('../config/generateToken');
 
-const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password, picture } = req.body;
+const validateUserName = asyncHandler(async (req, res) => {
+  console.log(req.body);
+  const { userName } = req.body;
+  console.log(userName, 'userName is');
 
-  if (!name || !email || !password) {
+  const userNameExists = await User.findOne({ userName });
+
+  // console.log(userNameExists);
+
+  if (userNameExists) {
+    res.json(true);
+  } else {
+    res.json(false);
+  }
+});
+
+const registerUser = asyncHandler(async (req, res) => {
+  const { name, email, password, picture, userName } = req.body;
+
+  if (!name || !email || !password || !userName) {
     res.status(400);
     throw new Error('Please enter all the fields');
   }
 
-  const userExists = await User.findOne({ email });
+  const userExists = await User.findOne({ $or: [{ email }, { userName }] });
 
   if (userExists) {
     res.status(400);
+    console.log(userExists);
     throw new Error('User already exists');
   }
 
@@ -26,6 +43,7 @@ const registerUser = asyncHandler(async (req, res) => {
     email,
     hash,
     picture,
+    userName,
   });
 
   if (user) {
@@ -35,6 +53,7 @@ const registerUser = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       picture: user.picture,
+      userName: user.userName,
       token: generateToken(user._id),
     });
   } else {
@@ -44,14 +63,19 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 const loginUser = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+  const { emailOrUserName, password } = req.body;
 
-  if (!email || !password) {
+  if (!emailOrUserName || !password) {
     res.status(400);
     throw new Error('Please enter all the fields');
   }
 
-  const user = await User.findOne({ email }).populate('friends', '-hash');
+  const user = await User.findOne({
+    or: [
+      { email: { $eq: emailOrUserName } },
+      { userName: { $eq: emailOrUserName } },
+    ],
+  }).populate('friends', '-hash');
 
   const isValidPassword = bcrypt.compareSync(password, user.hash);
 
@@ -63,6 +87,7 @@ const loginUser = asyncHandler(async (req, res) => {
       picture: user.picture,
       token: generateToken(user._id),
       friends: user.friends,
+      userName: user.userName,
     });
   } else {
     res.status(401);
@@ -76,7 +101,12 @@ const allUsers = asyncHandler(async (req, res) => {
   const { search } = req.query;
   if (!search) return;
 
-  const userQuery = { name: { $regex: search, $options: 'i' } };
+  const userQuery = {
+    $or: [
+      { name: { $regex: search, $options: 'i' } },
+      { userName: { $regex: search, $options: 'i' } },
+    ],
+  };
   const messageQuery = { text: { $regex: search, $options: 'i' } };
 
   // Means that we need to pass in the current user id
@@ -120,4 +150,11 @@ const removeFriend = asyncHandler(async (req, res) => {
   res.json(userWithFriendRemoved);
 });
 
-module.exports = { registerUser, loginUser, allUsers, addFriend, removeFriend };
+module.exports = {
+  validateUserName,
+  registerUser,
+  loginUser,
+  allUsers,
+  addFriend,
+  removeFriend,
+};

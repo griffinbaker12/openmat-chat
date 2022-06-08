@@ -19,19 +19,22 @@ const NewConversationModal = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { currentUser } = useAuthentication();
   const [searchResults, setSearchResults] = useState([]);
+  const { chats, setChats } = useSidebar();
 
   // So keep track of all the participants here, will need to search as well, then when we make the chat we send this to the api and push this into the current chat state of our application, also need to check to see if a chat with these users has already been made...
 
   // This is fine for now, I guess at some point I need to make it clear whether or not you can submit this when you hit enter, or whether hitting enter adds people to the chat if there are none, but then it probably should stary like that as well even afterwards so may make the other button a button type as well
 
-  const handleSubmit = e => {
-    // // Will need to check somewhere to see if this person has already been added to the conversation, if they have, then don't allow them to create the convo. I also need a better UI that allows you to hit the enter button to add a user, but not submit the form and close the modal.
-    e.preventDefault();
-    handleAddUser();
-  };
-
   const handleChatCreation = () => {
     if (chatParticipants.length === 0) return;
+
+    console.log(chats, 'chats');
+
+    // I need to get the ids out of everyone in the current chat
+    const mappedChatWithNames = chats.map(chat =>
+      chat.users.map(user => user.name).sort()
+    );
+    console.log(mappedChatWithNames);
 
     // createConversation(chatParticipants);
     // closeModal();
@@ -48,7 +51,6 @@ const NewConversationModal = () => {
     if (field !== 'name') return;
 
     try {
-      fetch('');
       setIsLoading(true);
       const response = await fetch(
         `http://localhost:4000/api/user?search=${query}`,
@@ -58,14 +60,15 @@ const NewConversationModal = () => {
         }
       );
       const { users } = await response.json();
-      console.log(users);
+      // console.log(users);
       setIsLoading(false);
       setSearchResults(users);
     } catch (e) {}
   };
 
   const handleAddUser = e => {
-    const selectedId = e.target.getAttribute('name');
+    const closestContainer = e.target.closest('.search-result-container');
+    const selectedId = closestContainer.getAttribute('name');
     const alreadyExists = chatParticipants.some(
       participant => participant._id === selectedId
     );
@@ -74,21 +77,26 @@ const NewConversationModal = () => {
       return;
     }
 
-    console.log('results are', searchResults);
-
     const selectedUser = searchResults.find(
       result => result?._id === selectedId
     );
-
-    // console.log(selectedUser);
 
     setChatParticipants(prevState => [...prevState, selectedUser]);
     setFormInput(prevState => ({ ...prevState, name: '' }));
   };
 
+  const handleRemoveUser = e => {
+    const selectedId = e.target.getAttribute('name');
+    const newParticipants = chatParticipants.filter(
+      participant => participant._id !== selectedId
+    );
+    console.log('new recip', newParticipants);
+    setChatParticipants(newParticipants);
+  };
+
   return (
     <div className="new-conversation-modal-body">
-      <form onSubmit={handleSubmit}>
+      <form>
         <label>Chat Name</label>
         <input
           onChange={handleChange}
@@ -106,20 +114,32 @@ const NewConversationModal = () => {
           value={formInput.name}
         />
         {/* So in here we need the searched users as well as the selected users */}
-        <div className="new-conversation-modal-chat-participant-container">
-          {chatParticipants.length !== 0 &&
-            chatParticipants.map(chatParticipant => (
-              <Fragment key={chatParticipant._id}>
-                <ChatParticipant chatParticipant={chatParticipant} />
-              </Fragment>
-            ))}
-        </div>
+
+        {/* Need to add some check here to only render when the length is over 0 so I do not get this error */}
+
+        {chatParticipants.length === 0 ? (
+          ''
+        ) : (
+          <div className="new-conversation-modal-chat-participant-container">
+            {chatParticipants.map((chatParticipant, i) => {
+              console.log(chatParticipants);
+              return (
+                <Fragment key={i}>
+                  <ChatParticipant
+                    chatParticipant={chatParticipant}
+                    handleRemoveUser={handleRemoveUser}
+                  />
+                </Fragment>
+              );
+            })}
+          </div>
+        )}
         {searchResults.length === 0 ? (
           ''
         ) : (
           <div className="new-conversation-modal-chat-search-result-container">
-            {searchResults.map(searchResult => (
-              <Fragment key={searchResult._id}>
+            {searchResults.map((searchResult, i) => (
+              <Fragment key={i}>
                 <SearchResult
                   handleAddUser={handleAddUser}
                   searchResult={searchResult}

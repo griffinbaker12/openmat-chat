@@ -1,6 +1,6 @@
 import './search-result.styles.scss';
 
-const SearchResult = ({ searchResult, handleAddUser, key }) => {
+const SearchResult = ({ searchResult, handleAddUser }) => {
   const { _id } = searchResult;
 
   return (

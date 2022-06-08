@@ -5,7 +5,7 @@ import Spinner from '../spinner/spinner.component';
 import './login.styles.scss';
 
 const Login = () => {
-  const [text, setText] = useState({ email: '', password: '' });
+  const [text, setText] = useState({ emailOrUserName: '', password: '' });
 
   const { changeAuth, setCurrentUser, isLoading, setIsLoading } =
     useAuthentication();
@@ -18,7 +18,7 @@ const Login = () => {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        email: text.email,
+        emailOrUserName: text.emailOrUserName,
         password: text.password,
       }),
     })
@@ -57,15 +57,15 @@ const Login = () => {
           <fieldset className="login-fieldset">
             <legend className="login-legend">Sign In</legend>
             <div className="login-legend-input-container">
-              <label htmlFor="email" className="login-legend-label">
-                Email
+              <label htmlFor="emailOrUserName" className="login-legend-label">
+                Email / Username
               </label>
               <input
                 onChange={handleChange}
                 className="login-legend-input"
-                type="email"
-                name="email"
-                id="email"
+                type="text"
+                name="emailOrUserName"
+                id="emailOrUserName"
                 value={text.email}
                 required
               />
