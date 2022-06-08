@@ -12,7 +12,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    if (!text.email || !text.email) return;
+    if (!text.emailOrUserName) return;
     setIsLoading(true);
     fetch('http://localhost:4000/api/user/login', {
       method: 'post',

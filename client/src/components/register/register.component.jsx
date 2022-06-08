@@ -196,7 +196,12 @@ const Register = () => {
                 >
                   {userNameUnique ? (
                     <>
-                      <span className="username-indicator">&#10003;</span>
+                      <span
+                        className="username-indicator"
+                        style={{ fontSize: '20px' }}
+                      >
+                        &#10003;
+                      </span>
                       <span className="username-response-text">
                         Username is available
                       </span>
@@ -205,14 +210,18 @@ const Register = () => {
                     <>
                       <span className="username-indicator">&#x2715;</span>
                       <span className="username-response-text">
-                        Username is not available
+                        Username not available
                       </span>
                     </>
                   )}
                 </div>
               )}
             </div>
-            <div className="register-legend-input-container">
+            <div
+              className={`register-legend-input-container ${
+                isUserNameResultShowing ? 'username-showing' : ''
+              }`}
+            >
               <label htmlFor="password" className="register-legend-label">
                 Password
               </label>

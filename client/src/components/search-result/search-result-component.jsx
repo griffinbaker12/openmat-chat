@@ -8,7 +8,10 @@ const SearchResult = ({ searchResult, handleAddUser }) => {
       <div className="search-result-image-container">
         <img height="100%" src={searchResult.picture} alt="profile" />
       </div>
-      <div className="search-result-name">{searchResult.name}</div>
+      <div className="search-result-body-container">
+        <div className="search-result-name">{searchResult.name}</div>
+        <div className="search-result-username">@{searchResult.userName}</div>
+      </div>
     </div>
   );
 };

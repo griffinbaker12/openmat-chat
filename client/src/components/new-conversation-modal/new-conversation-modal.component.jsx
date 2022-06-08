@@ -32,9 +32,24 @@ const NewConversationModal = () => {
 
     // I need to get the ids out of everyone in the current chat
     const mappedChatWithNames = chats.map(chat =>
-      chat.users.map(user => user.name).sort()
+      chat.users.map(({ userName }) => userName).sort()
     );
-    console.log(mappedChatWithNames);
+    console.log(mappedChatWithNames, 'sorted uns');
+
+    const sortedChatParticipants = [currentUser, ...chatParticipants]
+      .map(user => user.userName)
+      .sort();
+    console.log(sortedChatParticipants, 'sorted chat ps');
+
+    const exists = mappedChatWithNames.some(chat => {
+      if (chat.length !== sortedChatParticipants.length) return false;
+      return chat.some((user, i) => user === sortedChatParticipants[i]);
+    });
+
+    if (exists) {
+      alert('chat already exists');
+      return;
+    }
 
     // createConversation(chatParticipants);
     // closeModal();
@@ -121,17 +136,14 @@ const NewConversationModal = () => {
           ''
         ) : (
           <div className="new-conversation-modal-chat-participant-container">
-            {chatParticipants.map((chatParticipant, i) => {
-              console.log(chatParticipants);
-              return (
-                <Fragment key={i}>
-                  <ChatParticipant
-                    chatParticipant={chatParticipant}
-                    handleRemoveUser={handleRemoveUser}
-                  />
-                </Fragment>
-              );
-            })}
+            {chatParticipants.map((chatParticipant, i) => (
+              <Fragment key={i}>
+                <ChatParticipant
+                  chatParticipant={chatParticipant}
+                  handleRemoveUser={handleRemoveUser}
+                />
+              </Fragment>
+            ))}
           </div>
         )}
         {searchResults.length === 0 ? (
