@@ -32,8 +32,16 @@ const NewConversationModal = () => {
     setFormInput({ chatName: '', name: '' });
   };
 
-  const handleChatCreation = async () => {
-    if (chatParticipants.length === 0) return;
+  const handleChatCreation = async e => {
+    e.preventDefault();
+
+    // May want some sort of notification just letting them know that they need to enter something into the chat name field
+
+    if (
+      chatParticipants.length === 0 ||
+      (!formInput.chatName && chatParticipants.length !== 1)
+    )
+      return;
 
     // console.log(chats, 'chats');
 
@@ -58,13 +66,14 @@ const NewConversationModal = () => {
       return;
     }
 
+    const chatName =
+      chatParticipants.length === 1 ? 'solo chat' : formInput.chatName;
+
     const chatParticipantIds = chatParticipants.map(({ _id }) => _id);
     const payload = {
-      chatName: formInput.chatName,
+      chatName: chatName,
       users: chatParticipantIds,
     };
-
-    console.log(payload);
 
     try {
       const response = await fetch(
@@ -79,8 +88,9 @@ const NewConversationModal = () => {
         }
       );
       const newChat = await response.json();
+      console.log(newChat);
 
-      setChats(prevState => [...prevState, newChat]);
+      setChats(prevState => [newChat, ...prevState]);
       resetForm();
     } catch (e) {
       console.log(e);
@@ -100,6 +110,7 @@ const NewConversationModal = () => {
     if (field !== 'name') return;
 
     try {
+      console.log('hello?');
       setIsLoading(true);
       const response = await fetch(
         `http://localhost:4000/api/user?search=${query}`,
@@ -112,7 +123,9 @@ const NewConversationModal = () => {
       // console.log(users);
       setIsLoading(false);
       setSearchResults(users);
-    } catch (e) {}
+    } catch (e) {
+      console.log('some error with search results');
+    }
   };
 
   const handleAddUser = e => {
@@ -145,12 +158,12 @@ const NewConversationModal = () => {
 
   return (
     <div className="new-conversation-modal-body">
-      <form>
+      <form onSubmit={handleChatCreation}>
         <label>Chat Name</label>
         <input
           onChange={handleChange}
           type="text"
-          required={true}
+          required={chatParticipants.length === 1 ? false : true}
           name="chatName"
           value={formInput.chatName}
         />
@@ -195,9 +208,7 @@ const NewConversationModal = () => {
           </div>
         )}
         <div className="new-conversation-modal-buttons">
-          <button type="button" onClick={handleChatCreation}>
-            Create Chat
-          </button>
+          <button type="submit">Create Chat</button>
         </div>
       </form>
     </div>

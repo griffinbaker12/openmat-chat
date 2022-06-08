@@ -12,14 +12,13 @@ const MessageView = () => {
       node.scrollIntoView({ smooth: true });
     }
   }, []);
-  const { currentConversation } = useConversations();
+  const { activeChat } = useConversations();
 
   // What is the best way to make it so that the text bubble can expland if it needs to??
   return (
     <div className="message-view-container">
-      {currentConversation.messages.map((message, i) => {
-        const lastMessageBool =
-          currentConversation.messages.length - 1 === i + 1;
+      {activeChat.messages?.map((message, i) => {
+        const lastMessageBool = activeChat.messages.length - 1 === i + 1;
         return (
           <div
             key={i}

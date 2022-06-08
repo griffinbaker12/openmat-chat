@@ -84,6 +84,8 @@ const loginUser = asyncHandler(async (req, res) => {
     ],
   }).populate('friends', '-hash');
 
+  console.log(user);
+
   const isValidPassword = bcrypt.compareSync(password, user.hash);
 
   if (user && isValidPassword) {

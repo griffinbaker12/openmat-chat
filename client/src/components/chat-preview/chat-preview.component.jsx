@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useResolvedPath } from 'react-router-dom';
+import { useAuthentication } from '../../contexts/authentication-context';
 import { useConversations } from '../../contexts/conversations-context';
 import { useSidebar } from '../../contexts/sidebar-context';
 import './chat-preview.styles.scss';
@@ -6,11 +8,17 @@ import './chat-preview.styles.scss';
 const ChatPreview = () => {
   // And then we can also pull the active conversation up into higher state or into a context just so that we can actually store this variable without losing it when we switch between categories b/c that triggers a re-render
   const { activeChat, setActiveChat } = useConversations();
-
+  const { currentUser } = useAuthentication();
   const { chats } = useSidebar();
+
+  console.log('chats from chat preview', chats);
 
   const handleClick = e => {
     const chatId = e.target.getAttribute('name');
+
+    // Clicked on the container and not one of the list items, did not want to add the event handler to each individual item
+    if (!chatId) return;
+
     const activeChat = chats.find(chat => chat._id === chatId);
     setActiveChat(activeChat);
   };
@@ -20,10 +28,13 @@ const ChatPreview = () => {
   // This is wrong right now, but I know how to solve it. For each conversation, you need to make one UL or div or whatever and then each person of that convo you add in, then display flex that
 
   // Will also need to add in the image container and the name of the chat
+
+  // 'solo chat'
+
   return (
     <div className="chat-preview-container" onClick={handleClick}>
       {chats.length > 0 &&
-        chats.map(({ _id, chatName }) => (
+        chats.map(({ _id, chatName, users }) => (
           <div
             key={_id}
             name={_id}
@@ -31,7 +42,9 @@ const ChatPreview = () => {
               _id === activeChat?._id ? 'active' : ''
             }`}
           >
-            {chatName}
+            {chatName === 'solo chat'
+              ? users.filter(user => user._id !== currentUser._id)[0].name
+              : chatName}
           </div>
         ))}
     </div>

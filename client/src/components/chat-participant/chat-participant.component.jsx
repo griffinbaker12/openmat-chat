@@ -1,15 +1,13 @@
 import './chat-participant.styles.scss';
 
 const ChatParticipant = ({ chatParticipant, handleRemoveUser }) => {
-  const { _id } = chatParticipant;
+  const { _id, name } = chatParticipant;
 
   return (
     <div className="chat-participant-content-container">
-      <div className="chat-participant-content-participant">
-        {chatParticipant.name}
-      </div>
+      <div className="chat-participant-content-participant">{name}</div>
       <div
-        name={chatParticipant._id}
+        name={_id}
         onClick={handleRemoveUser}
         className="chat-participant-content-remove"
       >
