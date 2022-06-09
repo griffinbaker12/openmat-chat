@@ -10,7 +10,8 @@
   border-radius: 12px;
   margin: 12px 12px 12px 4px;
   background-color: rgb(30, 30, 30);
-  padding: 0px 12px 8px 12px;
+  padding: 0px 12px 10px 12px;
+  text-align: center;
 }
 
 // If there are any chats, then show the first one, or the one that you just made
@@ -19,8 +20,4 @@
   flex-direction: column;
   flex: 1;
   overflow: hidden;
-
-  // display: flex;
-  // align-items: center;
-  // color: white;
 }

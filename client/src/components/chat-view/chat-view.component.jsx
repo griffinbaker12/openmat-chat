@@ -5,6 +5,7 @@ import { useConversations } from '../../contexts/conversations-context';
 
 const ChatView = () => {
   const { activeChat } = useConversations();
+  console.log(activeChat, 'ac from cv');
 
   return (
     <div

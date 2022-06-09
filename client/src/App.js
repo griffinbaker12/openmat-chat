@@ -12,14 +12,8 @@ import 'react-toastify/dist/ReactToastify.css';
 // const currentUser = 'griffinbaker12';
 
 function App() {
-  // useEffect(() => {
-  //   const socket = io();
-  // }, []);
-
   // To include the id in the socket provider once we get DB hooked up
 
-  const { currentUser } = useAuthentication();
-  console.log('current user from app', currentUser);
   const navigate = useNavigate();
 
   useEffect(() => {

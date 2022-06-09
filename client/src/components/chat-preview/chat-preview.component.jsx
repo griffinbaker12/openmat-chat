@@ -19,7 +19,7 @@ const ChatPreview = () => {
     if (!chatId) return;
 
     const activeChat = chats.find(chat => chat._id === chatId);
-    setActiveChat(activeChat);
+    setActiveChat([activeChat]);
   };
 
   // Also going to need a map down below where I map over all of the data that I am pulling in and then add the class to the right; could also do a name function as well where you get the name off of the element that was clicked and then set it to the active one
@@ -38,7 +38,7 @@ const ChatPreview = () => {
             key={_id}
             name={_id}
             className={`chat-preview-list ${
-              _id === activeChat?._id ? 'active' : ''
+              _id === activeChat[0]?._id ? 'active' : ''
             }`}
           >
             {chatName === 'solo chat'

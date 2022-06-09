@@ -1,0 +1,140 @@
+.chat-info-modal-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  opacity: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  transition: all 300ms ease-in-out;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  pointer-events: none;
+}
+
+.chat-info-modal-container.active {
+  opacity: 1;
+  pointer-events: visible;
+}
+
+.chat-info-modal-content {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  border: 1px solid white;
+  border-radius: 4px;
+  background-color: rgb(30, 30, 30);
+  color: white;
+}
+
+.group-chat-modal-header {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding: 12px 10px;
+  align-items: center;
+  border-bottom: 1px solid gray;
+
+  button {
+    border: none;
+    background-color: transparent;
+    font-size: 14px;
+  }
+
+  button:hover {
+    cursor: pointer;
+    font-weight: bold;
+  }
+}
+
+.group-chat-modal-body {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  gap: 6px;
+  width: 100%;
+}
+
+.group-chat-modal-chat-participants-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: rgb(63, 59, 59);
+  border-radius: 8px;
+  padding: 0px 0px 8px 0px;
+  overflow: hidden;
+
+  .group-chat-modal-member-header {
+    // font-weight: bold;
+    background-color: black;
+    padding: 8px 0px 8px 0px;
+    width: 100%;
+    text-align: center;
+    border: 1px solid rgb(59, 59, 131);
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+}
+
+.group-chat-modal-member-container {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  overflow: auto;
+  gap: 12px;
+  padding: 8px 12px 4px 12px;
+  max-height: 400px;
+  overflow: auto;
+}
+
+.group-chat-modal-user-info-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.group-chat-modal-user-info-picture-container {
+  height: 30px;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  border-radius: 50%;
+  overflow: hidden;
+  justify-content: center;
+}
+
+.user-name-user-userName-container {
+  font-size: 14px;
+}
+
+.chevron-container {
+  border-radius: 50%;
+  border: 1px solid gray;
+  height: 16px;
+  width: 16px;
+  padding: 4px;
+  display: flex;
+  margin-left: auto;
+  fill: rgb(184, 182, 182);
+  // width: 12px;
+  padding-right: 4px;
+
+  &:hover {
+    cursor: pointer;
+    background-color: black;
+  }
+}
+
+.edit-pencil-container {
+  margin-left: 6px;
+  padding-bottom: 2px;
+  fill: white;
+  width: 12px;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    cursor: pointer;
+  }
+}

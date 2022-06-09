@@ -4,11 +4,7 @@ import ChatPreview from '../chat-preview/chat-preview.component';
 import Modal from '../modal/modal.component';
 import './side-bar.styles.scss';
 import ContactPreview from '../contact-preview/contact-preview.component';
-import {
-  SIDEBAR_CATEGORY_TYPE,
-  MODAL_TYPE,
-  useSidebar,
-} from '../../contexts/sidebar-context';
+import { MODAL_TYPE, useSidebar } from '../../contexts/sidebar-context';
 import Spinner from '../spinner/spinner.component';
 import { useAuthentication } from '../../contexts/authentication-context';
 
@@ -96,7 +92,7 @@ const SideBar = () => {
 
       <button
         className="side-bar-container-generate-button"
-        onClick={e => handleModal(e, MODAL_TYPE.sidebar)}
+        onClick={() => handleModal(MODAL_TYPE.sidebar)}
         type="button"
       >
         {sideBarCategory === 'conversations'

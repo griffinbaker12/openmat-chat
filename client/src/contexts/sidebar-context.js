@@ -13,7 +13,7 @@ export const SIDEBAR_CATEGORY_TYPE = {
 
 export const MODAL_TYPE = {
   sidebar: 'sidebar',
-  user: 'user',
+  chatInfo: 'chatInfo',
 };
 
 export const SidebarProvider = ({ children }) => {
@@ -45,10 +45,11 @@ export const SidebarProvider = ({ children }) => {
     }
   };
 
-  const handleModal = (e, modalType, friendId = null) => {
+  const handleModal = (modalType, friendId = null) => {
     // If the friend has not changed, do not do this loop
     const friend = friends.find(friend => friend._id === friendId);
     setActiveFriend(friend);
+    console.log('hello?');
     setModalType(modalType);
     setShowModal(true);
   };
