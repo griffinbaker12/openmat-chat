@@ -4,8 +4,13 @@
   overflow: auto;
   flex: 1;
   gap: 10px;
-  height: 100%;
-  padding: 8px 10px 0px 10px;
+  width: 100%;
+  border-radius: 8px;
+  background-color: rgb(78, 78, 78);
+}
+
+.message-view-active-chat-container {
+  flex: 1;
 }
 
 // So this either has to move to the left or right essentially becuase this is the child that is getting aligned accordingly to above, so copy below styles above essentially

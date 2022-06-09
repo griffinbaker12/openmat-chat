@@ -1,3 +1,4 @@
+import SendMessage from '../send-message/send-message.component';
 import { useCallback } from 'react';
 import { useConversations } from '../../contexts/conversations-context';
 import './message-view.styles.scss';
@@ -17,25 +18,28 @@ const MessageView = () => {
   // What is the best way to make it so that the text bubble can expland if it needs to??
   return (
     <div className="message-view-container">
-      {activeChat.messages?.map((message, i) => {
-        const lastMessageBool = activeChat.messages.length - 1 === i + 1;
-        return (
-          <div
-            key={i}
-            ref={lastMessageBool ? setRef : null}
-            className={`message-view-text-container ${
-              message.userSent ? 'user-sent' : ''
-            }`}
-          >
-            <div className="message-view-text">{message.text}</div>
-            <div className="message-view-text-info">
-              <p>{message.userSent ? 'You' : message.sender}</p>
-              <span>&#x2022;</span>
-              <p>{message.timeStamp}</p>
+      <div className="message-view-active-chat-container">
+        {activeChat.messages?.map((message, i) => {
+          const lastMessageBool = activeChat.messages.length - 1 === i + 1;
+          return (
+            <div
+              key={i}
+              ref={lastMessageBool ? setRef : null}
+              className={`message-view-text-container ${
+                message.userSent ? 'user-sent' : ''
+              }`}
+            >
+              <div className="message-view-text">{message.text}</div>
+              <div className="message-view-text-info">
+                <p>{message.userSent ? 'You' : message.sender}</p>
+                <span>&#x2022;</span>
+                <p>{message.timeStamp}</p>
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
+      <SendMessage />
     </div>
   );
 };

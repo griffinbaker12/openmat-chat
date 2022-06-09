@@ -2,31 +2,34 @@
   color: lightgray;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 5px 15px;
+  padding: 0px 5px 0px 5px;
   margin: 10px;
   border-radius: 5px;
-  // If I end up putting a background color then by all means add this back so that it actually shows up
-  // border-top: 1px solid gray;
-  background-color: #474b53;
+  background-color: #303238;
 }
 
 .send-message-container > form {
   display: flex;
   flex: 1;
+
+  align-items: center;
   // flex-wrap: wrap;
 }
 
-.send-message-container > form > input {
+.send-message-container > form > textarea {
   flex: 1;
-  padding: 15px;
+  // padding: 12px;
   background: transparent;
   border: none;
   outline-width: 0;
   color: white;
-  font-size: large;
   display: flex;
-  // flex-wrap: wrap;
+  font-size: 14px;
+  resize: none;
+  height: 40px;
+  padding: 12px 5px 12px 5px;
+  // line-height: 35px;
+  flex-wrap: wrap;
 }
 
 // .send-input {

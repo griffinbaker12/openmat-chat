@@ -4,14 +4,13 @@ import { useAuthentication } from '../../contexts/authentication-context';
 import { useConversations } from '../../contexts/conversations-context';
 import { useSidebar } from '../../contexts/sidebar-context';
 import './chat-preview.styles.scss';
+import { generateChatNameForSoloChats } from '../../utils/utils';
 
 const ChatPreview = () => {
   // And then we can also pull the active conversation up into higher state or into a context just so that we can actually store this variable without losing it when we switch between categories b/c that triggers a re-render
   const { activeChat, setActiveChat } = useConversations();
   const { currentUser } = useAuthentication();
   const { chats } = useSidebar();
-
-  console.log('chats from chat preview', chats);
 
   const handleClick = e => {
     const chatId = e.target.getAttribute('name');
@@ -43,7 +42,7 @@ const ChatPreview = () => {
             }`}
           >
             {chatName === 'solo chat'
-              ? users.filter(user => user._id !== currentUser._id)[0].name
+              ? generateChatNameForSoloChats(users, currentUser)
               : chatName}
           </div>
         ))}

@@ -10,6 +10,7 @@ import {
   useSidebar,
 } from '../../contexts/sidebar-context';
 import Spinner from '../spinner/spinner.component';
+import { useAuthentication } from '../../contexts/authentication-context';
 
 // Can extract the useEffect functionality to search for whatever it is that we need to search for in the actual context itself where the data lives / is stored
 
@@ -32,6 +33,7 @@ const SideBar = () => {
     setModalType,
     handleModal,
   } = useSidebar();
+  const { currentUser } = useAuthentication();
 
   const handleCategoryChange = e => {
     const clickedCategory = e.target.getAttribute('name');
