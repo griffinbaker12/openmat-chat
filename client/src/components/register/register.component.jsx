@@ -2,8 +2,7 @@ import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthentication } from '../../contexts/authentication-context';
 import Spinner from '../spinner/spinner.component';
-import Toast from '../toast/toast.component.styles';
-import { TOAST_TYPE } from '../toast/toast.component.styles';
+import { toast } from 'react-toastify';
 import './register.styles.scss';
 
 const Register = () => {
@@ -26,12 +25,23 @@ const Register = () => {
   const { changeAuth, setCurrentUser, isLoading, setIsLoading } =
     useAuthentication();
 
-  const toastRef = useRef(null);
   const hiddenInputRef = useRef();
 
   const handleRegistration = () => {
     // If the user does not submit all of the details, then could display a toast telling them to do so.
-    if (!text.name || !text.email || !text.password) return;
+    if (!text.name || !text.email || !text.password) {
+      toast.error('Please enter all fields', {
+        position: 'bottom-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
+      return;
+    }
     // Could make a separate is loading for the component as a whole
     setIsLoading(true);
     fetch('http://localhost:4000/api/user', {
@@ -52,14 +62,32 @@ const Register = () => {
         localStorage.setItem('userInfo', JSON.stringify(data));
         setIsLoading(false);
         navigate('/chat');
+        toast.success('Registration successful', {
+          position: 'bottom-center',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
         // Here you would render the toast saying that the registration was a success
 
         // Using chakra ui for something like this would be much easier; else would require you to implement logic on the success state of various different requests and then render the toast accordingly
       })
       .catch(err => {
         setIsLoading(false);
-        console.log(err);
-        // Here you would render that toast saying that there was a problem registering a user, most likely because the user credentials already exists
+        toast.error('Error registering the user', {
+          position: 'bottom-center',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
       });
 
     // Definitely room here as well for showing a toast icon that will pop up when the user either is or is not successful in signing up and for what reason. For that reason alone and how clean it is it makes me want to use chakra ui.
@@ -94,11 +122,18 @@ const Register = () => {
       setUserNameUnique(!exists);
       setIsUserNameResultShowing(true);
     } catch (error) {
-      console.log(error);
+      toast.error('Error validating username', {
+        position: 'bottom-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
     }
   };
-
-  // https://api.cloudinary.com/v1_1/dhogrpl6c/upload
 
   const handleFileInputChange = e => {
     const picture = e.target.files[0];
@@ -108,7 +143,6 @@ const Register = () => {
   };
 
   const handleImageUpload = () => {
-    // Simulate a click on hidden button
     hiddenInputRef.current.click();
   };
 
@@ -131,13 +165,29 @@ const Register = () => {
       .then(data => {
         setPicCloudUrl(data.url.toString());
         setIsPicLoading(false);
-        toastRef.current.show();
-        // setToastType(TOAST_TYPE.success);
+        toast.success('Profile picture upload successful', {
+          position: 'bottom-center',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
       })
       .catch(err => {
         setIsPicLoading(false);
-        // toastRef.current.show();
-        // setToastType(TOAST_TYPE.failure);
+        toast.success('Error uploading profile picture', {
+          position: 'bottom-center',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
       });
   };
 

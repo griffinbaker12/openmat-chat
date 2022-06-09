@@ -1,20 +1,28 @@
-import { useCallback, useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useConversations } from '../../contexts/conversations-context';
 import './send-message.styles.scss';
 
 const SendMessage = () => {
+  const [text, setText] = useState('');
   const formRef = useRef();
 
   // Make this a controlled component so that you can clear the text of the message button after hitting send and then add it up top in the sample text section.
   // const { currentConversation, sendMessage } = useConversations();
   // const inputRef = useRef();
 
-  const handleButtonPress = e => {
-    // Listen for the enter key and then submit the form
-    console.log(e);
+  const handleSubmit = () => {
+    setText('');
   };
 
-  const handleSubmit = e => {
+  const handleTextChange = e => setText(e.target.value);
+
+  const handleKeyPress = e => {
+    if (e.code !== 'Enter') return;
+    e.preventDefault();
+    formRef.current.dispatchEvent(
+      new Event('submit', { cancelable: true, bubbles: true })
+    );
+
     // console.log('hello?');
     // e.preventDefault();
     // // if (!inputRef.current.value) return;
@@ -31,15 +39,12 @@ const SendMessage = () => {
 
   return (
     <div className="send-message-container">
-      <form ref={formRef} onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} ref={formRef} onKeyPress={handleKeyPress}>
         <textarea
-          onKeyDown={handleButtonPress}
+          value={text}
+          onChange={handleTextChange}
           placeholder="Message"
         ></textarea>
-        {/* <input ref={inputRef} placeholder="Message" /> */}
-        <button className="send-button" type="submit">
-          Send
-        </button>
       </form>
     </div>
   );

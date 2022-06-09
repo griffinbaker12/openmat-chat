@@ -4,6 +4,8 @@ import ApplicationView from './routes/application-view/application-view.componen
 import Header from './routes/header/header.component';
 import Authentication from './routes/authentication/authentication.component';
 import { useAuthentication } from './contexts/authentication-context';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Obviously need to change and update this when a user actually signs in
 // In the real world, this variable will just be updated and set as the current user or something like that and we can receive that when the user signs in and we receive their username! Nice and easy. So then the entire application has access to the current user.
@@ -34,6 +36,17 @@ function App() {
           <Route path="chat" element={<ApplicationView />} />
         </Route>
       </Routes>
+      <ToastContainer
+        position="bottom-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 }

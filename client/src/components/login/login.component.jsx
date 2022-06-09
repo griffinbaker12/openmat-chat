@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthentication } from '../../contexts/authentication-context';
 import Spinner from '../spinner/spinner.component';
+import { toast } from 'react-toastify';
 import './login.styles.scss';
 
 const Login = () => {
@@ -12,7 +13,19 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    if (!text.emailOrUserName) return;
+    if (!text.emailOrUserName) {
+      toast.error('Please enter all fields', {
+        position: 'bottom-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
+      return;
+    }
     setIsLoading(true);
     fetch('http://localhost:4000/api/user/login', {
       method: 'post',
@@ -29,10 +42,29 @@ const Login = () => {
         localStorage.setItem('userInfo', JSON.stringify(data));
         setIsLoading(false);
         navigate('/chat');
+        toast.success('Login success', {
+          position: 'bottom-center',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
       })
       .catch(err => {
-        console.log(err);
         setIsLoading(false);
+        toast.error('Invalid user credentials', {
+          position: 'bottom-center',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
       });
 
     // Definitely room here as well for showing a toast icon that will pop up when the user either is or is not successful in signing up and for what reason. For that reason alone and how clean it is it makes me want to use chakra ui.

@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import React, { Fragment } from 'react';
 import { useRef, useState } from 'react';
 import ChatParticipant from '../chat-participant/chat-participant.component';
 import SearchResult from '../search-result/search-result-component';
@@ -6,6 +6,7 @@ import { useConversations } from '../../contexts/conversations-context';
 import './new-conversation-modal.styles.scss';
 import { useSidebar } from '../../contexts/sidebar-context';
 import { useAuthentication } from '../../contexts/authentication-context';
+import { toast } from 'react-toastify';
 
 // There seems to also totally be room to just have one modal component, and also a genreal button component as well, but for the modal, essentially I can just pass in the name of the modal itself, and then the body of the modal. The 'children' can just be the unique part of the actual form for these components that gets inserted into the overall block of the component
 
@@ -13,7 +14,7 @@ import { useAuthentication } from '../../contexts/authentication-context';
 
 const NewConversationModal = () => {
   const { closeModal } = useSidebar();
-  const { createConversation } = useConversations();
+  // const { createConversation } = useConversations();
   const [chatParticipants, setChatParticipants] = useState([]);
   const [formInput, setFormInput] = useState({ chatName: '', name: '' });
   const [isLoading, setIsLoading] = useState(false);
@@ -37,11 +38,33 @@ const NewConversationModal = () => {
 
     // May want some sort of notification just letting them know that they need to enter something into the chat name field
 
-    if (
-      chatParticipants.length === 0 ||
-      (!formInput.chatName && chatParticipants.length !== 1)
-    )
+    if (chatParticipants.length === 0) {
+      toast.error('Please add users to chat', {
+        position: 'bottom-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
       return;
+    }
+
+    if (!formInput.chatName && chatParticipants.length !== 1) {
+      toast.error('Please add name for group chat', {
+        position: 'bottom-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
+      return;
+    }
 
     // console.log(chats, 'chats');
 
@@ -62,7 +85,16 @@ const NewConversationModal = () => {
     });
 
     if (exists) {
-      alert('chat already exists');
+      toast.error('Chat between these users already exists', {
+        position: 'bottom-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
       return;
     }
 
@@ -88,12 +120,29 @@ const NewConversationModal = () => {
         }
       );
       const newChat = await response.json();
-      console.log(newChat);
-
       setChats(prevState => [newChat, ...prevState]);
       resetForm();
+      toast.success('Chat creation successful', {
+        position: 'bottom-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
     } catch (e) {
-      console.log(e);
+      toast.error('Error creating chat, please try again', {
+        position: 'bottom-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
     }
     // createConversation(chatParticipants);
     // closeModal();
@@ -110,7 +159,6 @@ const NewConversationModal = () => {
     if (field !== 'name') return;
 
     try {
-      console.log('hello?');
       setIsLoading(true);
       const response = await fetch(
         `http://localhost:4000/api/user?search=${query}`,
@@ -159,19 +207,23 @@ const NewConversationModal = () => {
   return (
     <div className="new-conversation-modal-body">
       <form onSubmit={handleChatCreation}>
-        <label>Chat Name</label>
+        <label style={chatParticipants.length <= 1 ? { display: 'none' } : {}}>
+          Chat Name
+        </label>
         <input
+          placeholder="Enter chat name..."
           onChange={handleChange}
           type="text"
-          required={chatParticipants.length === 1 ? false : true}
           name="chatName"
           value={formInput.chatName}
+          style={chatParticipants.length <= 1 ? { display: 'none' } : {}}
         />
-        <label>Name</label>
+
+        <label>User</label>
         <input
+          placeholder="Search users..."
           onChange={handleChange}
           type="text"
-          required={chatParticipants.length > 0 ? false : true}
           name="name"
           value={formInput.name}
         />
@@ -208,7 +260,14 @@ const NewConversationModal = () => {
           </div>
         )}
         <div className="new-conversation-modal-buttons">
-          <button type="submit">Create Chat</button>
+          <button
+            type="submit"
+            className={`${
+              searchResults.length === 0 ? 'button-no-search-results' : ''
+            }`}
+          >
+            Create Chat
+          </button>
         </div>
       </form>
     </div>
