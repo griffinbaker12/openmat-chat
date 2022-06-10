@@ -1,5 +1,6 @@
 import { useContacts } from '../../contexts/contacts-context';
 import { useSidebar } from '../../contexts/sidebar-context';
+import Tooltip from '../tooltip/tooltip.component';
 import './user-info-modal.styles.scss';
 
 // This could easily be made more generalizable by saying activeUser and then whatever user you click on will have the same profile

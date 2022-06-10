@@ -1,28 +1,37 @@
-import { useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useConversations } from '../../contexts/conversations-context';
 import UserInfoModal from '../user-info-modal/user-info-modal.component';
 import { useSidebar } from '../../contexts/sidebar-context';
 import { ReactComponent as ChevronRight } from '../../assets/chevron-right.svg';
 import { ReactComponent as EditPencil } from '../../assets/pencil.svg';
 import './chat-info-modal.styles.scss';
+import Tooltip from '../tooltip/tooltip.component';
 
 const ChatInfoModal = () => {
   const { activeChat } = useConversations();
   const isGroupChat = activeChat[0]?.chatName === 'solo chat' ? false : true;
   const { showModal, closeModal } = useSidebar();
   const [showChatEdit, setShowChatEdit] = useState(false);
+  const [newChatName, setNewChatName] = useState('');
+  const chatEditInputRef = useRef(null);
+  // const currentRefValue = chatEditInputRef.current;
+  // console.log(currentRefValue);
 
+  useEffect(() => {
+    setNewChatName(activeChat[0]?.chatName);
+  }, [activeChat]);
+
+  // useEffect(() => {
+  //   console.log('hey');
+  //   chatEditInputRef.current && chatEditInputRef.current.focus();
+  // }, [currentRefValue]);
+
+  const handleChatNameChange = e => setNewChatName(e.target.value);
+
+  const handleEditChatName = () => setShowChatEdit(prevState => !prevState);
   // So what I am going to need to is to set the state of the input field to be equal to the current chat name so that when you switch the component on click the name is already filled
 
   // This is sick you can also just store an object with the different users that you visited and each time you go back you go back to the prior user...apparently can also use a graph for this as well
-
-  const handleMouseEnter = e => {
-    console.log('return');
-  };
-
-  const handleMouseExit = e => {
-    console.log('left');
-  };
 
   // Check if it is a solo chat or a group chat, and then render a different modal accordingly
 
@@ -42,14 +51,24 @@ const ChatInfoModal = () => {
         {isGroupChat && activeChat.length !== 0 ? (
           <>
             <div className="group-chat-modal-header">
-              <p>{activeChat[0].chatName}</p>
-              <div
-                onMouseLeave={handleMouseExit}
-                onMouseEnter={handleMouseEnter}
-                className="edit-pencil-container"
-              >
-                <EditPencil />
-              </div>
+              {showChatEdit ? (
+                <input
+                  ref={chatEditInputRef}
+                  className="group-chat-modal-header-chat-name"
+                  onChange={handleChatNameChange}
+                  value={newChatName}
+                />
+              ) : (
+                <p>{activeChat[0].chatName}</p>
+              )}
+              <Tooltip content="Click to edit chat name">
+                <div
+                  className="edit-pencil-container"
+                  onClick={handleEditChatName}
+                >
+                  <EditPencil />
+                </div>
+              </Tooltip>
               <button
                 onClick={closeModal}
                 type="button"
@@ -63,7 +82,11 @@ const ChatInfoModal = () => {
                 <p className="group-chat-modal-member-header">Members</p>
                 <div className="group-chat-modal-member-container">
                   {activeChat[0].users.map(user => (
-                    <div className="group-chat-modal-user-info-container">
+                    <div
+                      key={user._id}
+                      name={user._id}
+                      className="group-chat-modal-user-info-container"
+                    >
                       <div className="group-chat-modal-user-info-picture-container">
                         <img height="100%" src={user.picture} alt="user" />
                       </div>

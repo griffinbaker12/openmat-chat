@@ -30,6 +30,7 @@
 
 .group-chat-modal-header {
   display: flex;
+  gap: 6px;
   width: 100%;
   justify-content: space-between;
   padding: 12px 10px;
@@ -127,7 +128,6 @@
 }
 
 .edit-pencil-container {
-  margin-left: 6px;
   padding-bottom: 2px;
   fill: white;
   width: 12px;
@@ -137,4 +137,7 @@
   &:hover {
     cursor: pointer;
   }
+}
+
+.group-chat-modal-header-chat-name {
 }
