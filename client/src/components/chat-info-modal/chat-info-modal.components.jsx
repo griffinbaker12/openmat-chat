@@ -14,21 +14,22 @@ const ChatInfoModal = () => {
   const [showChatEdit, setShowChatEdit] = useState(false);
   const [newChatName, setNewChatName] = useState('');
   const chatEditInputRef = useRef(null);
-  // const currentRefValue = chatEditInputRef.current;
-  // console.log(currentRefValue);
 
   useEffect(() => {
     setNewChatName(activeChat[0]?.chatName);
   }, [activeChat]);
 
-  // useEffect(() => {
-  //   console.log('hey');
-  //   chatEditInputRef.current && chatEditInputRef.current.focus();
-  // }, [currentRefValue]);
+  useEffect(() => {
+    chatEditInputRef.current.focus();
+  }, [showChatEdit]);
 
-  const handleChatNameChange = e => setNewChatName(e.target.value);
+  const handleChatNameChange = e => {
+    setNewChatName(e.target.value);
+  };
 
-  const handleEditChatName = () => setShowChatEdit(prevState => !prevState);
+  const handleEditChatName = () => {
+    setShowChatEdit(prevState => !prevState);
+  };
   // So what I am going to need to is to set the state of the input field to be equal to the current chat name so that when you switch the component on click the name is already filled
 
   // This is sick you can also just store an object with the different users that you visited and each time you go back you go back to the prior user...apparently can also use a graph for this as well
@@ -51,16 +52,27 @@ const ChatInfoModal = () => {
         {isGroupChat && activeChat.length !== 0 ? (
           <>
             <div className="group-chat-modal-header">
-              {showChatEdit ? (
-                <input
-                  ref={chatEditInputRef}
-                  className="group-chat-modal-header-chat-name"
-                  onChange={handleChatNameChange}
-                  value={newChatName}
-                />
-              ) : (
-                <p>{activeChat[0].chatName}</p>
-              )}
+              <input
+                placeholder={activeChat[0].chatName}
+                ref={chatEditInputRef}
+                className="group-chat-modal-header-chat-name"
+                onChange={handleChatNameChange}
+                value={newChatName || ''}
+                style={
+                  !showChatEdit
+                    ? { display: 'none' }
+                    : { visibility: 'visible' }
+                }
+              />
+              <p
+                style={
+                  !showChatEdit
+                    ? { visibility: 'visible' }
+                    : { display: 'none' }
+                }
+              >
+                {activeChat[0].chatName}
+              </p>
               <Tooltip content="Click to edit chat name">
                 <div
                   className="edit-pencil-container"
