@@ -1,4 +1,10 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const AuthenticationContext = createContext();
@@ -8,7 +14,6 @@ export const useAuthentication = () => useContext(AuthenticationContext);
 export const AuthenticationProvider = ({ children }) => {
   const [activeAuth, setActiveAuth] = useState('login');
   const [currentUser, setCurrentUser] = useState({});
-
   // May want to include different states for whether the sign in or the registration is loading...but fine for now
   const [isLoading, setIsLoading] = useState(false);
 
@@ -22,14 +27,7 @@ export const AuthenticationProvider = ({ children }) => {
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
     setCurrentUser(userInfo);
-
     if (!userInfo) navigate('/');
-
-    // Like why does he not include something like this in this part of the code
-    // else {
-    //   navigate('/chat');
-    // }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate]);
 
   return (

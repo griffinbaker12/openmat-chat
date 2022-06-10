@@ -1,11 +1,10 @@
 import MessageView from '../message-view/message-view.component';
 import TextHeader from '../text-header/text-header.component';
+import { useChatView } from '../../contexts/chat-view-context';
 import './chat-view.styles.scss';
-import { useConversations } from '../../contexts/conversations-context';
 
 const ChatView = () => {
-  const { activeChat } = useConversations();
-  console.log(activeChat, 'ac from cv');
+  const { activeChat } = useChatView();
 
   return (
     <div

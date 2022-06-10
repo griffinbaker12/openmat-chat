@@ -2,25 +2,23 @@ import React, { Fragment } from 'react';
 import { useRef, useState } from 'react';
 import ChatParticipant from '../chat-participant/chat-participant.component';
 import SearchResult from '../search-result/search-result-component';
-import { useConversations } from '../../contexts/conversations-context';
-import './new-conversation-modal.styles.scss';
-import { useSidebar } from '../../contexts/sidebar-context';
-import { useAuthentication } from '../../contexts/authentication-context';
 import { toast } from 'react-toastify';
+import { useChatView } from '../../contexts/chat-view-context';
+import './new-conversation-modal.styles.scss';
+import { useAuthentication } from '../../contexts/authentication-context';
 
 // There seems to also totally be room to just have one modal component, and also a genreal button component as well, but for the modal, essentially I can just pass in the name of the modal itself, and then the body of the modal. The 'children' can just be the unique part of the actual form for these components that gets inserted into the overall block of the component
 
 // Will also need to add something where I can check if the user exists and as the person types have a little dropdown that can fill in suggestions? May not be necessary, but I know that discord does that and you can always @someone in that way, would be a nice feature to try and implement
 
 const NewConversationModal = () => {
-  const { closeModal } = useSidebar();
-  // const { createConversation } = useConversations();
+  const { closeModal, chats, setChats } = useChatView();
+  const { currentUser } = useAuthentication();
+
   const [chatParticipants, setChatParticipants] = useState([]);
   const [formInput, setFormInput] = useState({ chatName: '', name: '' });
   const [isLoading, setIsLoading] = useState(false);
-  const { currentUser } = useAuthentication();
   const [searchResults, setSearchResults] = useState([]);
-  const { chats, setChats } = useSidebar();
 
   // So keep track of all the participants here, will need to search as well, then when we make the chat we send this to the api and push this into the current chat state of our application, also need to check to see if a chat with these users has already been made...
 

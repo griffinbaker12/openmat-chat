@@ -4,32 +4,21 @@ import ChatPreview from '../chat-preview/chat-preview.component';
 import Modal from '../modal/modal.component';
 import './side-bar.styles.scss';
 import ContactPreview from '../contact-preview/contact-preview.component';
-import { MODAL_TYPE, useSidebar } from '../../contexts/sidebar-context';
 import Spinner from '../spinner/spinner.component';
-import { useAuthentication } from '../../contexts/authentication-context';
+import { useChatView, MODAL_TYPE } from '../../contexts/chat-view-context';
 
 // Can extract the useEffect functionality to search for whatever it is that we need to search for in the actual context itself where the data lives / is stored
 
 const SideBar = () => {
   const {
     search,
-    setSearch,
     isLoading,
-    searchResults,
-    sideBarCategory,
     setSideBarCategory,
-    setIsLoading,
     updateSearchValue,
-    showModal,
-    setShowModal,
     handleSearchSubmit,
-    chats,
-    setChats,
-    modalType,
-    setModalType,
     handleModal,
-  } = useSidebar();
-  const { currentUser } = useAuthentication();
+    sideBarCategory,
+  } = useChatView();
 
   const handleCategoryChange = e => {
     const clickedCategory = e.target.getAttribute('name');

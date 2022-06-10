@@ -1,10 +1,17 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+} from 'react';
 import { useAuthentication } from './authentication-context';
-import { useContacts } from './contacts-context';
+import { toast } from 'react-toastify';
+// import { useSocket } from './socket-context';
 
-const SidebarContext = createContext();
+const ChatViewContext = createContext();
 
-export const useSidebar = () => useContext(SidebarContext);
+export const useChatView = () => useContext(ChatViewContext);
 
 export const SIDEBAR_CATEGORY_TYPE = {
   conversations: 'conversations',
@@ -16,7 +23,8 @@ export const MODAL_TYPE = {
   chatInfo: 'chatInfo',
 };
 
-export const SidebarProvider = ({ children }) => {
+export const ChatViewProvider = ({ children }) => {
+  const [activeChat, setActiveChat] = useState([]);
   const [search, setSearch] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
@@ -26,30 +34,42 @@ export const SidebarProvider = ({ children }) => {
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState('');
   const [chats, setChats] = useState([]);
+  const [activeFriend, setActiveFriend] = useState('');
+  const [friends, setFriends] = useState([]);
 
   const { currentUser } = useAuthentication();
-  const { friends, activeFriend, setActiveFriend } = useContacts();
 
   const updateSearchValue = e => setSearch(e.target.value);
 
-  const fetchChats = async () => {
+  const fetchChats = useCallback(async () => {
     try {
       const response = await fetch(`http://localhost:4000/api/chat`, {
         method: 'get',
         headers: { Authorization: `Bearer ${currentUser.token}` },
       });
       const data = await response.json();
+
       setChats(data);
     } catch (e) {
-      console.log(e);
+      toast.error('Error fetching chats', {
+        position: 'bottom-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
     }
-  };
+  }, [currentUser]);
 
   const handleModal = (modalType, friendId = null) => {
+    // Not sure what I was thinking for this as of right now
     // If the friend has not changed, do not do this loop
-    const friend = friends.find(friend => friend._id === friendId);
-    setActiveFriend(friend);
-    console.log('hello?');
+    // const friend = friends.find(friend => friend._id === friendId);
+    // setActiveFriend(friend);
+
     setModalType(modalType);
     setShowModal(true);
   };
@@ -59,8 +79,6 @@ export const SidebarProvider = ({ children }) => {
   const handleSearchSubmit = async e => {
     e.preventDefault();
     if (!search) return;
-
-    // Spinner until you get the results, fetch them
 
     try {
       setIsLoading(true);
@@ -79,7 +97,16 @@ export const SidebarProvider = ({ children }) => {
       setIsLoading(false);
       setSearchResults([{ messages, users }]);
     } catch (e) {
-      console.log(e, 'Failed to load search results');
+      toast.error('Error fetching results', {
+        position: 'bottom-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
     }
   };
 
@@ -92,31 +119,39 @@ export const SidebarProvider = ({ children }) => {
       fetchChats();
     }
     return;
+  }, [currentUser, fetchChats]);
+
+  useEffect(() => {
+    if (chats.length === 0) return;
+    else {
+      const activeChat = chats[0];
+      setActiveChat([activeChat]);
+    }
+  }, [chats]);
+
+  useEffect(() => {
+    if (!currentUser) return;
+    setFriends(currentUser.friends);
   }, [currentUser]);
 
   return (
-    <SidebarContext.Provider
+    <ChatViewContext.Provider
       value={{
-        search,
-        updateSearchValue,
-        isLoading,
-        searchResults,
-        sideBarCategory,
-        setSideBarCategory,
-        setIsLoading,
-        setSearchResults,
-        showModal,
-        setShowModal,
-        handleSearchSubmit,
-        chats,
-        setChats,
-        modalType,
-        setModalType,
+        activeChat,
+        setActiveChat,
         handleModal,
         closeModal,
+        handleSearchSubmit,
+        updateSearchValue,
+        chats,
+        setChats,
+        showModal,
+        setSideBarCategory,
+        sideBarCategory,
+        modalType,
       }}
     >
       {children}
-    </SidebarContext.Provider>
+    </ChatViewContext.Provider>
   );
 };

@@ -1,16 +1,13 @@
-import { useState } from 'react';
-import { useResolvedPath } from 'react-router-dom';
+import { useCallback, useEffect, useState } from 'react';
 import { useAuthentication } from '../../contexts/authentication-context';
-import { useConversations } from '../../contexts/conversations-context';
-import { useSidebar } from '../../contexts/sidebar-context';
+import { useChatView } from '../../contexts/chat-view-context';
 import './chat-preview.styles.scss';
 import { generateChatNameForSoloChats } from '../../utils/utils';
 
 const ChatPreview = () => {
   // And then we can also pull the active conversation up into higher state or into a context just so that we can actually store this variable without losing it when we switch between categories b/c that triggers a re-render
-  const { activeChat, setActiveChat } = useConversations();
   const { currentUser } = useAuthentication();
-  const { chats } = useSidebar();
+  const { activeChat, setActiveChat, chats, setChats } = useChatView();
 
   const handleClick = e => {
     const chatId = e.target.getAttribute('name');
@@ -33,19 +30,22 @@ const ChatPreview = () => {
   return (
     <div className="chat-preview-container" onClick={handleClick}>
       {chats.length > 0 &&
-        chats.map(({ _id, chatName, users }) => (
-          <div
-            key={_id}
-            name={_id}
-            className={`chat-preview-list ${
-              _id === activeChat[0]?._id ? 'active' : ''
-            }`}
-          >
-            {chatName === 'solo chat'
-              ? generateChatNameForSoloChats(users, currentUser)
-              : chatName}
-          </div>
-        ))}
+        chats.map(({ _id, chatName, users }) => {
+          console.log('chat name from preview', chatName);
+          return (
+            <div
+              key={_id}
+              name={_id}
+              className={`chat-preview-list ${
+                _id === activeChat[0]?._id ? 'active' : ''
+              }`}
+            >
+              {chatName === 'solo chat'
+                ? generateChatNameForSoloChats(users, currentUser)
+                : chatName}
+            </div>
+          );
+        })}
     </div>
   );
 };

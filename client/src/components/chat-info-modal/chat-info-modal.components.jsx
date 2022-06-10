@@ -1,27 +1,67 @@
 import { useEffect, useState, useRef } from 'react';
-import { useConversations } from '../../contexts/conversations-context';
+import { useAuthentication } from '../../contexts/authentication-context';
+import { useChatView } from '../../contexts/chat-view-context';
 import UserInfoModal from '../user-info-modal/user-info-modal.component';
-import { useSidebar } from '../../contexts/sidebar-context';
 import { ReactComponent as ChevronRight } from '../../assets/chevron-right.svg';
 import { ReactComponent as EditPencil } from '../../assets/pencil.svg';
 import './chat-info-modal.styles.scss';
 import Tooltip from '../tooltip/tooltip.component';
+import { toast } from 'react-toastify';
 
 const ChatInfoModal = () => {
-  const { activeChat } = useConversations();
+  const { currentUser } = useAuthentication();
+  const { activeChat, setActiveChat, chats, setChats, showModal, closeModal } =
+    useChatView();
+
   const isGroupChat = activeChat[0]?.chatName === 'solo chat' ? false : true;
-  const { showModal, closeModal } = useSidebar();
   const [showChatEdit, setShowChatEdit] = useState(false);
   const [newChatName, setNewChatName] = useState('');
   const chatEditInputRef = useRef(null);
 
   useEffect(() => {
-    setNewChatName(activeChat[0]?.chatName);
-  }, [activeChat]);
-
-  useEffect(() => {
-    chatEditInputRef.current.focus();
+    chatEditInputRef.current?.focus();
   }, [showChatEdit]);
+
+  const handleKeyChange = async e => {
+    if (e.code !== 'Enter') return;
+    if (newChatName === activeChat[0].chatName) {
+      setShowChatEdit(false);
+      return;
+    }
+    if (!newChatName) {
+      toast.error('Chat name cannot be blank', {
+        position: 'bottom-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
+      setNewChatName(activeChat[0].chatName);
+      setShowChatEdit(false);
+      return;
+    }
+
+    const response = await fetch('http://localhost:4000/api/chat/renameChat', {
+      method: 'put',
+      headers: {
+        Authorization: `Bearer ${currentUser.token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        chatId: activeChat[0]._id,
+        chatName: newChatName,
+      }),
+    });
+
+    const updatedChat = await response.json();
+
+    setActiveChat([updatedChat]);
+
+    setShowChatEdit(false);
+  };
 
   const handleChatNameChange = e => {
     setNewChatName(e.target.value);
@@ -53,11 +93,11 @@ const ChatInfoModal = () => {
           <>
             <div className="group-chat-modal-header">
               <input
-                placeholder={activeChat[0].chatName}
                 ref={chatEditInputRef}
                 className="group-chat-modal-header-chat-name"
+                onKeyDown={handleKeyChange}
                 onChange={handleChatNameChange}
-                value={newChatName || ''}
+                value={newChatName}
                 style={
                   !showChatEdit
                     ? { display: 'none' }

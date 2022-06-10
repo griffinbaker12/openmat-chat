@@ -1,13 +1,11 @@
-import { useContacts } from '../../contexts/contacts-context';
-import { useSidebar } from '../../contexts/sidebar-context';
+import { useChatView } from '../../contexts/chat-view-context';
 import Tooltip from '../tooltip/tooltip.component';
 import './user-info-modal.styles.scss';
 
 // This could easily be made more generalizable by saying activeUser and then whatever user you click on will have the same profile
 
 const UserInfoModal = () => {
-  const { activeFriend } = useContacts();
-  const { showModal, closeModal } = useSidebar();
+  const { activeFriend, showModal, closeModal } = useChatView();
 
   // When you look at their profile, you should be able to chat them, remove or add them as a friend, see their friends...TOMORROW!
 

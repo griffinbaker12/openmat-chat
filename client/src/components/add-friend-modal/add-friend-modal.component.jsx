@@ -1,17 +1,14 @@
 import { useRef } from 'react';
-import { useContacts } from '../../contexts/contacts-context';
-import { useSidebar } from '../../contexts/sidebar-context';
+import { useChatView } from '../../contexts/chat-view-context';
 import './add-friend-modal.styles.scss';
 
 const AddFriendModal = () => {
-  const { closeModal } = useSidebar();
-  const { createContact } = useContacts();
+  const { closeModal } = useChatView();
   const userNameRef = useRef();
   // const nameRef = useRef();
 
   const handleSubmit = e => {
     e.preventDefault();
-    createContact(userNameRef.current.value);
     closeModal();
     // Also need to clear the form here as well
     userNameRef.current.value = '';

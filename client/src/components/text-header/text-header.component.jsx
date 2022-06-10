@@ -1,15 +1,11 @@
-import { useConversations } from '../../contexts/conversations-context';
-import './text-header.styles.scss';
-import { generateChatNameForSoloChats } from '../../utils/utils';
 import { useAuthentication } from '../../contexts/authentication-context';
-import { useSidebar, MODAL_TYPE } from '../../contexts/sidebar-context';
+import { useChatView, MODAL_TYPE } from '../../contexts/chat-view-context';
+import { generateChatNameForSoloChats } from '../../utils/utils';
+import './text-header.styles.scss';
 
 const TextHeader = () => {
-  const { activeChat } = useConversations();
+  const { activeChat, handleModal } = useChatView();
   const { currentUser } = useAuthentication();
-  const { handleModal } = useSidebar();
-
-  console.log(activeChat, 'ac from th');
 
   const handleClick = () => {
     handleModal(MODAL_TYPE.chatInfo);

@@ -1,10 +1,10 @@
-import { useSidebar } from '../../contexts/sidebar-context';
+import { useChatView } from '../../contexts/chat-view-context';
 import AddFriendModal from '../add-friend-modal/add-friend-modal.component';
 import NewConversationModal from '../new-conversation-modal/new-conversation-modal.component';
 import './sidebar-modal.styles.scss';
 
 const SidebarModal = () => {
-  const { showModal, closeModal, sideBarCategory } = useSidebar();
+  const { showModal, closeModal, sideBarCategory } = useChatView();
 
   return (
     <div

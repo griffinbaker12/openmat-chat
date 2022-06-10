@@ -1,5 +1,4 @@
 import { useRef, useState } from 'react';
-import { useConversations } from '../../contexts/conversations-context';
 import './send-message.styles.scss';
 
 const SendMessage = () => {
