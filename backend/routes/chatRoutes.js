@@ -5,7 +5,7 @@ const {
   fetchChats,
   renameChat,
   addUserToChat,
-  removeUserFromChat,
+  leaveChat,
 } = require('../controllers/chatController');
 const { decodeToken } = require('../middleware/authMiddleware');
 // const { decodeToken } = require('../middleware/authMiddleware');
@@ -20,8 +20,6 @@ router.route('/').get(decodeToken, fetchChats);
 
 router.route('/renameChat').put(decodeToken, renameChat);
 router.route('/addUserToChat').put(decodeToken, addUserToChat);
-
-// This route is more like leave chat since I only want someone to be able to leave and not for someone to be able to remove someone from the chat
-router.route('/removeUserFromChat').put(decodeToken, removeUserFromChat);
+router.route('/leaveChat').put(decodeToken, leaveChat);
 
 module.exports = router;

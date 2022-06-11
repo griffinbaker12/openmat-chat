@@ -140,8 +140,6 @@ const addUserToChat = asyncHandler(async (req, res) => {
   // We need to chat to which we are going to add the specified user
   const { chatId, userId } = req.body;
 
-  console.log(userId);
-
   const added = await Chat.findByIdAndUpdate(
     chatId,
     { $push: { users: userId } },
@@ -160,13 +158,13 @@ const addUserToChat = asyncHandler(async (req, res) => {
   }
 });
 
-const removeUserFromChat = asyncHandler(async (req, res) => {
+const leaveChat = asyncHandler(async (req, res) => {
   // We need to chat to which we are going to add the specified user
-  const { chatId, userId } = req.body;
+  const { chatId } = req.body;
 
   const removed = await Chat.findByIdAndUpdate(
     chatId,
-    { $pull: { users: userId } },
+    { $pull: { users: req.user._id } },
     { new: true }
   )
     .populate('users', '-password')
@@ -186,5 +184,5 @@ module.exports = {
   fetchChats,
   renameChat,
   addUserToChat,
-  removeUserFromChat,
+  leaveChat,
 };

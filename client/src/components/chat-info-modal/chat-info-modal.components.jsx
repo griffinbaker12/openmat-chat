@@ -52,6 +52,28 @@ const ChatInfoModal = () => {
   const handleShowUserDropdown = () =>
     setShowAddUserInfoDropdown(prevState => !prevState);
 
+  const handleLeaveChat = async e => {
+    try {
+      const response = await fetch('http://localhost:4000/api/chat/leaveChat', {
+        method: 'put',
+        headers: {
+          Authorization: `Bearer ${currentUser.token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          chatId: activeChat[0]._id,
+        }),
+      });
+
+      const updatedChat = await response.json();
+      closeModal();
+      fetchChats();
+      defaultToast(TOAST_TYPE.success, 'You have left the chat');
+    } catch (error) {
+      defaultToast(TOAST_TYPE.failure, 'Error leaving chat');
+    }
+  };
+
   const handleKeyChange = async e => {
     if (e.code !== 'Enter') return;
     if (newChatName === activeChat[0].chatName) {
@@ -65,22 +87,29 @@ const ChatInfoModal = () => {
       return;
     }
 
-    const response = await fetch('http://localhost:4000/api/chat/renameChat', {
-      method: 'put',
-      headers: {
-        Authorization: `Bearer ${currentUser.token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        chatId: activeChat[0]._id,
-        chatName: newChatName,
-      }),
-    });
+    try {
+      const response = await fetch(
+        'http://localhost:4000/api/chat/renameChat',
+        {
+          method: 'put',
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            chatId: activeChat[0]._id,
+            chatName: newChatName,
+          }),
+        }
+      );
 
-    const updatedChat = await response.json();
-    setActiveChat([updatedChat]);
-    setShowChatEdit(false);
-    fetchChats();
+      const updatedChat = await response.json();
+      setActiveChat([updatedChat]);
+      setShowChatEdit(false);
+      fetchChats();
+    } catch (error) {
+      defaultToast(TOAST_TYPE.failure, 'Error re-naming chat');
+    }
   };
 
   const handleChatNameChange = e => {
@@ -185,7 +214,7 @@ const ChatInfoModal = () => {
                   ))}
                 </div>
               </div>
-              <div className="chat-info-modal-button">
+              <div onClick={handleLeaveChat} className="chat-info-modal-button">
                 <button className="leave-chat-button" type="submit">
                   Leave Chat
                 </button>

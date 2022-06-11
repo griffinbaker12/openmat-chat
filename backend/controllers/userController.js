@@ -5,9 +5,7 @@ const Message = require('../models/messageModel');
 const generateToken = require('../config/generateToken');
 
 const validateUserName = asyncHandler(async (req, res) => {
-  console.log(req.body);
   const { userName } = req.body;
-  console.log(userName, 'userName is');
 
   const userNameExists = await User.findOne({ userName });
 
