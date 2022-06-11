@@ -1,10 +1,23 @@
 import './search-result.styles.scss';
 
-const SearchResult = ({ searchResult, handleAddUser }) => {
+export const SEARCH_RESULT_TYPE = {
+  default: 'default',
+  addUserToExistingChat: 'addUserToExistingChat',
+};
+
+const SearchResult = ({ searchResult, handleAddUser, type }) => {
   const { _id } = searchResult;
 
   return (
-    <div name={_id} onClick={handleAddUser} className="search-result-container">
+    <div
+      name={_id}
+      onClick={handleAddUser}
+      className={`search-result-container ${
+        type === SEARCH_RESULT_TYPE.addUserToExistingChat
+          ? 'add-user-to-existing-chat'
+          : ''
+      }`}
+    >
       <div className="search-result-image-container">
         <img height="100%" src={searchResult.picture} alt="profile" />
       </div>

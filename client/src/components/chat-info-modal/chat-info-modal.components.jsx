@@ -1,26 +1,46 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, Fragment } from 'react';
 import { useAuthentication } from '../../contexts/authentication-context';
 import { useChatView } from '../../contexts/chat-view-context';
 import UserInfoModal from '../user-info-modal/user-info-modal.component';
 import { ReactComponent as ChevronRight } from '../../assets/chevron-right.svg';
 import { ReactComponent as EditPencil } from '../../assets/pencil.svg';
+import SearchResult from '../search-result/search-result-component';
+import AddUserDropdown from '../add-user-dropdown/add-user-dropdown.component';
 import './chat-info-modal.styles.scss';
 import Tooltip from '../tooltip/tooltip.component';
-import { toast } from 'react-toastify';
+import { defaultToast, TOAST_TYPE } from '../../utils/utils';
 
 const ChatInfoModal = () => {
   const { currentUser } = useAuthentication();
-  const { activeChat, setActiveChat, chats, setChats, showModal, closeModal } =
-    useChatView();
+  const {
+    activeChat,
+    setActiveChat,
+    chats,
+    setChats,
+    showModal,
+    closeModal,
+    fetchChats,
+  } = useChatView();
 
   const isGroupChat = activeChat[0]?.chatName === 'solo chat' ? false : true;
   const [showChatEdit, setShowChatEdit] = useState(false);
   const [newChatName, setNewChatName] = useState('');
   const chatEditInputRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showAddUserDropdown, setShowAddUserDropdown] = useState(false);
 
   useEffect(() => {
-    chatEditInputRef.current?.focus();
+    if (!chatEditInputRef.current) return;
+    chatEditInputRef.current.focus();
   }, [showChatEdit]);
+
+  useEffect(() => {
+    if (!activeChat[0]) return;
+    setNewChatName(activeChat[0].chatName);
+  }, [activeChat, showChatEdit]);
+
+  const handleShowUserDropdown = () =>
+    setShowAddUserDropdown(prevState => !prevState);
 
   const handleKeyChange = async e => {
     if (e.code !== 'Enter') return;
@@ -29,16 +49,7 @@ const ChatInfoModal = () => {
       return;
     }
     if (!newChatName) {
-      toast.error('Chat name cannot be blank', {
-        position: 'bottom-center',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'dark',
-      });
+      defaultToast(TOAST_TYPE.error, 'Chat name cannot be blank');
       setNewChatName(activeChat[0].chatName);
       setShowChatEdit(false);
       return;
@@ -57,10 +68,9 @@ const ChatInfoModal = () => {
     });
 
     const updatedChat = await response.json();
-
     setActiveChat([updatedChat]);
-
     setShowChatEdit(false);
+    fetchChats();
   };
 
   const handleChatNameChange = e => {
@@ -131,7 +141,23 @@ const ChatInfoModal = () => {
             </div>
             <div className="group-chat-modal-body">
               <div className="group-chat-modal-chat-participants-container">
-                <p className="group-chat-modal-member-header">Members</p>
+                <div className="group-chat-modal-member-header-container">
+                  <p>Members</p>
+                  <Tooltip content="Click to add user">
+                    <div
+                      onClick={handleShowUserDropdown}
+                      className="add-button-container"
+                    >
+                      <span>+</span>
+                    </div>
+                  </Tooltip>
+                  {showAddUserDropdown && (
+                    <AddUserDropdown
+                      showAddUserDropdown={showAddUserDropdown}
+                      setShowAddUserDropdown={setShowAddUserDropdown}
+                    />
+                  )}
+                </div>
                 <div className="group-chat-modal-member-container">
                   {activeChat[0].users.map(user => (
                     <div

@@ -64,18 +64,50 @@
   background-color: rgb(63, 59, 59);
   border-radius: 8px;
   padding: 0px 0px 8px 0px;
-  overflow: hidden;
 
-  .group-chat-modal-member-header {
-    // font-weight: bold;
+  .group-chat-modal-member-header-container {
+    // position: absolute;
+    display: flex;
+    justify-content: space-between;
     background-color: black;
-    padding: 8px 0px 8px 0px;
-    width: 100%;
-    text-align: center;
+    padding: 8px 12px 8px 12px;
+    align-items: center;
     border: 1px solid rgb(59, 59, 131);
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
+    position: relative;
+
+    .add-button-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      border: 1px solid gray;
+      background-color: rgb(94, 93, 93);
+      height: 16px;
+      width: 16px;
+      &:hover {
+        cursor: pointer;
+      }
+
+      span {
+        font-size: small;
+        font-weight: bold;
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
   }
+
+  // .group-chat-modal-member-header {
+  //   background-color: black;
+  //   padding: 8px 0px 8px 0px;
+  //   text-align: center;
+  //   border: 1px solid rgb(59, 59, 131);
+  //   border-top-left-radius: 8px;
+  //   border-top-right-radius: 8px;
+  // }
 }
 
 .group-chat-modal-member-container {

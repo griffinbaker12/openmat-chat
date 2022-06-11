@@ -149,6 +149,7 @@ export const ChatViewProvider = ({ children }) => {
         setSideBarCategory,
         sideBarCategory,
         modalType,
+        fetchChats,
       }}
     >
       {children}
