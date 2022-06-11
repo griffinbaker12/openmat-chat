@@ -14,7 +14,7 @@ const SearchResult = ({ searchResult, handleAddUser, type }) => {
       onClick={handleAddUser}
       className={`search-result-container ${
         type === SEARCH_RESULT_TYPE.addUserToExistingChat
-          ? 'add-user-to-existing-chat'
+          ? 'add-user-to-existing-chat-container'
           : ''
       }`}
     >

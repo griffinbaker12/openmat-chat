@@ -179,6 +179,11 @@ const ChatInfoModal = () => {
                   ))}
                 </div>
               </div>
+              <div className="chat-info-modal-button">
+                <button className="leave-chat-button" type="submit">
+                  Leave Chat
+                </button>
+              </div>
             </div>
           </>
         ) : (
