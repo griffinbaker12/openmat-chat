@@ -140,6 +140,8 @@ const addUserToChat = asyncHandler(async (req, res) => {
   // We need to chat to which we are going to add the specified user
   const { chatId, userId } = req.body;
 
+  console.log(userId);
+
   const added = await Chat.findByIdAndUpdate(
     chatId,
     { $push: { users: userId } },

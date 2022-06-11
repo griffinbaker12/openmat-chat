@@ -20,6 +20,8 @@ router.route('/').get(decodeToken, fetchChats);
 
 router.route('/renameChat').put(decodeToken, renameChat);
 router.route('/addUserToChat').put(decodeToken, addUserToChat);
+
+// This route is more like leave chat since I only want someone to be able to leave and not for someone to be able to remove someone from the chat
 router.route('/removeUserFromChat').put(decodeToken, removeUserFromChat);
 
 module.exports = router;

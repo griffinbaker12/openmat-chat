@@ -32,12 +32,22 @@ export const ChatViewProvider = ({ children }) => {
     SIDEBAR_CATEGORY_TYPE.conversations
   );
   const [showModal, setShowModal] = useState(false);
+  const [showAddUserInfoDropdown, setShowAddUserInfoDropdown] = useState(false);
   const [modalType, setModalType] = useState('');
   const [chats, setChats] = useState([]);
   const [activeFriend, setActiveFriend] = useState('');
   const [friends, setFriends] = useState([]);
 
   const { currentUser } = useAuthentication();
+
+  const closeModal = () => {
+    console.log('what is up');
+    if (showAddUserInfoDropdown) {
+      setShowAddUserInfoDropdown(false);
+      return;
+    }
+    setShowModal(false);
+  };
 
   const updateSearchValue = e => setSearch(e.target.value);
 
@@ -73,8 +83,6 @@ export const ChatViewProvider = ({ children }) => {
     setModalType(modalType);
     setShowModal(true);
   };
-
-  const closeModal = () => setShowModal(false);
 
   const handleSearchSubmit = async e => {
     e.preventDefault();
@@ -150,6 +158,9 @@ export const ChatViewProvider = ({ children }) => {
         sideBarCategory,
         modalType,
         fetchChats,
+        setShowModal,
+        showAddUserInfoDropdown,
+        setShowAddUserInfoDropdown,
       }}
     >
       {children}

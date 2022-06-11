@@ -20,6 +20,8 @@ const ChatInfoModal = () => {
     showModal,
     closeModal,
     fetchChats,
+    showAddUserInfoDropdown,
+    setShowAddUserInfoDropdown,
   } = useChatView();
 
   const isGroupChat = activeChat[0]?.chatName === 'solo chat' ? false : true;
@@ -27,7 +29,6 @@ const ChatInfoModal = () => {
   const [newChatName, setNewChatName] = useState('');
   const chatEditInputRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [showAddUserDropdown, setShowAddUserDropdown] = useState(false);
 
   useEffect(() => {
     if (!chatEditInputRef.current) return;
@@ -39,8 +40,17 @@ const ChatInfoModal = () => {
     setNewChatName(activeChat[0].chatName);
   }, [activeChat, showChatEdit]);
 
+  const closeAddUserInfoAndStopPropagation = e => {
+    const addButtonPress = e.target.closest('.add-button-container');
+    e.stopPropagation();
+
+    if (!addButtonPress) {
+      setShowAddUserInfoDropdown(false);
+    }
+  };
+
   const handleShowUserDropdown = () =>
-    setShowAddUserDropdown(prevState => !prevState);
+    setShowAddUserInfoDropdown(prevState => !prevState);
 
   const handleKeyChange = async e => {
     if (e.code !== 'Enter') return;
@@ -92,12 +102,13 @@ const ChatInfoModal = () => {
 
   return (
     <div
+      name="chat-info-modal"
       className={`chat-info-modal-container ${showModal ? 'active' : ''}`}
       onClick={closeModal}
     >
       <div
         className="chat-info-modal-content"
-        onClick={e => e.stopPropagation()}
+        onClick={closeAddUserInfoAndStopPropagation}
       >
         {isGroupChat && activeChat.length !== 0 ? (
           <>
@@ -151,12 +162,7 @@ const ChatInfoModal = () => {
                       <span>+</span>
                     </div>
                   </Tooltip>
-                  {showAddUserDropdown && (
-                    <AddUserDropdown
-                      showAddUserDropdown={showAddUserDropdown}
-                      setShowAddUserDropdown={setShowAddUserDropdown}
-                    />
-                  )}
+                  {showAddUserInfoDropdown && <AddUserDropdown />}
                 </div>
                 <div className="group-chat-modal-member-container">
                   {activeChat[0].users.map(user => (

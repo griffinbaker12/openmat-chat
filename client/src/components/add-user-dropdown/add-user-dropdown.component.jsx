@@ -7,24 +7,35 @@ import SearchResult, {
 } from '../search-result/search-result-component';
 import './add-user-dropdown.styles.scss';
 
-const AddUserDropdown = ({ showAddUserDropdown, setShowAddUserdropdown }) => {
-  // const [userSearchText, setUserSearchText] = useState('');
-  const [userToAdd, setUserToAdd] = useState('');
+const AddUserDropdown = () => {
   const [userSearchResults, setUserSearchResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const addUserToChatRef = useRef();
 
   const { currentUser } = useAuthentication();
-  const { activeChat } = useChatView();
+  const { activeChat, fetchChats, showAddUserInfoDropdown } = useChatView();
+
+  // const handleClick = e => {
+  //   console.log('wtf is up my g');
+  // };
+
+  // useEffect(() => {
+  //   document.addEventListener('click', handleClick);
+
+  //   return () => document.removeEventListener('click', handleClick);
+  // }, []);
+
+  useEffect(() => {
+    if (!addUserToChatRef.current) return;
+    addUserToChatRef.current.focus();
+  }, [showAddUserInfoDropdown]);
 
   const handleTextChange = async e => {
     const query = e.target.value;
-    console.log(query);
     if (!query) {
-      console.log('hey');
       setUserSearchResults([]);
       return;
     }
-
     try {
       setIsLoading(true);
       const response = await fetch(
@@ -48,20 +59,46 @@ const AddUserDropdown = ({ showAddUserDropdown, setShowAddUserdropdown }) => {
 
       // May also want to filter these by who is not in the curent chat, or could do this on the back end as well but may not be the right nove there, but could jsut incluce a little flag to hanle on the BE
     } catch (e) {
-      defaultToast(TOAST_TYPE.error, 'Error adding user');
+      defaultToast(TOAST_TYPE.error, 'User already exists in chat');
     }
   };
 
-  const handleAddUser = e => {
+  const handleAddUser = async e => {
     const closestContainer = e.target.closest(
       '.add-user-to-existing-chat-container'
     );
     const selectedId = closestContainer.getAttribute('name');
-    console.log(selectedId);
 
-    const selectedUser = userSearchResults.find(
-      result => result?._id === selectedId
+    const alreadyExists = activeChat[0].users.some(
+      user => user._id === selectedId
     );
+
+    if (alreadyExists) {
+      defaultToast(TOAST_TYPE.failure, 'Error adding user');
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        'http://localhost:4000/api/chat/addUserToChat',
+        {
+          method: 'put',
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            chatId: activeChat[0]._id,
+            userId: selectedId,
+          }),
+        }
+      );
+      const newChat = await response.json();
+      fetchChats();
+      defaultToast(TOAST_TYPE.success, 'User successfully added');
+    } catch (error) {
+      defaultToast(TOAST_TYPE.failure, 'Error adding user');
+    }
 
     // setChatParticipants(prevState => [...prevState, selectedUser]);
     // setFormInput(prevState => ({ ...prevState, name: '' }));
@@ -96,6 +133,7 @@ const AddUserDropdown = ({ showAddUserDropdown, setShowAddUserdropdown }) => {
             type="search"
             placeholder="Search users..."
             onChange={handleTextChange}
+            ref={addUserToChatRef}
           />
           <div className="add-user-dropdown-results-container">
             {userSearchResults.map((searchResult, i) => (

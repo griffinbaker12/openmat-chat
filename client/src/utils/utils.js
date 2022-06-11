@@ -21,7 +21,7 @@ export const defaultToast = (type, message) => {
       theme: 'dark',
     });
   } else {
-    toast.success(message, {
+    toast.error(message, {
       position: 'bottom-center',
       autoClose: 3000,
       hideProgressBar: false,
