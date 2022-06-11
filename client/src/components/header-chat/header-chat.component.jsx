@@ -33,7 +33,7 @@ const HeaderChat = ({ logo }) => {
           className="header-chat-link"
         >
           <button className="header-user-account-container">
-            <img height="100%" src={picture} alt="profile" />
+            <img src={picture} alt="profile" />
           </button>
         </div>
       </div>

@@ -1,12 +1,14 @@
 import { forwardRef, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthentication } from '../../contexts/authentication-context';
+import { useChatView } from '../../contexts/chat-view-context';
 import './account-dropdown.styles.scss';
 
 const AccountDropdown = forwardRef(({ handleDropdown }, ref) => {
-  const { currentUser } = useAuthentication();
+  const { currentUser, setCurrentUser } = useAuthentication();
+  const { setChats } = useChatView();
   const navigate = useNavigate();
-  const { picture, name } = currentUser;
+  const { picture, name, userName } = currentUser;
   const dropDownRef = useRef();
 
   const handleClick = e => {
@@ -35,7 +37,10 @@ const AccountDropdown = forwardRef(({ handleDropdown }, ref) => {
           <div className="account-dropdown-image-container">
             <img height="100%" src={picture} alt="profile" />
           </div>
-          <p>{name}</p>
+          <div className="account-dropdown-content-userinfo-container">
+            <p>{name}</p>
+            <p>@{userName}</p>
+          </div>
         </div>
         <button onClick={signOutUser} type="button">
           Sign Out

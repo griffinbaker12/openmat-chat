@@ -7,6 +7,7 @@ import {
 } from 'react';
 import { useAuthentication } from './authentication-context';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 // import { useSocket } from './socket-context';
 
 const ChatViewContext = createContext();
@@ -26,7 +27,7 @@ export const MODAL_TYPE = {
 export const ChatViewProvider = ({ children }) => {
   const [activeChat, setActiveChat] = useState([]);
   const [search, setSearch] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isChatViewLoading, setIsChatViewLoading] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const [sideBarCategory, setSideBarCategory] = useState(
     SIDEBAR_CATEGORY_TYPE.conversations
@@ -38,10 +39,10 @@ export const ChatViewProvider = ({ children }) => {
   const [activeFriend, setActiveFriend] = useState('');
   const [friends, setFriends] = useState([]);
 
-  const { currentUser } = useAuthentication();
+  const { currentUser, setCurrentUser, setIsLoading } = useAuthentication();
+  const navigate = useNavigate();
 
   const closeModal = () => {
-    console.log('what is up');
     if (showAddUserInfoDropdown) {
       setShowAddUserInfoDropdown(false);
       return;
@@ -51,28 +52,47 @@ export const ChatViewProvider = ({ children }) => {
 
   const updateSearchValue = e => setSearch(e.target.value);
 
-  const fetchChats = useCallback(async () => {
-    try {
-      const response = await fetch(`http://localhost:4000/api/chat`, {
-        method: 'get',
-        headers: { Authorization: `Bearer ${currentUser.token}` },
-      });
-      const data = await response.json();
-
-      setChats(data);
-    } catch (e) {
-      toast.error('Error fetching chats', {
-        position: 'bottom-center',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'dark',
-      });
-    }
-  }, [currentUser]);
+  const fetchChats = useCallback(
+    async (tokenForLogin = null, userData = null) => {
+      try {
+        const response = await fetch(`http://localhost:4000/api/chat`, {
+          method: 'get',
+          headers: {
+            Authorization: `Bearer ${tokenForLogin || currentUser.token}`,
+          },
+        });
+        const data = await response.json();
+        setChats(data);
+        if (tokenForLogin) {
+          navigate('/chat');
+          setIsLoading(false);
+          toast.success('Login success', {
+            position: 'bottom-center',
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'dark',
+          });
+          setCurrentUser(userData);
+        }
+      } catch (e) {
+        toast.error('Error fetching chats', {
+          position: 'bottom-center',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
+      }
+    },
+    [currentUser, navigate, setIsLoading]
+  );
 
   const handleModal = (modalType, friendId = null) => {
     // Not sure what I was thinking for this as of right now
@@ -89,7 +109,7 @@ export const ChatViewProvider = ({ children }) => {
     if (!search) return;
 
     try {
-      setIsLoading(true);
+      setIsChatViewLoading(true);
 
       // I almost like the feature where you keep the search text there so that you know what you searched, and then once you hit the x then the results unfilter and are based off of the time the last message was sent
       // setSearch('');
@@ -102,7 +122,7 @@ export const ChatViewProvider = ({ children }) => {
         }
       );
       const { messages, users } = await response.json();
-      setIsLoading(false);
+      setIsChatViewLoading(false);
       setSearchResults([{ messages, users }]);
     } catch (e) {
       toast.error('Error fetching results', {
@@ -121,8 +141,11 @@ export const ChatViewProvider = ({ children }) => {
   // Fetch the chats once, and then otherwise just add the chats to the data, don't need to re-fetch or anything like that. Could keep this here or do something where you only fetch the chats and the friends once the user is actually signed in. That could also be a route where you just find these two things
 
   useEffect(() => {
-    // Make sure that that is right?
-    if (!currentUser) return;
+    if (!currentUser) {
+      setChats([]);
+      setActiveChat([]);
+      return;
+    }
     if (currentUser._id) {
       fetchChats();
     }

@@ -1,18 +1,18 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuthentication } from '../../contexts/authentication-context';
 import Spinner from '../spinner/spinner.component';
 import { toast } from 'react-toastify';
 import './login.styles.scss';
+import { useChatView } from '../../contexts/chat-view-context';
 
 const Login = () => {
   const [text, setText] = useState({ emailOrUserName: '', password: '' });
 
-  const { changeAuth, setCurrentUser, isLoading, setIsLoading } =
-    useAuthentication();
-  const navigate = useNavigate();
+  const { changeAuth, isLoading, setIsLoading } = useAuthentication();
 
-  const handleLogin = () => {
+  const { fetchChats } = useChatView();
+
+  const handleLogin = async () => {
     if (!text.emailOrUserName) {
       toast.error('Please enter all fields', {
         position: 'bottom-center',
@@ -37,21 +37,8 @@ const Login = () => {
     })
       .then(res => res.json())
       .then(data => {
-        setCurrentUser(data);
-        // Until we and if we use redux with the persisted state, but otherwise we can just check to see if there is a current user
+        fetchChats(data.token, data);
         localStorage.setItem('userInfo', JSON.stringify(data));
-        setIsLoading(false);
-        navigate('/chat');
-        toast.success('Login success', {
-          position: 'bottom-center',
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'dark',
-        });
       })
       .catch(err => {
         setIsLoading(false);
