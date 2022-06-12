@@ -6,7 +6,7 @@ import './text-header.styles.scss';
 const TextHeader = () => {
   const { activeChat, handleModal } = useChatView();
   const { currentUser } = useAuthentication();
-  console.log(activeChat);
+  console.log(activeChat[0].isGroupChat);
 
   const handleClick = () => {
     handleModal(MODAL_TYPE.chatInfo);

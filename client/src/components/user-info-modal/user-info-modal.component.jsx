@@ -6,7 +6,7 @@ import './user-info-modal.styles.scss';
 
 const UserInfoModal = () => {
   const { activeFriend, showModal, closeModal } = useChatView();
-
+  console.log('hey');
   // When you look at their profile, you should be able to chat them, remove or add them as a friend, see their friends...TOMORROW!
 
   return (

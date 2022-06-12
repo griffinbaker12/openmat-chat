@@ -97,7 +97,7 @@ const NewConversationModal = () => {
     }
 
     const chatName =
-      chatParticipants.length === 1 ? 'solo chat' : formInput.chatName;
+      chatParticipants.length === 1 ? 'null' : formInput.chatName;
 
     const chatParticipantIds = chatParticipants.map(({ _id }) => _id);
     const payload = {
@@ -156,6 +156,11 @@ const NewConversationModal = () => {
     // If we are typing into the name field, then we want to make a fetch reqeust with the current value of the input
     if (field !== 'name') return;
 
+    if (!query) {
+      setSearchResults([]);
+      return;
+    }
+
     try {
       setIsLoading(true);
       const response = await fetch(
@@ -166,9 +171,14 @@ const NewConversationModal = () => {
         }
       );
       const { users } = await response.json();
-      // console.log(users);
+
+      // You take the users, and then see if this user is not already a participant, you want that to be false, but it will be "true" since it is not equal
+
+      const filteredUsers = users.filter(user =>
+        chatParticipants.some(participant => user._id !== participant._id)
+      );
       setIsLoading(false);
-      setSearchResults(users);
+      setSearchResults(filteredUsers);
     } catch (e) {
       console.log('some error with search results');
     }
@@ -200,7 +210,6 @@ const NewConversationModal = () => {
     const newParticipants = chatParticipants.filter(
       participant => participant._id !== selectedId
     );
-    console.log('new recip', newParticipants);
     setChatParticipants(newParticipants);
   };
 
@@ -227,10 +236,6 @@ const NewConversationModal = () => {
           name="name"
           value={formInput.name}
         />
-        {/* So in here we need the searched users as well as the selected users */}
-
-        {/* Need to add some check here to only render when the length is over 0 so I do not get this error */}
-
         {chatParticipants.length === 0 ? (
           ''
         ) : (
