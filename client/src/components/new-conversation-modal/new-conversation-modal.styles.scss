@@ -50,9 +50,36 @@
 }
 
 .new-conversation-modal-chat-participant-container {
-  display: flex;
+  max-height: 150px;
+  display: inline-flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 0 auto;
   gap: 4px;
+  padding: 6px;
   overflow: auto;
+  background-color: rgb(71, 71, 88);
+  border-radius: 4px;
+  margin-bottom: 4px;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-right: 1px solid transparent;
+    border-left: 1px solid transparent;
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+
+    background: black;
+    background-clip: padding-box;
+    border-radius: 100px;
+    &:hover {
+      background: #606060;
+    }
+  }
 }
 
 .new-conversation-modal-chat-search-result-container {

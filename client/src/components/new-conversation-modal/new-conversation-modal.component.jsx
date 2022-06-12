@@ -174,13 +174,13 @@ const NewConversationModal = () => {
         }
       );
       const { users } = await response.json();
-      const filteredUsers = users.filter(
-        user =>
-          !chatParticipants.some(participant => user._id !== participant._id)
-      );
+      // const filteredUsers = users.filter(
+      //   user =>
+      //     !chatParticipants.some(participant => user._id !== participant._id)
+      // );
 
       setIsLoading(false);
-      setSearchResults(filteredUsers);
+      setSearchResults(users);
       setShowSearchResults(true);
     } catch (e) {
       console.log('some error with search results');
@@ -224,6 +224,7 @@ const NewConversationModal = () => {
     const newParticipants = chatParticipants.filter(
       participant => participant._id !== selectedId
     );
+    setShowSearchResults(true);
     setChatParticipants(newParticipants);
   };
 
@@ -250,6 +251,32 @@ const NewConversationModal = () => {
           name="name"
           value={formInput.name}
         />
+        <CSSTransition
+          in={showSearchResults}
+          classNames="chat-participant-animation-container"
+          unmountOnExit
+          mountOnEnter
+          timeout={300}
+          nodeRef={nodeRef}
+        >
+          <>
+            <div
+              ref={nodeRef}
+              className="new-conversation-modal-chat-search-result-container"
+            >
+              {searchResults.map((searchResult, i) => (
+                <Fragment key={i}>
+                  <SearchResult
+                    chatParticipants={chatParticipants}
+                    handleAddUser={handleAddUser}
+                    searchResult={searchResult}
+                  />
+                </Fragment>
+              ))}
+            </div>
+          </>
+        </CSSTransition>
+
         {chatParticipants.length === 0 ? (
           ''
         ) : (

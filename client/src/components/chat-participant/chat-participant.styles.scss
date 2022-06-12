@@ -1,16 +1,21 @@
 .chat-participant-content-container {
-  display: flex;
   border: 1px solid gray;
   padding: 8px;
+  padding-right: 16px;
   border-radius: 8px;
   margin-top: 2px;
-  margin-bottom: 6px;
   background-color: rgb(59, 88, 180);
   font-size: 12px;
   font-weight: bold;
   text-transform: uppercase;
-  gap: 4px;
-  align-items: center;
+  position: relative;
+  // flex: 1;
+}
+
+.chat-participant-content-remove {
+  position: absolute;
+  right: 6px;
+  top: 7px;
 }
 
 .chat-participant-content-remove:hover {
