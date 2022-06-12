@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { useChatView } from '../../contexts/chat-view-context';
 import './new-conversation-modal.styles.scss';
 import { useAuthentication } from '../../contexts/authentication-context';
+import { defaultToast, TOAST_TYPE } from '../../utils/utils';
 
 // There seems to also totally be room to just have one modal component, and also a genreal button component as well, but for the modal, essentially I can just pass in the name of the modal itself, and then the body of the modal. The 'children' can just be the unique part of the actual form for these components that gets inserted into the overall block of the component
 
@@ -75,11 +76,10 @@ const NewConversationModal = () => {
     const sortedChatParticipants = [currentUser, ...chatParticipants]
       .map(user => user.userName)
       .sort();
-    // console.log(sortedChatParticipants, 'sorted chat ps');
 
     const exists = mappedChatWithNames.some(chat => {
       if (chat.length !== sortedChatParticipants.length) return false;
-      return chat.some((user, i) => user === sortedChatParticipants[i]);
+      return chat.every((user, i) => user === sortedChatParticipants[i]);
     });
 
     if (exists) {
@@ -182,6 +182,8 @@ const NewConversationModal = () => {
     );
 
     if (alreadyExists) {
+      // Just as a general point, it would be a better idea not to even show them in the results, why would you allow the user to do something they aren't allowed to like that? Did you already do this on the add to chat
+      defaultToast(TOAST_TYPE.failure, 'Cannot add duplicate user');
       return;
     }
 

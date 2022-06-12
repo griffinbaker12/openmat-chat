@@ -10,7 +10,7 @@ import './chat-info-modal.styles.scss';
 import Tooltip from '../tooltip/tooltip.component';
 import { defaultToast, TOAST_TYPE } from '../../utils/utils';
 
-const ChatInfoModal = () => {
+const ChatInfoModal = ({ userFlag }) => {
   const { currentUser } = useAuthentication();
   const {
     activeChat,
@@ -24,11 +24,12 @@ const ChatInfoModal = () => {
     setShowAddUserInfoDropdown,
   } = useChatView();
 
-  const isGroupChat = activeChat[0]?.chatName === 'solo chat' ? false : true;
   const [showChatEdit, setShowChatEdit] = useState(false);
   const [newChatName, setNewChatName] = useState('');
   const chatEditInputRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  console.log(activeChat[0], userFlag);
 
   useEffect(() => {
     if (!chatEditInputRef.current) return;
@@ -139,7 +140,7 @@ const ChatInfoModal = () => {
         className="chat-info-modal-content"
         onClick={closeAddUserInfoAndStopPropagation}
       >
-        {isGroupChat && activeChat.length !== 0 ? (
+        {(activeChat[0] && activeChat[0].isGroupChat) || userFlag ? (
           <>
             <div className="group-chat-modal-header">
               <input

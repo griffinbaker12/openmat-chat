@@ -45,28 +45,18 @@ const accessChat = asyncHandler(async (req, res) => {
 
 // Receive the users and the name of the chat and create a new chat
 const createChat = asyncHandler(async (req, res) => {
-  // He has some check where he looks to see if the id has
-  // been sent already
-
   const { users, chatName } = req.body;
-
-  // We are going to send an array, but we cannot just send an array directly, so need to send it in the stringified format so we need to parse it here
-  // const parsedUsersArray = JSON.parse(users);
-  // console.log(parsedUsersArray, 'parsed chat participant array');
-  // console.log('current user', req.user._id);
 
   if (!users || !chatName) {
     return res.status(400).send({ message: 'Please fill all the fields' });
   }
 
+  const isGroupChat = users.length === 1 ? false : true;
+
   users.push(req.user);
 
   // Really pretty cool, it extracts the Object Id from the current user property on the request object
-  // console.log('this is the parsed user array', parsedUsersArray);
 
-  // Should somehow be able to check if there exists a chat with the same users already
-
-  // Create a new chat
   try {
     // I could potentially do this on the front end as well...may be easier to implement...stay tuned; so I think that we store the chats on the front end
     // anyway, so before a user enters a chat, we want to check whether the chat already exists, and if it does, then alert the user
@@ -75,6 +65,7 @@ const createChat = asyncHandler(async (req, res) => {
       chatName,
       users,
       chatCreator: req.user,
+      isGroupChat,
     });
 
     // One question is why does our id auto get pushed into the array, but the id for the chat creator does not, it pushes the howle object?

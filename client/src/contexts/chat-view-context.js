@@ -22,6 +22,7 @@ export const SIDEBAR_CATEGORY_TYPE = {
 export const MODAL_TYPE = {
   sidebar: 'sidebar',
   chatInfo: 'chatInfo',
+  userInfo: 'userInfo',
 };
 
 export const ChatViewProvider = ({ children }) => {
@@ -91,15 +92,10 @@ export const ChatViewProvider = ({ children }) => {
         });
       }
     },
-    [currentUser, navigate, setIsLoading]
+    [currentUser, navigate, setIsLoading, setCurrentUser]
   );
 
-  const handleModal = (modalType, friendId = null) => {
-    // Not sure what I was thinking for this as of right now
-    // If the friend has not changed, do not do this loop
-    // const friend = friends.find(friend => friend._id === friendId);
-    // setActiveFriend(friend);
-
+  const handleModal = (modalType, userId = null) => {
     setModalType(modalType);
     setShowModal(true);
   };

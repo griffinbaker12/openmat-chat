@@ -6,6 +6,7 @@ import './text-header.styles.scss';
 const TextHeader = () => {
   const { activeChat, handleModal } = useChatView();
   const { currentUser } = useAuthentication();
+  console.log(activeChat);
 
   const handleClick = () => {
     handleModal(MODAL_TYPE.chatInfo);
@@ -14,7 +15,7 @@ const TextHeader = () => {
   return (
     <div className="text-header-container">
       <p>
-        {activeChat && activeChat[0].chatName === 'solo chat'
+        {activeChat && !activeChat[0].isGroupChat
           ? generateChatNameForSoloChats(activeChat[0].users, currentUser)
           : activeChat[0].chatName}
       </p>

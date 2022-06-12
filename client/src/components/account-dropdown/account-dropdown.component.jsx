@@ -1,17 +1,16 @@
 import { forwardRef, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthentication } from '../../contexts/authentication-context';
-import { useChatView } from '../../contexts/chat-view-context';
+import { useChatView, MODAL_TYPE } from '../../contexts/chat-view-context';
 import './account-dropdown.styles.scss';
 
 const AccountDropdown = forwardRef(({ handleDropdown }, ref) => {
-  const { currentUser, setCurrentUser } = useAuthentication();
-  const { setChats } = useChatView();
   const navigate = useNavigate();
-  const { picture, name, userName } = currentUser;
   const dropDownRef = useRef();
+  const { handleModal } = useChatView();
+  const { currentUser } = useChatView();
 
-  const handleClick = e => {
+  const handleSignOutClick = e => {
     if (ref.current === e.target.closest('.header-chat-link')) {
       return;
     }
@@ -20,9 +19,13 @@ const AccountDropdown = forwardRef(({ handleDropdown }, ref) => {
     }
   };
 
+  const handleAccountClick = () => {
+    handleModal(MODAL_TYPE.userInfo);
+  };
+
   useEffect(() => {
-    document.addEventListener('mousedown', handleClick);
-    return () => document.removeEventListener('mousedown', handleClick);
+    document.addEventListener('mousedown', handleSignOutClick);
+    return () => document.removeEventListener('mousedown', handleSignOutClick);
   });
 
   const signOutUser = () => {
@@ -33,16 +36,8 @@ const AccountDropdown = forwardRef(({ handleDropdown }, ref) => {
   return (
     <div ref={dropDownRef} className="account-dropdown-container">
       <div className="account-dropdown-content-container">
-        <div className="account-dropdown-header-container">
-          <div className="account-dropdown-image-container">
-            <img height="100%" src={picture} alt="profile" />
-          </div>
-          <div className="account-dropdown-content-userinfo-container">
-            <p>{name}</p>
-            <p>@{userName}</p>
-          </div>
-        </div>
-        <button onClick={signOutUser} type="button">
+        <p onClick={handleModal}>View Profile</p>
+        <button onClick={handleSignOutClick} type="button">
           Sign Out
         </button>
       </div>

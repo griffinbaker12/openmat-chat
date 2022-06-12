@@ -10,7 +10,9 @@ const Modal = () => {
   return modalType === MODAL_TYPE.sidebar ? (
     <SidebarModal />
   ) : (
-    <ChatInfoModal />
+    <ChatInfoModal
+      userFlag={modalType === MODAL_TYPE.userInfo ? true : false}
+    />
   );
 };
 
