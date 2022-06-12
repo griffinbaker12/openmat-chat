@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import { useRef, useState } from 'react';
+import { CSSTransition } from 'react-transition-group';
 import ChatParticipant from '../chat-participant/chat-participant.component';
 import SearchResult from '../search-result/search-result-component';
 import { toast } from 'react-toastify';
@@ -20,6 +21,8 @@ const NewConversationModal = () => {
   const [formInput, setFormInput] = useState({ chatName: '', name: '' });
   const [isLoading, setIsLoading] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
+  const nodeRef = useRef(null);
+  const [showSearchResults, setShowSearchResults] = useState(false);
 
   // So keep track of all the participants here, will need to search as well, then when we make the chat we send this to the api and push this into the current chat state of our application, also need to check to see if a chat with these users has already been made...
 
@@ -157,7 +160,7 @@ const NewConversationModal = () => {
     if (field !== 'name') return;
 
     if (!query) {
-      setSearchResults([]);
+      setShowSearchResults(false);
       return;
     }
 
@@ -171,14 +174,14 @@ const NewConversationModal = () => {
         }
       );
       const { users } = await response.json();
-
-      // You take the users, and then see if this user is not already a participant, you want that to be false, but it will be "true" since it is not equal
-
-      const filteredUsers = users.filter(user =>
-        chatParticipants.some(participant => user._id !== participant._id)
+      const filteredUsers = users.filter(
+        user =>
+          !chatParticipants.some(participant => user._id !== participant._id)
       );
+
       setIsLoading(false);
       setSearchResults(filteredUsers);
+      setShowSearchResults(true);
     } catch (e) {
       console.log('some error with search results');
     }
@@ -197,12 +200,23 @@ const NewConversationModal = () => {
       return;
     }
 
+    if (chatParticipants.length + 1 === searchResults.length) {
+      setShowSearchResults(false);
+    }
+
     const selectedUser = searchResults.find(
       result => result?._id === selectedId
     );
 
+    // const filteredUsers = searchResults.filter(
+    //   result => selectedUser._id !== result._id
+    // );
+
     setChatParticipants(prevState => [...prevState, selectedUser]);
-    setFormInput(prevState => ({ ...prevState, name: '' }));
+    // setSearchResults(filteredUsers);
+    // setSearchResults(prevState => {
+    //   // I want to go through the prior state, and then add maybe some animation that pops up when you show the users, or maybe a removed animcation so that once that user is removed, maybe we could do some cool animation, honeslty could do it on click, and then here you just set the result so that they are actually gone, but maybe you don't even need it at all. Maybe just could add a class to the element that was clicked to removed it with an animation.
+    // });
   };
 
   const handleRemoveUser = e => {
@@ -250,20 +264,31 @@ const NewConversationModal = () => {
             ))}
           </div>
         )}
-        {searchResults.length === 0 ? (
-          ''
-        ) : (
-          <div className="new-conversation-modal-chat-search-result-container">
-            {searchResults.map((searchResult, i) => (
-              <Fragment key={i}>
-                <SearchResult
-                  handleAddUser={handleAddUser}
-                  searchResult={searchResult}
-                />
-              </Fragment>
-            ))}
-          </div>
-        )}
+        <CSSTransition
+          in={showSearchResults}
+          classNames="search-result-animation-container"
+          unmountOnExit
+          mountOnEnter
+          timeout={300}
+          nodeRef={nodeRef}
+        >
+          <>
+            <div
+              ref={nodeRef}
+              className="new-conversation-modal-chat-search-result-container"
+            >
+              {searchResults.map((searchResult, i) => (
+                <Fragment key={i}>
+                  <SearchResult
+                    chatParticipants={chatParticipants}
+                    handleAddUser={handleAddUser}
+                    searchResult={searchResult}
+                  />
+                </Fragment>
+              ))}
+            </div>
+          </>
+        </CSSTransition>
         <div className="new-conversation-modal-buttons">
           <button
             type="submit"

@@ -76,3 +76,20 @@
 .hide-chat-name-form {
   display: none;
 }
+
+.search-result-animation-container-enter {
+  opacity: 0;
+}
+
+.search-result-animation-container-enter-active {
+  opacity: 1;
+  transition: opacity 500ms;
+}
+
+.search-result-animation-container-exit {
+  opacity: 1;
+}
+.search-result-animation-container-exit-active {
+  opacity: 0;
+  transition: opacity 500ms;
+}

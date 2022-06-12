@@ -122,7 +122,6 @@ const allUsers = asyncHandler(async (req, res) => {
   // This makes it so that the user who actually sends the request does not get any data back about themselves, and we do this by running it through the middleware. This is so sick, is a means of us being able to authorize what data is available to the person that is currently logged in and will change depending on who is actually logged in..super cool b/c then we can just run this whenever we want to actually remove the user themselves from any searches
   const users = await User.find(userQuery).find({ _id: { $ne: req.user._id } });
   const messages = await Message.find(messageQuery);
-
   res.send({ users, messages });
 });
 
