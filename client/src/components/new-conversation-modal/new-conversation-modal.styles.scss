@@ -104,19 +104,42 @@
   display: none;
 }
 
-.search-result-animation-container-enter {
+// .search-result-container-animation-enter,
+// .search-result-animation,
+// .chat-participant-animation-container-enter {
+//   opacity: 0;
+// }
+
+// .search-result-container-animation-enter-active,
+// // .search-result-animation,
+// .chat-participant-animation-enter-active {
+//   opacity: 1;
+//   transition: opacity 300ms;
+// }
+
+// // .search-result-container-animation-exit,
+// // .search-result-animation,
+// .chat-participant-animation-container-exit {
+//   opacity: 1;
+// }
+// // .search-result-container-animation-exit-active,
+// // .search-result-animation,
+// .chat-participant-animation-container-exit {
+//   opacity: 0;
+//   transition: opacity 300ms;
+// }
+
+.item-enter {
   opacity: 0;
 }
-
-.search-result-animation-container-enter-active {
+.item-enter-active {
   opacity: 1;
-  transition: opacity 500ms;
+  transition: opacity 500ms ease-in;
 }
-
-.search-result-animation-container-exit {
+.item-exit {
   opacity: 1;
 }
-.search-result-animation-container-exit-active {
+.item-exit-active {
   opacity: 0;
-  transition: opacity 500ms;
+  transition: opacity 500ms ease-in;
 }

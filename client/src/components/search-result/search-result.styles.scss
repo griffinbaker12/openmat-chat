@@ -21,11 +21,6 @@
       background-color: rgb(22, 22, 22);
     }
   }
-
-  &.removed {
-    // -webkit-animation: hideThat 1s fowards;
-    // animation: hideThat 1s fowards;
-  }
 }
 
 .search-result-container:hover {
@@ -50,19 +45,19 @@
   border-radius: 50%;
 }
 
-.test-enter {
+.search-result-enter {
   opacity: 0;
 }
 
-.test-enter-active {
+.search-result-enter-active {
   opacity: 1;
   transition: opacity 500ms;
 }
 
-.test-exit {
+.search-result-exit {
   opacity: 1;
 }
-.test-exit-active {
+.search-result-exit-active {
   opacity: 0;
   transition: opacity 500ms;
 }
