@@ -1,8 +1,9 @@
-import React, { Fragment, createRef } from 'react';
+import React, { createRef, useEffect } from 'react';
 import { useRef, useState } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import ChatParticipant from '../chat-participant/chat-participant.component';
 import SearchResult from '../search-result/search-result-component';
+import Spinner from '../spinner/spinner.component';
 import { toast } from 'react-toastify';
 import { useChatView } from '../../contexts/chat-view-context';
 import './new-conversation-modal.styles.scss';
@@ -22,26 +23,31 @@ const NewConversationModal = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
 
-  const [showResult, setShowResult] = useState(false);
   const [showSearchResults, setShowSearchResults] = useState(false);
-  const searchResultContainer = useRef(null);
+  const searchResultRef = useRef(null);
 
   const [showChatParticipants, setShowChatParticipants] = useState(false);
   // The other approach would be to somehow create an array of refs and that makes sense why the ref would disappear after you delete the element but it works when it actually loads on the page
   const chatParticipantRef = useRef(null);
-
-  console.log(searchResults, chatParticipants);
 
   // So keep track of all the participants here, will need to search as well, then when we make the chat we send this to the api and push this into the current chat state of our application, also need to check to see if a chat with these users has already been made...
 
   // This is fine for now, I guess at some point I need to make it clear whether or not you can submit this when you hit enter, or whether hitting enter adds people to the chat if there are none, but then it probably should stary like that as well even afterwards so may make the other button a button type as well
 
   const resetForm = () => {
-    closeModal();
+    setShowChatParticipants(false);
+    setShowSearchResults(false);
     setChatParticipants([]);
     setSearchResults([]);
     setFormInput({ chatName: '', name: '' });
   };
+
+  const handleClick = () => resetForm();
+
+  useEffect(() => {
+    document.addEventListener('click', handleClick);
+    return () => document.removeEventListener('click', handleClick);
+  });
 
   const handleChatCreation = async e => {
     e.preventDefault();
@@ -131,6 +137,7 @@ const NewConversationModal = () => {
       const newChat = await response.json();
       setChats(prevState => [newChat, ...prevState]);
       resetForm();
+      closeModal();
       toast.success('Chat creation successful', {
         position: 'bottom-center',
         autoClose: 3000,
@@ -183,17 +190,35 @@ const NewConversationModal = () => {
         }
       );
       const { users } = await response.json();
+      if (!users.length) {
+        setShowSearchResults(false);
+        setIsLoading(false);
+        return;
+      }
       const filteredUsers = users.filter(
         user =>
           !chatParticipants.some(participant => user._id === participant._id)
       );
-
+      if (!filteredUsers.length) {
+        setShowSearchResults(false);
+        setIsLoading(false);
+        setSearchResults(filteredUsers);
+        return;
+      }
       setIsLoading(false);
-      setSearchResults(filteredUsers);
       setShowSearchResults(true);
-      setShowResult(true);
+      setSearchResults(filteredUsers);
     } catch (e) {
-      console.log('some error with search results');
+      toast.error('Error fetching search results', {
+        position: 'bottom-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
     }
   };
 
@@ -210,7 +235,7 @@ const NewConversationModal = () => {
       return;
     }
 
-    if (chatParticipants.length + 1 === searchResults.length) {
+    if (searchResults.length === 1) {
       setShowSearchResults(false);
     }
 
@@ -222,14 +247,9 @@ const NewConversationModal = () => {
       result => selectedUser._id !== result._id
     );
 
-    console.log(filteredUsers);
-
     setChatParticipants(prevState => [...prevState, selectedUser]);
     setShowChatParticipants(true);
     setSearchResults(filteredUsers);
-    // setSearchResults(prevState => {
-    //   // I want to go through the prior state, and then add maybe some animation that pops up when you show the users, or maybe a removed animcation so that once that user is removed, maybe we could do some cool animation, honeslty could do it on click, and then here you just set the result so that they are actually gone, but maybe you don't even need it at all. Maybe just could add a class to the element that was clicked to removed it with an animation.
-    // });
   };
 
   const handleRemoveUser = e => {
@@ -268,72 +288,89 @@ const NewConversationModal = () => {
           value={formInput.name}
         />
 
-        {/* <CSSTransition
-          in={true}
-          timeout={200}
-          mountOnEnter
-          unmountOnExit
-          classNames="item"
-        >
-          <div> */}
-
         <CSSTransition
           in={showChatParticipants}
-          classNames="item"
+          classNames="chat-participants"
           timeout={500}
           nodeRef={chatParticipantRef}
-          show={showChatParticipants}
           mountOnEnter
           unmountOnExit
         >
-          <>
-            {
-              <div style={{ textAlign: 'center' }} ref={chatParticipantRef}>
-                <TransitionGroup className="new-conversation-modal-chat-participant-container">
-                  {chatParticipants.map(chatParticipant => {
-                    const itemRef = createRef();
-                    return (
-                      // <Fragment key={chatParticipant._id}>
-                      <CSSTransition
-                        key={chatParticipant._id}
-                        classNames="item"
-                        timeout={500}
-                        nodeRef={itemRef}
-                      >
-                        <div ref={itemRef}>
-                          <ChatParticipant
-                            chatParticipant={chatParticipant}
-                            handleRemoveUser={handleRemoveUser}
-                          />
-                        </div>
-                      </CSSTransition>
-                    );
-                  })}
-                </TransitionGroup>
-              </div>
-            }
-          </>
+          <div
+            style={{ display: 'flex', justifyContent: 'center' }}
+            ref={chatParticipantRef}
+          >
+            <TransitionGroup className="new-conversation-modal-chat-participant-container">
+              {chatParticipants.map(chatParticipant => {
+                const participantRef = createRef();
+                return (
+                  <CSSTransition
+                    key={chatParticipant._id}
+                    classNames="chat-participant"
+                    timeout={500}
+                    nodeRef={participantRef}
+                  >
+                    <div ref={participantRef}>
+                      <ChatParticipant
+                        chatParticipant={chatParticipant}
+                        handleRemoveUser={handleRemoveUser}
+                      />
+                    </div>
+                  </CSSTransition>
+                );
+              })}
+            </TransitionGroup>
+          </div>
         </CSSTransition>
 
-        <>
-          <div className="new-conversation-modal-chat-search-result-container">
-            <CSSTransition timeout={200}>
-              <div ref={searchResultContainer}>
-                {searchResults.map((searchResult, i) => (
-                  <Fragment key={searchResult._id}>
-                    <SearchResult
-                      showSearchResults={showSearchResults}
-                      chatParticipants={chatParticipants}
-                      handleAddUser={handleAddUser}
-                      searchResult={searchResult}
-                    />
-                  </Fragment>
-                ))}
-              </div>
-            </CSSTransition>
+        {isLoading ? (
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              paddingTop: '4px',
+              paddingBottom: '8px',
+            }}
+          >
+            <Spinner />
           </div>
-        </>
-        {/* </CSSTransition> */}
+        ) : (
+          <CSSTransition
+            in={showSearchResults}
+            classNames="search-results"
+            timeout={500}
+            nodeRef={searchResultRef}
+            mountOnEnter
+            unmountOnExit
+          >
+            <div ref={searchResultRef}>
+              <TransitionGroup
+                className="new-conversation-modal-chat-search-result-container"
+                timeout={500}
+              >
+                {searchResults.map(searchResult => {
+                  const resultRef = createRef();
+                  return (
+                    <CSSTransition
+                      key={searchResult._id}
+                      classNames="search-result"
+                      timeout={500}
+                      nodeRef={resultRef}
+                    >
+                      <div ref={resultRef}>
+                        <SearchResult
+                          handleAddUser={handleAddUser}
+                          searchResult={searchResult}
+                        />
+                      </div>
+                    </CSSTransition>
+                  );
+                })}
+              </TransitionGroup>
+            </div>
+          </CSSTransition>
+        )}
+
         <div className="new-conversation-modal-buttons">
           <button
             type="submit"

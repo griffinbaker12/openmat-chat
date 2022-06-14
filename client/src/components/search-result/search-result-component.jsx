@@ -1,5 +1,3 @@
-import { forwardRef } from 'react';
-import { CSSTransition } from 'react-transition-group';
 import './search-result.styles.scss';
 
 export const SEARCH_RESULT_TYPE = {
