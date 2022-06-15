@@ -1,28 +1,20 @@
 import { useMemo } from 'react';
 import { useAuthentication } from '../../contexts/authentication-context';
 import { useChatView } from '../../contexts/chat-view-context';
-import { areFriends } from '../../utils/utils';
+import { areFriends, defaultToast, TOAST_TYPE } from '../../utils/utils';
 import './user-info-dropdown.styles.scss';
 
 const UserInfoDropdown = ({ closeDropdown }) => {
   const { currentUser } = useAuthentication();
-  const {
-    activeUserInfo,
-    chats,
-    setChats,
-    setActiveChat,
-    closeModal,
-    activeChat,
-  } = useChatView();
-
-  console.log(activeChat);
+  const { activeUserInfo, chats, setChats, setActiveChat, closeModal } =
+    useChatView();
 
   const areFriendsBool = useMemo(
     () => areFriends(currentUser, activeUserInfo),
     [currentUser, activeUserInfo]
   );
 
-  const handleChatCreation = e => {
+  const handleChatCreation = async e => {
     e.stopPropagation();
 
     const soloChats = chats.filter(chat => !chat.isGroupChat);
@@ -31,13 +23,38 @@ const UserInfoDropdown = ({ closeDropdown }) => {
       chat.users.some(user => user._id === activeUserInfo._id)
     );
 
-    console.log(existingChat);
-
     if (existingChat) {
       closeModal();
       closeDropdown();
       setActiveChat([existingChat]);
       return;
+    } else {
+      const otherParticipantId = [activeUserInfo._id];
+      const payload = {
+        chatName: null,
+        users: otherParticipantId,
+      };
+
+      try {
+        const response = await fetch(
+          `http://localhost:4000/api/chat/createChat`,
+          {
+            method: 'post',
+            headers: {
+              Authorization: `Bearer ${currentUser.token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+          }
+        );
+        const newChat = await response.json();
+        setChats(prevState => [newChat, ...prevState]);
+        closeModal();
+        closeDropdown();
+        defaultToast(TOAST_TYPE.success, 'Chat creation successful');
+      } catch (e) {
+        defaultToast(TOAST_TYPE.failure, 'Error creating chat');
+      }
     }
   };
 

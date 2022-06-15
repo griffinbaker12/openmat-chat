@@ -47,7 +47,7 @@ const accessChat = asyncHandler(async (req, res) => {
 const createChat = asyncHandler(async (req, res) => {
   const { users, chatName } = req.body;
 
-  if (!users || !chatName) {
+  if (!users || (users.length > 1 && !chatName)) {
     return res.status(400).send({ message: 'Please fill all the fields' });
   }
 
@@ -56,7 +56,6 @@ const createChat = asyncHandler(async (req, res) => {
   users.push(req.user);
 
   // Really pretty cool, it extracts the Object Id from the current user property on the request object
-
   try {
     // I could potentially do this on the front end as well...may be easier to implement...stay tuned; so I think that we store the chats on the front end
     // anyway, so before a user enters a chat, we want to check whether the chat already exists, and if it does, then alert the user

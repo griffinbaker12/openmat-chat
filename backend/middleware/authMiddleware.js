@@ -21,7 +21,6 @@ const decodeToken = asyncHandler(async (req, res, next) => {
 
       // Add a user property onto the request object
       req.user = await User.findById(decodedId).select('-hash');
-
       next();
     } catch (error) {
       res.status(401);
