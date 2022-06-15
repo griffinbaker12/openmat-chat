@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useAuthentication } from '../../contexts/authentication-context';
 import Spinner from '../spinner/spinner.component';
 import { toast } from 'react-toastify';
@@ -7,6 +7,19 @@ import { useChatView } from '../../contexts/chat-view-context';
 
 const Login = () => {
   const [text, setText] = useState({ emailOrUserName: '', password: '' });
+  const signInButtonRef = useRef();
+
+  const handleEnterKey = e => {
+    if (e.key === 'Enter' && signInButtonRef.current) {
+      signInButtonRef.current.click();
+    }
+    return;
+  };
+
+  useEffect(() => {
+    document.addEventListener('keypress', handleEnterKey);
+    return () => document.removeEventListener('keypress', handleEnterKey);
+  });
 
   const { changeAuth, isLoading, setIsLoading } = useAuthentication();
 
@@ -104,7 +117,12 @@ const Login = () => {
               />
             </div>
           </fieldset>
-          <button className="login-input" type="button" onClick={handleLogin}>
+          <button
+            ref={signInButtonRef}
+            className="login-input"
+            type="button"
+            onClick={handleLogin}
+          >
             {isLoading ? <Spinner /> : 'Sign In'}
           </button>
           <p onClick={changeAuth} className="register-text">

@@ -14,6 +14,8 @@ const HeaderChat = ({ logo }) => {
 
   const handleAccountClick = () => setToggleAccount(prevState => !prevState);
 
+  const closeAccountDropdown = () => setToggleAccount(false);
+
   return (
     <div className="header-chat-container">
       <div className="header-chat-logo-container">
@@ -41,6 +43,7 @@ const HeaderChat = ({ logo }) => {
         <AccountDropdown
           ref={accountContainerRef}
           handleDropdown={setToggleAccount}
+          closeAccountDropdown={closeAccountDropdown}
         />
       )}
     </div>

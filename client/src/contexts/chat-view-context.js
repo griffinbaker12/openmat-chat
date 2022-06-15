@@ -37,7 +37,8 @@ export const ChatViewProvider = ({ children }) => {
   const [showAddUserInfoDropdown, setShowAddUserInfoDropdown] = useState(false);
   const [modalType, setModalType] = useState('');
   const [chats, setChats] = useState([]);
-  const [activeFriend, setActiveFriend] = useState('');
+  const [activeUserInfo, setActiveUserInfo] = useState('');
+  const [isActiveUserCurrentUser, setIsActiveUserCurrentUser] = useState(false);
   const [friends, setFriends] = useState([]);
 
   const { currentUser, setCurrentUser, setIsLoading } = useAuthentication();
@@ -49,6 +50,24 @@ export const ChatViewProvider = ({ children }) => {
       return;
     }
     setShowModal(false);
+  };
+
+  const setUserInfoModal = async (id, currentUserFlag = null) => {
+    if (currentUserFlag) {
+      setActiveUserInfo(currentUser);
+      setIsActiveUserCurrentUser(true);
+      return;
+    }
+    const response = await fetch(
+      `http://localhost:4000/api/user/getUserInfo?id=${id}`,
+      {
+        method: 'get',
+        headers: { Authorization: `Bearer ${currentUser.token}` },
+      }
+    );
+    const user = await response.json();
+    console.log(user);
+    setActiveUserInfo(user);
   };
 
   const updateSearchValue = e => setSearch(e.target.value);
@@ -180,6 +199,10 @@ export const ChatViewProvider = ({ children }) => {
         setShowModal,
         showAddUserInfoDropdown,
         setShowAddUserInfoDropdown,
+        setUserInfoModal,
+        activeUserInfo,
+        isActiveUserCurrentUser,
+        setIsActiveUserCurrentUser,
       }}
     >
       {children}

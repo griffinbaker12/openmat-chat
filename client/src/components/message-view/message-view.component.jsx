@@ -9,6 +9,9 @@ const MessageView = () => {
   // Somehow we are going to have to get all of the message in a conversation potentially and then mark whether or not they are your messages or someone else's to style accordingly;
   const { activeChat } = useChatView();
 
+  // So I am thinking that I can definitely scroll into view whatever message is actually clicked within whatever chat, I don't see why that would not be possible?
+  // Pretty cool, when the component actually mounts, the ref for the element gets passed into the callback function, could actually do some pretyy coll things with this, like making an animation or shake the screen or bounce the message or anything when the message actually enters the screen...
+
   const setRef = useCallback(node => {
     if (node) {
       node.scrollIntoView({ smooth: true });

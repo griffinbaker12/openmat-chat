@@ -19,8 +19,6 @@ const ChatPreview = () => {
     setActiveChat([activeChat]);
   };
 
-  console.log(activeChat);
-
   // Also going to need a map down below where I map over all of the data that I am pulling in and then add the class to the right; could also do a name function as well where you get the name off of the element that was clicked and then set it to the active one
 
   // This is wrong right now, but I know how to solve it. For each conversation, you need to make one UL or div or whatever and then each person of that convo you add in, then display flex that

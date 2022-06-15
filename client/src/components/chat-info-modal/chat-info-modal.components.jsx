@@ -30,7 +30,9 @@ const ChatInfoModal = ({ userFlag }) => {
   const [showChatEdit, setShowChatEdit] = useState(false);
   const [newChatName, setNewChatName] = useState('');
   const chatEditInputRef = useRef(null);
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
+
+  // So yeah, cool, the chats will be updated whenever you create a new chat from the modal so can easily tell / check duplicate chats are being
 
   useEffect(() => {
     if (!chatEditInputRef.current) return;
@@ -149,7 +151,7 @@ const ChatInfoModal = ({ userFlag }) => {
         className="chat-info-modal-content"
         onClick={closeAddUserInfoAndStopPropagation}
       >
-        {activeChat[0] && (
+        {activeChat[0] && !userFlag ? (
           <>
             <div className="group-chat-modal-header">
               <input
@@ -239,8 +241,9 @@ const ChatInfoModal = ({ userFlag }) => {
                 )}
               </div>
             </div>
-            <UserInfoModal />
           </>
+        ) : (
+          <UserInfoModal />
         )}
       </div>
     </div>

@@ -88,7 +88,6 @@ const NewConversationModal = () => {
     const mappedChatWithNames = chats.map(chat =>
       chat.users.map(({ userName }) => userName).sort()
     );
-    // console.log(mappedChatWithNames, 'sorted uns');
 
     const sortedChatParticipants = [currentUser, ...chatParticipants]
       .map(user => user.userName)
@@ -230,7 +229,6 @@ const NewConversationModal = () => {
     );
 
     if (alreadyExists) {
-      // Just as a general point, it would be a better idea not to even show them in the results, why would you allow the user to do something they aren't allowed to like that? Did you already do this on the add to chat
       defaultToast(TOAST_TYPE.failure, 'Cannot add duplicate user');
       return;
     }

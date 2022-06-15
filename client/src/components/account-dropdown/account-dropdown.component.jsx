@@ -1,26 +1,23 @@
 import { forwardRef, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthentication } from '../../contexts/authentication-context';
+import { defaultToast, TOAST_TYPE } from '../../utils/utils';
 import { useChatView, MODAL_TYPE } from '../../contexts/chat-view-context';
 import './account-dropdown.styles.scss';
 
-const AccountDropdown = forwardRef(({ handleDropdown }, ref) => {
+const AccountDropdown = forwardRef(({ closeAccountDropdown }, ref) => {
   const navigate = useNavigate();
   const dropDownRef = useRef();
-  const { handleModal } = useChatView();
-  const { currentUser } = useChatView();
+  const { handleModal, setUserInfoModal } = useChatView();
+  const { currentUser } = useAuthentication();
 
   const handleSignOutClick = e => {
     if (ref.current === e.target.closest('.header-chat-link')) {
       return;
     }
     if (dropDownRef.current && !dropDownRef.current.contains(e.target)) {
-      handleDropdown(false);
+      closeAccountDropdown();
     }
-  };
-
-  const handleAccountClick = () => {
-    handleModal(MODAL_TYPE.userInfo);
   };
 
   useEffect(() => {
@@ -28,16 +25,27 @@ const AccountDropdown = forwardRef(({ handleDropdown }, ref) => {
     return () => document.removeEventListener('mousedown', handleSignOutClick);
   });
 
+  const handleAccountClick = () => {
+    closeAccountDropdown();
+    setUserInfoModal(null, true);
+    handleModal(MODAL_TYPE.userInfo);
+  };
+
   const signOutUser = () => {
     localStorage.removeItem('userInfo');
     navigate('/');
+    defaultToast(TOAST_TYPE.success, 'Goodbye 👋🏼');
   };
 
   return (
-    <div ref={dropDownRef} className="account-dropdown-container">
+    <div
+      onClick={handleSignOutClick}
+      ref={dropDownRef}
+      className="account-dropdown-container"
+    >
       <div className="account-dropdown-content-container">
-        <p onClick={handleModal}>View Profile</p>
-        <button onClick={handleSignOutClick} type="button">
+        <p onClick={handleAccountClick}>View Profile</p>
+        <button onClick={signOutUser} type="button">
           Sign Out
         </button>
       </div>

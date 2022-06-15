@@ -53,6 +53,7 @@ const registerUser = asyncHandler(async (req, res) => {
       picture: user.picture,
       userName: user.userName,
       token: generateToken(user._id),
+      friends: [],
     });
   } else {
     res.status(400);
@@ -82,8 +83,6 @@ const loginUser = asyncHandler(async (req, res) => {
     ],
   }).populate('friends', '-hash');
 
-  console.log(user);
-
   const isValidPassword = bcrypt.compareSync(password, user.hash);
 
   if (user && isValidPassword) {
@@ -96,6 +95,19 @@ const loginUser = asyncHandler(async (req, res) => {
       friends: user.friends,
       userName: user.userName,
     });
+  } else {
+    res.status(401);
+    throw new Error('Invalid user credentials');
+  }
+});
+
+const getUserInfo = asyncHandler(async (req, res) => {
+  const { id } = req.query;
+  if (!id) return;
+
+  const user = await User.findOne({ _id: id });
+  if (user) {
+    res.json(user);
   } else {
     res.status(401);
     throw new Error('Invalid user credentials');
@@ -164,4 +176,5 @@ module.exports = {
   allUsers,
   addFriend,
   removeFriend,
+  getUserInfo,
 };
