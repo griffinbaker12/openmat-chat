@@ -21,7 +21,7 @@
 .chat-info-modal-content {
   display: flex;
   flex-direction: column;
-  min-width: 300px;
+  min-width: 325px;
   width: auto;
   border: 1px solid white;
   border-radius: 4px;
@@ -131,6 +131,10 @@
   &:hover {
     color: rgb(138, 136, 136);
     cursor: pointer;
+
+    .chevron-container {
+      background-color: black;
+    }
   }
 }
 
@@ -145,26 +149,30 @@
 }
 
 .user-name-user-userName-container {
+  display: flex;
+  justify-content: space-between;
   font-size: 14px;
+  align-items: center;
+  &:hover {
+    ~ .chevron-container {
+      background-color: black;
+    }
+  }
 }
 
-// .chevron-container {
-//   border-radius: 50%;
-//   border: 1px solid gray;
-//   height: 16px;
-//   width: 16px;
-//   padding: 4px;
-//   display: flex;
-//   margin-left: auto;
-//   fill: rgb(184, 182, 182);
-//   // width: 12px;
-//   padding-right: 4px;
-
-//   &:hover {
-//     cursor: pointer;
-//     background-color: black;
-//   }
-// }
+.chevron-container {
+  display: block;
+  border-radius: 50%;
+  border: 1px solid gray;
+  height: 16px;
+  width: 16px;
+  padding: 4px;
+  display: flex;
+  margin-left: auto;
+  fill: rgb(184, 182, 182);
+  // width: 12px;
+  padding-right: 4px;
+}
 
 .edit-pencil-container {
   padding-bottom: 2px;

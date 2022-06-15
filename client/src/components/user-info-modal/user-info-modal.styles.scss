@@ -53,23 +53,21 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
 }
 
-.user-info-modal-user-detail-header {
+.user-info-modal-user-detail-header-with-buttons {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 4px;
-
-  .user-info-modal-username-email {
-    display: flex;
-    font-size: 16px;
-  }
 
   .user-info-modal-name {
     font-size: 32px;
   }
+}
+
+.user-info-modal-username-email {
+  display: flex;
+  font-size: 16px;
+  margin-bottom: 12px;
 }
 
 .user-info-modal-picture-container {
@@ -87,11 +85,37 @@
   }
 }
 
+.user-info-modal-user-detail-header-with-buttons {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+
+  .user-info-modal-back-arrow {
+    // border: 1px solid white;
+    // display: flex;
+    // align-items: center;
+    // justify-content: center;
+
+    &:hover {
+      cursor: pointer;
+      filter: brightness(0.8);
+    }
+  }
+
+  .user-info-modal-back-ellipsis {
+    &:hover {
+      cursor: pointer;
+      filter: brightness(0.8);
+    }
+  }
+}
+
 .user-info-modal-additional-user-info-container {
   display: flex;
   // flex-direction: column;
   gap: 8px;
-  margin-top: 6px;
+  margin-top: 16px;
   margin-bottom: 6px;
 }
 

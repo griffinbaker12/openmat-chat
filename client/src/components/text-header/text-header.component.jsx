@@ -4,12 +4,13 @@ import { generateChatNameForSoloChats } from '../../utils/utils';
 import './text-header.styles.scss';
 
 const TextHeader = () => {
-  const { activeChat, handleModal } = useChatView();
+  const { activeChat, handleModal, setShowActiveUserWithinChatInfo } =
+    useChatView();
   const { currentUser } = useAuthentication();
-  console.log(activeChat[0].isGroupChat);
 
   const handleClick = () => {
     handleModal(MODAL_TYPE.chatInfo);
+    setShowActiveUserWithinChatInfo(false);
   };
 
   return (

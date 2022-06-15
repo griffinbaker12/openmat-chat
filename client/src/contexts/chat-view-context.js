@@ -37,7 +37,7 @@ export const ChatViewProvider = ({ children }) => {
   const [showAddUserInfoDropdown, setShowAddUserInfoDropdown] = useState(false);
   const [modalType, setModalType] = useState('');
   const [chats, setChats] = useState([]);
-  const [activeUserInfo, setActiveUserInfo] = useState('');
+  const [activeUserInfo, setActiveUserInfo] = useState(null);
   const [isActiveUserCurrentUser, setIsActiveUserCurrentUser] = useState(false);
   const [showActiveUserWithinChatInfo, setShowActiveUserWithinChatInfo] =
     useState(false);
@@ -58,6 +58,7 @@ export const ChatViewProvider = ({ children }) => {
     if (currentUserFlag) {
       setActiveUserInfo(currentUser);
       setIsActiveUserCurrentUser(true);
+      setShowActiveUserWithinChatInfo(true);
       return;
     }
     const response = await fetch(
@@ -207,6 +208,7 @@ export const ChatViewProvider = ({ children }) => {
         setIsActiveUserCurrentUser,
         showActiveUserWithinChatInfo,
         setShowActiveUserWithinChatInfo,
+        setActiveUserInfo,
       }}
     >
       {children}

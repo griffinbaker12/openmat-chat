@@ -27,7 +27,11 @@ const ChatInfoModal = ({ userFlag }) => {
     setShowAddUserInfoDropdown,
     showActiveUserWithinChatInfo,
     setShowActiveUserWithinChatInfo,
+    setActiveUserInfo,
+    setIsActiveUserCurrentUser,
   } = useChatView();
+
+  console.log(showActiveUserWithinChatInfo);
 
   const [showChatEdit, setShowChatEdit] = useState(false);
   const [newChatName, setNewChatName] = useState('');
@@ -51,6 +55,22 @@ const ChatInfoModal = ({ userFlag }) => {
     }
     setNewChatName(activeChat[0].chatName);
   }, [activeChat, showChatEdit, currentUser]);
+
+  // Make sure that you update the users in the chat so that they are actually there when you click on them, may need to do a refetch of the chats, yeah because don't want to directly modify the state
+
+  const updateActiveUserChatInfo = e => {
+    const selectedUserId = e.target
+      .closest('.group-chat-modal-user-info-container')
+      .getAttribute('name');
+
+    const selectedUser = activeChat[0].users.filter(
+      user => user._id === selectedUserId
+    );
+
+    setActiveUserInfo(selectedUser[0]);
+    setIsActiveUserCurrentUser(false);
+    setShowActiveUserWithinChatInfo(true);
+  };
 
   const closeAddUserInfoAndStopPropagation = e => {
     const addButtonPress = e.target.closest('.add-button-container');
@@ -209,7 +229,10 @@ const ChatInfoModal = ({ userFlag }) => {
               </Tooltip>
               {showAddUserInfoDropdown && <AddUserDropdown />}
             </div>
-            <div className="group-chat-modal-member-container">
+            <div
+              onClick={updateActiveUserChatInfo}
+              className="group-chat-modal-member-container"
+            >
               {activeChat[0].users
                 .filter(user => user._id !== currentUser._id)
                 .map(user => (
@@ -222,12 +245,14 @@ const ChatInfoModal = ({ userFlag }) => {
                       <img height="100%" src={user.picture} alt="user" />
                     </div>
                     <div className="user-name-user-userName-container">
-                      <p>{user.name}</p>
-                      <p>@{user.userName}</p>
+                      <div>
+                        <p>{user.name}</p>
+                        <p>@{user.userName}</p>
+                      </div>
                     </div>
-                    {/* <div className="chevron-container">
+                    <div className="chevron-container">
                       <ChevronRight />
-                    </div> */}
+                    </div>
                   </div>
                 ))}
             </div>
