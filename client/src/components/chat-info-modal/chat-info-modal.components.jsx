@@ -25,6 +25,8 @@ const ChatInfoModal = ({ userFlag }) => {
     fetchChats,
     showAddUserInfoDropdown,
     setShowAddUserInfoDropdown,
+    showActiveUserWithinChatInfo,
+    setShowActiveUserWithinChatInfo,
   } = useChatView();
 
   const [showChatEdit, setShowChatEdit] = useState(false);
@@ -141,7 +143,7 @@ const ChatInfoModal = ({ userFlag }) => {
 
   //Right now I am thinking that you render both, but you hid ohe programatically. I think I can do this, never done it before, but should not be too bad hopefuly. When you click on user profile or on one of the names in the chat, hide the chat info display and show the user info modal
 
-  return (
+  return activeChat[0] && !userFlag ? (
     <div
       name="chat-info-modal"
       className={`chat-info-modal-container ${showModal ? 'active' : ''}`}
@@ -150,103 +152,105 @@ const ChatInfoModal = ({ userFlag }) => {
       <div
         className="chat-info-modal-content"
         onClick={closeAddUserInfoAndStopPropagation}
+        style={
+          showActiveUserWithinChatInfo
+            ? { visibility: 'hidden' }
+            : { visibility: 'visible' }
+        }
       >
-        {activeChat[0] && !userFlag ? (
-          <>
-            <div className="group-chat-modal-header">
-              <input
-                ref={chatEditInputRef}
-                className="group-chat-modal-header-chat-name"
-                onKeyDown={handleKeyChange}
-                onChange={handleChatNameChange}
-                value={newChatName}
-                style={
-                  !showChatEdit
-                    ? { display: 'none' }
-                    : { visibility: 'visible' }
-                }
-              />
-              <p
-                style={
-                  !showChatEdit
-                    ? { visibility: 'visible' }
-                    : { display: 'none' }
-                }
+        <div className="group-chat-modal-header">
+          <input
+            ref={chatEditInputRef}
+            className="group-chat-modal-header-chat-name"
+            onKeyDown={handleKeyChange}
+            onChange={handleChatNameChange}
+            value={newChatName}
+            style={
+              !showChatEdit ? { display: 'none' } : { visibility: 'visible' }
+            }
+          />
+          <p
+            style={
+              !showChatEdit ? { visibility: 'visible' } : { display: 'none' }
+            }
+          >
+            {activeChat[0].isGroupChat ? activeChat[0].chatName : newChatName}
+          </p>
+          {activeChat[0].isGroupChat && (
+            <Tooltip content="Click to edit chat name">
+              <div
+                className="edit-pencil-container"
+                onClick={handleEditChatName}
               >
-                {activeChat[0].isGroupChat
-                  ? activeChat[0].chatName
-                  : newChatName}
-              </p>
-              {activeChat[0].isGroupChat && (
-                <Tooltip content="Click to edit chat name">
+                {/* Add a check for whether it is a group chat or not */}
+                <EditPencil />
+              </div>
+            </Tooltip>
+          )}
+          <button
+            onClick={closeModal}
+            type="button"
+            style={{ color: 'white', marginLeft: 'auto' }}
+          >
+            &#x2715;
+          </button>
+        </div>
+        <div className="group-chat-modal-body">
+          <div className="group-chat-modal-chat-participants-container">
+            <div className="group-chat-modal-member-header-container">
+              <p>Members</p>
+              <Tooltip content="Click to add user">
+                <div
+                  onClick={handleShowUserDropdown}
+                  className="add-button-container"
+                >
+                  <span>+</span>
+                </div>
+              </Tooltip>
+              {showAddUserInfoDropdown && <AddUserDropdown />}
+            </div>
+            <div className="group-chat-modal-member-container">
+              {activeChat[0].users
+                .filter(user => user._id !== currentUser._id)
+                .map(user => (
                   <div
-                    className="edit-pencil-container"
-                    onClick={handleEditChatName}
+                    key={user._id}
+                    name={user._id}
+                    className="group-chat-modal-user-info-container"
                   >
-                    {/* Add a check for whether it is a group chat or not */}
-                    <EditPencil />
-                  </div>
-                </Tooltip>
-              )}
-              <button
-                onClick={closeModal}
-                type="button"
-                style={{ color: 'white', marginLeft: 'auto' }}
-              >
-                &#x2715;
-              </button>
-            </div>
-            <div className="group-chat-modal-body">
-              <div className="group-chat-modal-chat-participants-container">
-                <div className="group-chat-modal-member-header-container">
-                  <p>Members</p>
-                  <Tooltip content="Click to add user">
-                    <div
-                      onClick={handleShowUserDropdown}
-                      className="add-button-container"
-                    >
-                      <span>+</span>
+                    <div className="group-chat-modal-user-info-picture-container">
+                      <img height="100%" src={user.picture} alt="user" />
                     </div>
-                  </Tooltip>
-                  {showAddUserInfoDropdown && <AddUserDropdown />}
-                </div>
-                <div className="group-chat-modal-member-container">
-                  {activeChat[0].users
-                    .filter(user => user._id !== currentUser._id)
-                    .map(user => (
-                      <div
-                        key={user._id}
-                        name={user._id}
-                        className="group-chat-modal-user-info-container"
-                      >
-                        <div className="group-chat-modal-user-info-picture-container">
-                          <img height="100%" src={user.picture} alt="user" />
-                        </div>
-                        <div className="user-name-user-userName-container">
-                          <p>{user.name}</p>
-                          <p>@{user.userName}</p>
-                        </div>
-                        <div className="chevron-container">
-                          <ChevronRight />
-                        </div>
-                      </div>
-                    ))}
-                </div>
-              </div>
-              <div onClick={handleLeaveChat} className="chat-info-modal-button">
-                {activeChat[0].isGroupChat && (
-                  <button className="leave-chat-button" type="submit">
-                    Leave Chat
-                  </button>
-                )}
-              </div>
+                    <div className="user-name-user-userName-container">
+                      <p>{user.name}</p>
+                      <p>@{user.userName}</p>
+                    </div>
+                    {/* <div className="chevron-container">
+                      <ChevronRight />
+                    </div> */}
+                  </div>
+                ))}
             </div>
-          </>
-        ) : (
-          <UserInfoModal />
-        )}
+          </div>
+          <div onClick={handleLeaveChat} className="chat-info-modal-button">
+            {activeChat[0].isGroupChat && (
+              <button className="leave-chat-button" type="submit">
+                Leave Chat
+              </button>
+            )}
+          </div>
+        </div>
       </div>
+      <UserInfoModal
+        style={
+          showActiveUserWithinChatInfo
+            ? { visibility: 'visible' }
+            : { visibility: 'hidden' }
+        }
+      />
     </div>
+  ) : (
+    <UserInfoModal />
   );
 };
 export default ChatInfoModal;

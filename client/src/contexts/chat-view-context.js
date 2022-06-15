@@ -39,6 +39,8 @@ export const ChatViewProvider = ({ children }) => {
   const [chats, setChats] = useState([]);
   const [activeUserInfo, setActiveUserInfo] = useState('');
   const [isActiveUserCurrentUser, setIsActiveUserCurrentUser] = useState(false);
+  const [showActiveUserWithinChatInfo, setShowActiveUserWithinChatInfo] =
+    useState(false);
   const [friends, setFriends] = useState([]);
 
   const { currentUser, setCurrentUser, setIsLoading } = useAuthentication();
@@ -203,6 +205,8 @@ export const ChatViewProvider = ({ children }) => {
         activeUserInfo,
         isActiveUserCurrentUser,
         setIsActiveUserCurrentUser,
+        showActiveUserWithinChatInfo,
+        setShowActiveUserWithinChatInfo,
       }}
     >
       {children}

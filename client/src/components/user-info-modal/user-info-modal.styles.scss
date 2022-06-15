@@ -23,7 +23,8 @@
 .user-info-modal-content {
   display: flex;
   flex-direction: column;
-  width: 400px;
+  min-width: 300px;
+  width: auto;
   border: 1px solid white;
   background-color: rgb(30, 30, 30);
   color: white;
@@ -49,24 +50,49 @@
 
 .user-info-modal-user-detail-container {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 16px;
+  justify-content: center;
+  gap: 12px;
+}
+
+.user-info-modal-user-detail-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+
+  .user-info-modal-username-email {
+    display: flex;
+    font-size: 16px;
+  }
+
+  .user-info-modal-name {
+    font-size: 32px;
+  }
 }
 
 .user-info-modal-picture-container {
-  height: 60px;
-  width: 60px;
+  height: 90px;
+  width: 90px;
   display: flex;
   align-items: center;
   border-radius: 50%;
   overflow: hidden;
   justify-content: center;
+  margin-top: 4px;
+
+  img {
+    object-fit: cover;
+  }
 }
 
-.user-info-modal-user-info-container {
+.user-info-modal-additional-user-info-container {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  // flex-direction: column;
+  gap: 8px;
+  margin-top: 6px;
+  margin-bottom: 6px;
 }
 
 // .user-info-modal-header {
