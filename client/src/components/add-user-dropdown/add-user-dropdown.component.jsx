@@ -15,16 +15,6 @@ const AddUserDropdown = () => {
   const { currentUser } = useAuthentication();
   const { activeChat, fetchChats, showAddUserInfoDropdown } = useChatView();
 
-  // const handleClick = e => {
-  //   console.log('wtf is up my g');
-  // };
-
-  // useEffect(() => {
-  //   document.addEventListener('click', handleClick);
-
-  //   return () => document.removeEventListener('click', handleClick);
-  // }, []);
-
   useEffect(() => {
     if (!addUserToChatRef.current) return;
     addUserToChatRef.current.focus();

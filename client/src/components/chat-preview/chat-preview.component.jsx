@@ -8,6 +8,9 @@ const ChatPreview = () => {
   // And then we can also pull the active conversation up into higher state or into a context just so that we can actually store this variable without losing it when we switch between categories b/c that triggers a re-render
   const { currentUser } = useAuthentication();
   const { activeChat, setActiveChat, chats, setChats } = useChatView();
+  console.log('the active chat is', activeChat[0]);
+
+  console.log(chats);
 
   const handleClick = e => {
     const chatId = e.target.getAttribute('name');
@@ -29,7 +32,7 @@ const ChatPreview = () => {
     <div className="chat-preview-container" onClick={handleClick}>
       {chats.length > 0 &&
         activeChat[0] &&
-        chats.map(({ _id, chatName, users }) => (
+        chats.map(({ _id, chatName, users, isGroupChat }) => (
           <div
             key={_id}
             name={_id}
@@ -37,7 +40,7 @@ const ChatPreview = () => {
               _id === activeChat[0]?._id ? 'active' : ''
             }`}
           >
-            {!activeChat[0].isGroupChat
+            {!isGroupChat
               ? generateChatNameForSoloChats(users, currentUser)
               : chatName}
           </div>

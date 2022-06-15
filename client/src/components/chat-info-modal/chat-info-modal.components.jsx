@@ -31,8 +31,6 @@ const ChatInfoModal = ({ userFlag }) => {
     setIsActiveUserCurrentUser,
   } = useChatView();
 
-  console.log(showActiveUserWithinChatInfo);
-
   const [showChatEdit, setShowChatEdit] = useState(false);
   const [newChatName, setNewChatName] = useState('');
   const chatEditInputRef = useRef(null);
@@ -174,7 +172,7 @@ const ChatInfoModal = ({ userFlag }) => {
         onClick={closeAddUserInfoAndStopPropagation}
         style={
           showActiveUserWithinChatInfo
-            ? { visibility: 'hidden' }
+            ? { display: 'none' }
             : { visibility: 'visible' }
         }
       >
@@ -257,9 +255,13 @@ const ChatInfoModal = ({ userFlag }) => {
                 ))}
             </div>
           </div>
-          <div onClick={handleLeaveChat} className="chat-info-modal-button">
+          <div className="chat-info-modal-button">
             {activeChat[0].isGroupChat && (
-              <button className="leave-chat-button" type="submit">
+              <button
+                onClick={handleLeaveChat}
+                className="leave-chat-button"
+                type="submit"
+              >
                 Leave Chat
               </button>
             )}

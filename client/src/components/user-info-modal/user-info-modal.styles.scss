@@ -58,6 +58,7 @@
 .user-info-modal-user-detail-header-with-buttons {
   display: flex;
   align-items: center;
+  position: relative;
 
   .user-info-modal-name {
     font-size: 32px;
@@ -104,6 +105,7 @@
   }
 
   .user-info-modal-back-ellipsis {
+    position: relative;
     &:hover {
       cursor: pointer;
       filter: brightness(0.8);
