@@ -9,14 +9,21 @@ import './add-user-dropdown.styles.scss';
 
 // If there is a solo chat, can add the user, but need to add another user to an existing chat as opposed to create an entirely new one. Also, need to make an adjustment once the chat goes from solo to group.
 
-const AddUserDropdown = () => {
+const AddUserDropdown = ({ wasSoloChat }) => {
   const [userSearchResults, setUserSearchResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [wasSoloChat, setWasSoloChat] = useState(false);
   const addUserToChatRef = useRef();
 
   const { currentUser } = useAuthentication();
-  const { activeChat, fetchChats, showAddUserInfoDropdown } = useChatView();
+  const {
+    activeChat,
+    fetchChats,
+    showAddUserInfoDropdown,
+    chats,
+    setActiveChat,
+  } = useChatView();
+
+  console.log('was solo chat from user dd', wasSoloChat);
 
   useEffect(() => {
     if (!addUserToChatRef.current) return;
@@ -62,16 +69,43 @@ const AddUserDropdown = () => {
     );
     const selectedId = closestContainer.getAttribute('name');
 
-    const alreadyExistsInCurrentChat = activeChat[0].users.some(
+    // const alreadyExistsInCurrentChat = activeChat[0].users.some(
+    //   user => user._id === selectedId
+    // );
+
+    // if (alreadyExistsInCurrentChat) {
+    //   defaultToast(TOAST_TYPE.failure, 'Error adding user');
+    //   return;
+    // }
+
+    // Search for if a chat already exists between the user that was just added
+    // const alreadyExists = chats.some(chat => chat.users);
+
+    const mappedChatWithNamesAndId = chats.map(chat => [
+      chat.users.map(({ userName }) => userName).sort(),
+      chat._id,
+    ]);
+
+    const selectedUser = userSearchResults.find(
       user => user._id === selectedId
     );
 
-    if (alreadyExistsInCurrentChat) {
-      defaultToast(TOAST_TYPE.failure, 'Error adding user');
+    const sortedChatUsers = [...activeChat[0].users, selectedUser]
+      .map(user => user.userName)
+      .sort();
+
+    const existingChatUsersAndId = mappedChatWithNamesAndId.find(chat => {
+      if (chat[0].length !== sortedChatUsers.length) return false;
+      return chat[0].every((user, i) => user === sortedChatUsers[i]);
+    });
+
+    if (existingChatUsersAndId) {
+      const existingChat = chats.find(
+        chat => chat._id === existingChatUsersAndId[1]
+      );
+      setActiveChat([existingChat]);
       return;
     }
-
-    if (!activeChat[0].isGroupChat) setWasSoloChat(true);
 
     try {
       const response = await fetch(
