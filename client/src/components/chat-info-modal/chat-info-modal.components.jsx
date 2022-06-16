@@ -33,8 +33,10 @@ const ChatInfoModal = ({ userFlag }) => {
 
   const [showChatEdit, setShowChatEdit] = useState(false);
   const [newChatName, setNewChatName] = useState('');
+  const [wasSoloChat, setWasSoloChat] = useState(false);
   const chatEditInputRef = useRef(null);
   // const [isLoading, setIsLoading] = useState(false);
+  console.log('was solo chat', wasSoloChat);
 
   // So yeah, cool, the chats will be updated whenever you create a new chat from the modal so can easily tell / check duplicate chats are being
 
@@ -46,6 +48,7 @@ const ChatInfoModal = ({ userFlag }) => {
   useEffect(() => {
     if (!activeChat[0]) return;
     if (!activeChat[0].isGroupChat) {
+      setWasSoloChat(true);
       setNewChatName(
         generateChatNameForSoloChats(activeChat[0].users, currentUser)
       );
@@ -53,6 +56,18 @@ const ChatInfoModal = ({ userFlag }) => {
     }
     setNewChatName(activeChat[0].chatName);
   }, [activeChat, showChatEdit, currentUser]);
+
+  const checkForUsedToSoloAndCloseModal = () => {
+    if (wasSoloChat && !activeChat[0].chatName) {
+      setShowChatEdit(true);
+      chatEditInputRef.current.focus();
+      defaultToast(TOAST_TYPE.failure, 'Please add chat name');
+      return;
+    }
+    setWasSoloChat(false);
+    closeModal();
+    return;
+  };
 
   // Make sure that you update the users in the chat so that they are actually there when you click on them, may need to do a refetch of the chats, yeah because don't want to directly modify the state
 
@@ -111,7 +126,7 @@ const ChatInfoModal = ({ userFlag }) => {
       return;
     }
     if (!newChatName) {
-      defaultToast(TOAST_TYPE.error, 'Chat name cannot be blank');
+      defaultToast(TOAST_TYPE.failure, 'Chat name cannot be blank');
       setNewChatName(activeChat[0].chatName);
       setShowChatEdit(false);
       return;
@@ -165,7 +180,7 @@ const ChatInfoModal = ({ userFlag }) => {
     <div
       name="chat-info-modal"
       className={`chat-info-modal-container ${showModal ? 'active' : ''}`}
-      onClick={closeModal}
+      onClick={checkForUsedToSoloAndCloseModal}
     >
       <div
         className="chat-info-modal-content"

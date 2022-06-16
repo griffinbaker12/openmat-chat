@@ -78,7 +78,8 @@ const createChat = asyncHandler(async (req, res) => {
 
     res.json(fullChat);
   } catch (e) {
-    console.log('error creating chat');
+    res.status;
+    throw new Error('Error creating chat', e.message);
   }
 });
 
@@ -130,15 +131,27 @@ const addUserToChat = asyncHandler(async (req, res) => {
   // We need to chat to which we are going to add the specified user
   const { chatId, userId } = req.body;
 
-  const added = await Chat.findByIdAndUpdate(
-    chatId,
-    { $push: { users: userId } },
-    { new: true }
-  )
-    .populate('users', '-password')
-    .populate('chatCreator', '-password');
+  const chat = await Chat.findById({ _id: chatId });
 
-  console.log(added);
+  let added;
+
+  if (!chat.isGroupChat) {
+    added = await Chat.findByIdAndUpdate(
+      chatId,
+      { $push: { users: userId }, $set: { isGroupChat: true, chatName: '' } },
+      { new: true }
+    )
+      .populate('users', '-password')
+      .populate('chatCreator', '-password');
+  } else {
+    added = await Chat.findByIdAndUpdate(
+      chatId,
+      { $push: { users: userId }, $set: { isGroupChat: true, chatName: '' } },
+      { new: true }
+    )
+      .populate('users', '-password')
+      .populate('chatCreator', '-password');
+  }
 
   if (!added) {
     res.status(404);

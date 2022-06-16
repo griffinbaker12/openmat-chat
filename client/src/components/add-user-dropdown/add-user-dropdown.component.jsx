@@ -7,9 +7,12 @@ import SearchResult, {
 } from '../search-result/search-result-component';
 import './add-user-dropdown.styles.scss';
 
+// If there is a solo chat, can add the user, but need to add another user to an existing chat as opposed to create an entirely new one. Also, need to make an adjustment once the chat goes from solo to group.
+
 const AddUserDropdown = () => {
   const [userSearchResults, setUserSearchResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [wasSoloChat, setWasSoloChat] = useState(false);
   const addUserToChatRef = useRef();
 
   const { currentUser } = useAuthentication();
@@ -59,14 +62,16 @@ const AddUserDropdown = () => {
     );
     const selectedId = closestContainer.getAttribute('name');
 
-    const alreadyExists = activeChat[0].users.some(
+    const alreadyExistsInCurrentChat = activeChat[0].users.some(
       user => user._id === selectedId
     );
 
-    if (alreadyExists) {
+    if (alreadyExistsInCurrentChat) {
       defaultToast(TOAST_TYPE.failure, 'Error adding user');
       return;
     }
+
+    if (!activeChat[0].isGroupChat) setWasSoloChat(true);
 
     try {
       const response = await fetch(

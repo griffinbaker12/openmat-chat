@@ -1,11 +1,11 @@
 import { toast } from 'react-toastify';
 
 export const generateChatNameForSoloChats = (users, currentUser) => {
-  console.log(
-    'the users and current user from function are',
-    users,
-    currentUser
-  );
+  // console.log(
+  //   'the users and current user from function are',
+  //   users,
+  //   currentUser
+  // );
   return users.filter(user => user._id !== currentUser._id)[0].name;
 };
 
