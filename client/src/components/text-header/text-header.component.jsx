@@ -16,7 +16,7 @@ const TextHeader = () => {
   return (
     <div className="text-header-container">
       <p>
-        {activeChat && !activeChat[0].isGroupChat
+        {activeChat.length > 0 && !activeChat[0].isGroupChat
           ? generateChatNameForSoloChats(activeChat[0].users, currentUser)
           : activeChat[0].chatName}
       </p>
