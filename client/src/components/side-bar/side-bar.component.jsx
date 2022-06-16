@@ -6,13 +6,14 @@ import './side-bar.styles.scss';
 import ContactPreview from '../contact-preview/contact-preview.component';
 import Spinner from '../spinner/spinner.component';
 import { useChatView, MODAL_TYPE } from '../../contexts/chat-view-context';
+import { useAuthentication } from '../../contexts/authentication-context';
 
 // Can extract the useEffect functionality to search for whatever it is that we need to search for in the actual context itself where the data lives / is stored
 
 const SideBar = () => {
   const {
     search,
-    isLoading,
+    isChatViewLoading,
     setSideBarCategory,
     updateSearchValue,
     handleSearchSubmit,
@@ -20,10 +21,12 @@ const SideBar = () => {
     sideBarCategory,
   } = useChatView();
 
-  const handleCategoryChange = e => {
-    const clickedCategory = e.target.getAttribute('name');
-    setSideBarCategory(clickedCategory);
-  };
+  const { isLoading } = useAuthentication();
+
+  // const handleCategoryChange = e => {
+  //   const clickedCategory = e.target.getAttribute('name');
+  //   setSideBarCategory(clickedCategory);
+  // };
 
   // submit just get whatever that value was and actually set the search loading to true and all that jazz
 
@@ -44,7 +47,7 @@ const SideBar = () => {
         - Handle the loading of the spinner, handle the displaying of the results with a new component inside if the actual header itself in a nice little dropdown
         */}
       </div>
-      <div onClick={handleCategoryChange} className="side-bar-header-container">
+      {/* <div onClick={handleCategoryChange} className="side-bar-header-container">
         <div
           name="conversations"
           className={`side-bar-category ${
@@ -63,7 +66,7 @@ const SideBar = () => {
         >
           Friends
         </div>
-      </div>
+      </div> */}
 
       <div style={{ flex: '1' }}>
         {sideBarCategory === 'conversations' ? (

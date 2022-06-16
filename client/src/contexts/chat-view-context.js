@@ -69,7 +69,6 @@ export const ChatViewProvider = ({ children }) => {
       }
     );
     const user = await response.json();
-    console.log(user);
     setActiveUserInfo(user);
   };
 
@@ -85,6 +84,8 @@ export const ChatViewProvider = ({ children }) => {
           },
         });
         const data = await response.json();
+        console.log(data);
+        setIsLoading(false);
         setChats(data);
         if (tokenForLogin) {
           navigate('/chat');
@@ -117,7 +118,7 @@ export const ChatViewProvider = ({ children }) => {
     [currentUser, navigate, setIsLoading, setCurrentUser]
   );
 
-  const handleModal = (modalType, userId = null) => {
+  const handleModal = modalType => {
     setModalType(modalType);
     setShowModal(true);
   };
@@ -209,6 +210,7 @@ export const ChatViewProvider = ({ children }) => {
         showActiveUserWithinChatInfo,
         setShowActiveUserWithinChatInfo,
         setActiveUserInfo,
+        isChatViewLoading,
       }}
     >
       {children}

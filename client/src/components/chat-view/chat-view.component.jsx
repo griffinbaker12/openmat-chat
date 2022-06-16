@@ -1,10 +1,14 @@
 import MessageView from '../message-view/message-view.component';
 import TextHeader from '../text-header/text-header.component';
+import Spinner from '../spinner/spinner.component';
 import { useChatView } from '../../contexts/chat-view-context';
 import './chat-view.styles.scss';
+import { useAuthentication } from '../../contexts/authentication-context';
 
 const ChatView = () => {
   const { activeChat } = useChatView();
+  const { isLoading } = useAuthentication();
+  console.log(isLoading);
 
   return (
     <div
@@ -12,7 +16,9 @@ const ChatView = () => {
         activeChat.length > 0 && 'active-chat'
       }`}
     >
-      {activeChat.length > 0 ? (
+      {isLoading ? (
+        <Spinner type="search" />
+      ) : activeChat.length > 0 ? (
         <>
           <TextHeader />
           <MessageView />

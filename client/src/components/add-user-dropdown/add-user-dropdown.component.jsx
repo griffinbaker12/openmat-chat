@@ -7,8 +7,6 @@ import SearchResult, {
 } from '../search-result/search-result-component';
 import './add-user-dropdown.styles.scss';
 
-// If there is a solo chat, can add the user, but need to add another user to an existing chat as opposed to create an entirely new one. Also, need to make an adjustment once the chat goes from solo to group.
-
 const AddUserDropdown = ({ wasSoloChat }) => {
   const [userSearchResults, setUserSearchResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -56,8 +54,6 @@ const AddUserDropdown = ({ wasSoloChat }) => {
       setIsLoading(false);
 
       setUserSearchResults(usersNotAlreadyInChat);
-
-      // May also want to filter these by who is not in the curent chat, or could do this on the back end as well but may not be the right nove there, but could jsut incluce a little flag to hanle on the BE
     } catch (e) {
       defaultToast(TOAST_TYPE.error, 'User already exists in chat');
     }
@@ -68,18 +64,6 @@ const AddUserDropdown = ({ wasSoloChat }) => {
       '.add-user-to-existing-chat-container'
     );
     const selectedId = closestContainer.getAttribute('name');
-
-    // const alreadyExistsInCurrentChat = activeChat[0].users.some(
-    //   user => user._id === selectedId
-    // );
-
-    // if (alreadyExistsInCurrentChat) {
-    //   defaultToast(TOAST_TYPE.failure, 'Error adding user');
-    //   return;
-    // }
-
-    // Search for if a chat already exists between the user that was just added
-    // const alreadyExists = chats.some(chat => chat.users);
 
     const mappedChatWithNamesAndId = chats.map(chat => [
       chat.users.map(({ userName }) => userName).sort(),
@@ -128,31 +112,7 @@ const AddUserDropdown = ({ wasSoloChat }) => {
     } catch (error) {
       defaultToast(TOAST_TYPE.failure, 'Error adding user');
     }
-
-    // setChatParticipants(prevState => [...prevState, selectedUser]);
-    // setFormInput(prevState => ({ ...prevState, name: '' }));
   };
-
-  const handleLeaveChat = e => {
-    // Here Ia m going to need to see who the current user is and then send them to the backend and then I guess just refetch the chats? Is that what he does just to reset everything? I guess that make sure the whole state is current
-  };
-  // const addUserInputRef = useRef();
-
-  // const handleKeyDown = e => {
-  //   console.log('hello?');
-  // };
-
-  // useEffect(() => {
-  //   if (!addUserInputRef.current) return;
-  //   const keypress = new Event('keydown', {
-  //     bubbles: true,
-  //     cancelable: true,
-  //     keycode: 32,
-  //     which: 32,
-  //   });
-  //   addUserInputRef.current.focus();
-  //   addUserInputRef.current.dispatchEvent(keypress);
-  // }, [showAddUserDropdown]);
 
   return (
     <div className="add-user-dropdown-container">

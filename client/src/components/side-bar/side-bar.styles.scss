@@ -1,7 +1,6 @@
 .side-bar-container {
   margin: 12px;
-  width: 25%;
-  min-width: 300px;
+  width: 31%;
   border: 1px solid white;
   border-radius: 12px;
   display: flex;
@@ -59,11 +58,12 @@
   margin-bottom: 0;
   list-style: none;
   display: flex;
-  gap: 24px;
-  justify-content: center;
+  // gap: 24px;
+  justify-content: space-around;
   align-items: center;
   color: white;
   font-weight: bold;
+  padding: 0px 24px;
 }
 
 .side-bar-category {
