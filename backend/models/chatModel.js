@@ -26,7 +26,6 @@ const chatSchema = mongoose.Schema(
     },
     chatName: { type: String, trim: true },
     isGroupChat: { type: Boolean, default: false },
-    chatCreator: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   },
   {
     timestamps: true,

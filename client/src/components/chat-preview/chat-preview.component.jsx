@@ -10,8 +10,6 @@ const ChatPreview = () => {
   const { activeChat, setActiveChat, chats, windowDimensions, setActiveView } =
     useChatView();
 
-  console.log('the chats are:', chats, 'the active chat is', activeChat);
-
   useEffect(() => {});
 
   const handleClick = e => {

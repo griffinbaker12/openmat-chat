@@ -1,4 +1,3 @@
-const { json } = require('express');
 const asyncHandler = require('express-async-handler');
 const Chat = require('../models/chatModel');
 const User = require('../models/userModel');
@@ -63,7 +62,6 @@ const createChat = asyncHandler(async (req, res) => {
     const newChat = await Chat.create({
       chatName,
       users,
-      chatCreator: req.user,
       isGroupChat,
     });
 
@@ -73,7 +71,6 @@ const createChat = asyncHandler(async (req, res) => {
     // Each object that gets created seems to have an id attached to it, and that is how all of these things are linked together
     const fullChat = await Chat.findOne({ _id: newChat._id })
       .populate('users', '-password')
-      .populate('chatCreator', '-password')
       .populate('latestMessage');
 
     res.json(fullChat);
@@ -85,12 +82,12 @@ const createChat = asyncHandler(async (req, res) => {
 
 // Check which user is logged in and then send them all the chats of which they are apart; the MW makes it so that we always have the current user and that is very handy
 const fetchChats = asyncHandler(async (req, res) => {
+  console.log(req.user);
   try {
     // Find the chats where the element (b/c we are dealing with object ids) is equal to the user id that we have received (from the MW)
     // Since we do not have any data fields in the latest message right now that does not show up in Postman apparently
     Chat.find({ users: { $elemMatch: { $eq: req.user._id } } })
       .populate('users', '-hash')
-      .populate('chatCreator', '-hash')
       .populate('latestMessage')
       .sort({ updatedAt: -1 })
       .then(async results => {
@@ -115,9 +112,7 @@ const renameChat = asyncHandler(async (req, res) => {
     chatId,
     { chatName },
     { new: true }
-  )
-    .populate('users', '-password')
-    .populate('chatCreator', '-password');
+  ).populate('users', '-password');
 
   if (!updatedChat) {
     res.status(404);
@@ -140,17 +135,13 @@ const addUserToChat = asyncHandler(async (req, res) => {
       chatId,
       { $push: { users: userId }, $set: { isGroupChat: true, chatName: '' } },
       { new: true }
-    )
-      .populate('users', '-password')
-      .populate('chatCreator', '-password');
+    ).populate('users', '-password');
   } else {
     added = await Chat.findByIdAndUpdate(
       chatId,
       { $push: { users: userId }, $set: { isGroupChat: true, chatName: '' } },
       { new: true }
-    )
-      .populate('users', '-password')
-      .populate('chatCreator', '-password');
+    ).populate('users', '-password');
   }
 
   if (!added) {
@@ -169,9 +160,7 @@ const leaveChat = asyncHandler(async (req, res) => {
     chatId,
     { $pull: { users: req.user._id } },
     { new: true }
-  )
-    .populate('users', '-password')
-    .populate('chatCreator', '-password');
+  ).populate('users', '-password');
 
   if (!removed) {
     res.status(404);

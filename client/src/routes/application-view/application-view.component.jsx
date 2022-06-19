@@ -12,6 +12,7 @@ const ApplicationView = () => {
     setActiveView,
     setActiveChat,
     chats,
+    activeChat,
   } = useChatView();
 
   const handleResize = e => {
@@ -20,7 +21,11 @@ const ApplicationView = () => {
     setWindowDimensions({ height, width });
     if (windowDimensions.width > 900) {
       setActiveView('chat');
-      setActiveChat([chats[0]]);
+      if (activeChat.length) {
+        setActiveChat([chats[0]]);
+      } else {
+        setActiveChat([]);
+      }
     }
   };
 
