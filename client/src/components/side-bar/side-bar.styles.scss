@@ -1,11 +1,10 @@
 .side-bar-container {
-  margin: 12px;
   width: 31%;
   border: 1px solid white;
   border-radius: 12px;
   display: flex;
   flex-direction: column;
-  padding-top: 4px;
+  // padding-top: 4px;
   background-color: rgb(30, 30, 30);
   overflow: hidden;
 }
@@ -13,8 +12,7 @@
 .side-bar-search-container {
   align-items: center;
   position: relative;
-  padding: 6px;
-  padding-bottom: 12px;
+  padding: 12px 6px;
   border-bottom: 1px solid gray;
 
   form {
@@ -47,7 +45,7 @@
 .search-icon {
   position: absolute;
   left: 22px;
-  top: 11px;
+  top: 17px;
   height: 16px;
   width: 16px;
   fill: white;

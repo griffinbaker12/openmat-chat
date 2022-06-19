@@ -25,9 +25,11 @@ export const AuthenticationProvider = ({ children }) => {
   // Something like this, I am not sure if this works 100% but still nonetheless we can clean this up later when we get to it. Then we should also be working on the sign in component which should not be all that bad either
 
   useEffect(() => {
-    setIsLoading(true);
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-    setCurrentUser(userInfo);
+    if (userInfo) {
+      setIsLoading(true);
+      setCurrentUser(userInfo);
+    }
     if (!userInfo) navigate('/');
   }, [navigate]);
 

@@ -26,31 +26,36 @@
 }
 
 .chat-information-button-container {
-  height: 20px;
-  width: 20px;
-  border-radius: 50%;
-  // border: 1px solid white;
+  height: 30px;
+  width: 30px;
+  border-radius: 4px;
   background-color: rgb(94, 93, 93);
   border: 1px solid gray;
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: all 200ms ease-in-out;
 
   &:hover {
     cursor: pointer;
+    filter: brightness(0.9);
   }
 }
 
 .chat-information-button {
   border: none;
+  border-radius: 50%;
+  border: 1px solid white;
   background: none;
   color: white;
   font-weight: bold;
   font-size: 12px;
 
-  &:hover {
-    cursor: pointer;
-  }
+  // &:hover {
+  //   cursor: pointer;
+
+  //   filter: brightness(0.9);
+  // }
 }
 
 // .to-text-recipient {

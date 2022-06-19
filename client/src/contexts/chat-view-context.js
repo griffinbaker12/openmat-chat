@@ -42,6 +42,11 @@ export const ChatViewProvider = ({ children }) => {
   const [showActiveUserWithinChatInfo, setShowActiveUserWithinChatInfo] =
     useState(false);
   const [friends, setFriends] = useState([]);
+  const [activeView, setActiveView] = useState('chat');
+  const [windowDimensions, setWindowDimensions] = useState({
+    height: window.innerHeight,
+    width: window.innerWidth,
+  });
 
   const { currentUser, setCurrentUser, setIsLoading } = useAuthentication();
   const navigate = useNavigate();
@@ -76,6 +81,8 @@ export const ChatViewProvider = ({ children }) => {
 
   const fetchChats = useCallback(
     async (tokenForLogin = null, userData = null) => {
+      setIsChatViewLoading(true);
+      setIsLoading(true);
       try {
         const response = await fetch(`http://localhost:4000/api/chat`, {
           method: 'get',
@@ -84,12 +91,11 @@ export const ChatViewProvider = ({ children }) => {
           },
         });
         const data = await response.json();
-        console.log(data);
+        setIsChatViewLoading(false);
         setIsLoading(false);
         setChats(data);
         if (tokenForLogin) {
           navigate('/chat');
-          setIsLoading(false);
           toast.success('Login success', {
             position: 'bottom-center',
             autoClose: 3000,
@@ -103,6 +109,7 @@ export const ChatViewProvider = ({ children }) => {
           setCurrentUser(userData);
         }
       } catch (e) {
+        setIsChatViewLoading(false);
         toast.error('Error fetching chats', {
           position: 'bottom-center',
           autoClose: 3000,
@@ -169,7 +176,7 @@ export const ChatViewProvider = ({ children }) => {
       fetchChats();
     }
     return;
-  }, [currentUser, fetchChats]);
+  }, [currentUser, fetchChats, setIsLoading]);
 
   useEffect(() => {
     if (chats.length === 0) return;
@@ -211,6 +218,10 @@ export const ChatViewProvider = ({ children }) => {
         setShowActiveUserWithinChatInfo,
         setActiveUserInfo,
         isChatViewLoading,
+        activeView,
+        setActiveView,
+        windowDimensions,
+        setWindowDimensions,
       }}
     >
       {children}

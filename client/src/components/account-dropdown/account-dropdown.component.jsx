@@ -9,7 +9,7 @@ const AccountDropdown = forwardRef(({ closeAccountDropdown }, ref) => {
   const navigate = useNavigate();
   const dropDownRef = useRef();
   const { handleModal, setUserInfoModal } = useChatView();
-  const { currentUser, setCurrentUser } = useAuthentication();
+  const { setIsLoading, setCurrentUser } = useAuthentication();
 
   const handleSignOutClick = e => {
     if (ref.current === e.target.closest('.header-chat-link')) {
@@ -34,7 +34,7 @@ const AccountDropdown = forwardRef(({ closeAccountDropdown }, ref) => {
   const signOutUser = () => {
     localStorage.removeItem('userInfo');
     navigate('/');
-    setCurrentUser({});
+    setCurrentUser(null);
     defaultToast(TOAST_TYPE.success, 'Goodbye 👋🏼');
   };
 

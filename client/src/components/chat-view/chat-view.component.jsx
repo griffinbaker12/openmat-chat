@@ -6,17 +6,23 @@ import './chat-view.styles.scss';
 import { useAuthentication } from '../../contexts/authentication-context';
 
 const ChatView = () => {
-  const { activeChat } = useChatView();
-  const { isLoading } = useAuthentication();
-  console.log(isLoading);
+  const { activeChat, isChatViewLoading, activeView, windowDimensions } =
+    useChatView();
 
   return (
     <div
+      style={
+        windowDimensions.width > 900
+          ? { width: '68%' }
+          : activeView === 'chat'
+          ? { width: '100%' }
+          : { display: 'none' }
+      }
       className={`chat-view-container ${
         activeChat.length > 0 && 'active-chat'
       }`}
     >
-      {isLoading ? (
+      {isChatViewLoading ? (
         <Spinner type="search" />
       ) : activeChat.length > 0 ? (
         <>

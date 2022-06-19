@@ -19,9 +19,9 @@ const SideBar = () => {
     handleSearchSubmit,
     handleModal,
     sideBarCategory,
+    activeView,
+    windowDimensions,
   } = useChatView();
-
-  const { isLoading } = useAuthentication();
 
   // const handleCategoryChange = e => {
   //   const clickedCategory = e.target.getAttribute('name');
@@ -31,7 +31,16 @@ const SideBar = () => {
   // submit just get whatever that value was and actually set the search loading to true and all that jazz
 
   return (
-    <div className="side-bar-container">
+    <div
+      style={
+        windowDimensions.width > 900
+          ? { width: '31%' }
+          : activeView === 'chat-preview'
+          ? { width: '100%' }
+          : { display: 'none' }
+      }
+      className="side-bar-container"
+    >
       <div className="side-bar-search-container">
         <form onSubmit={handleSearchSubmit}>
           <input
@@ -70,12 +79,12 @@ const SideBar = () => {
 
       <div style={{ flex: '1' }}>
         {sideBarCategory === 'conversations' ? (
-          isLoading ? (
+          isChatViewLoading ? (
             <Spinner type="search" />
           ) : (
             <ChatPreview />
           )
-        ) : isLoading ? (
+        ) : isChatViewLoading ? (
           <Spinner type="search" />
         ) : (
           <ContactPreview />
@@ -91,8 +100,6 @@ const SideBar = () => {
           ? 'New Conversation'
           : 'Add Friend'}
       </button>
-
-      {<Modal />}
     </div>
   );
 };
