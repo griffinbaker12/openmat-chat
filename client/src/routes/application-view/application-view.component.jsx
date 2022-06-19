@@ -21,12 +21,12 @@ const ApplicationView = () => {
     setWindowDimensions({ height, width });
     if (windowDimensions.width > 900) {
       setActiveView('chat');
-      if (activeChat.length) {
-        setActiveChat([chats[0]]);
-      } else {
-        setActiveChat([]);
-      }
+      //   if (activeChat.length) {
+      //     setActiveChat([chats[0]]);
+      //   } else {
+      //     setActiveChat([]);
     }
+    // }
   };
 
   useEffect(() => {

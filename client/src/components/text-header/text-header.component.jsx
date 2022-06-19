@@ -16,8 +16,6 @@ const TextHeader = () => {
   } = useChatView();
   const { currentUser } = useAuthentication();
 
-  console.log(activeChat, chats);
-
   const handleClick = () => {
     handleModal(MODAL_TYPE.chatInfo);
     setShowActiveUserWithinChatInfo(false);

@@ -6,9 +6,9 @@ const User = require('../models/userModel');
 
 const sendMessage = asyncHandler(async (req, res) => {
   const { text, chatId } = req.body;
+  console.log(text, chatId);
 
   if (!text || !chatId) {
-    console.log('Invalid data passed into request');
     return res.sendStatus(400);
   }
 
@@ -46,12 +46,10 @@ const fetchChatMessages = asyncHandler(async (req, res) => {
       .populate('sender', 'userName picture')
       .populate('chat');
 
-    console.log(chatMessages);
-
     res.json(chatMessages);
   } catch (error) {
     res.status(400);
-    throw new Error(e.message);
+    throw new Error(error.message);
   }
 });
 

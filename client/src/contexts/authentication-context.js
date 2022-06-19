@@ -13,11 +13,13 @@ export const useAuthentication = () => useContext(AuthenticationContext);
 
 export const AuthenticationProvider = ({ children }) => {
   const [activeAuth, setActiveAuth] = useState('login');
-  const [currentUser, setCurrentUser] = useState({});
+  const [currentUser, setCurrentUser] = useState(null);
   // May want to include different states for whether the sign in or the registration is loading...but fine for now
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
+
+  console.log('the cu from the provider', currentUser);
 
   const changeAuth = () =>
     setActiveAuth(prevState => (prevState === 'login' ? 'register' : 'login'));
@@ -29,6 +31,7 @@ export const AuthenticationProvider = ({ children }) => {
     if (userInfo) {
       setIsLoading(true);
       setCurrentUser(userInfo);
+      console.log('does this run');
     }
     if (!userInfo) navigate('/');
   }, [navigate]);

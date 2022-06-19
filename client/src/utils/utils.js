@@ -55,3 +55,6 @@ export const getMutualFriends = (friendOneArr, friendTwoArr) => {
 export const areFriends = (user1, user2) => {
   return user1.friends.some(friend => friend.userName === user2.userName);
 };
+
+export const userSent = (currentUser, message) =>
+  currentUser._id === message.sender._id;

@@ -6,7 +6,6 @@ import { useAuthentication } from '../../contexts/authentication-context';
 
 const Header = () => {
   const { currentUser } = useAuthentication();
-  console.log(currentUser);
 
   return (
     <>

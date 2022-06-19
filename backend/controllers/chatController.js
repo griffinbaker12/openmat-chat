@@ -82,7 +82,6 @@ const createChat = asyncHandler(async (req, res) => {
 
 // Check which user is logged in and then send them all the chats of which they are apart; the MW makes it so that we always have the current user and that is very handy
 const fetchChats = asyncHandler(async (req, res) => {
-  console.log(req.user);
   try {
     // Find the chats where the element (b/c we are dealing with object ids) is equal to the user id that we have received (from the MW)
     // Since we do not have any data fields in the latest message right now that does not show up in Postman apparently

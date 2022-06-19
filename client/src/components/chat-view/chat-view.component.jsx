@@ -3,10 +3,9 @@ import TextHeader from '../text-header/text-header.component';
 import Spinner from '../spinner/spinner.component';
 import { useChatView } from '../../contexts/chat-view-context';
 import './chat-view.styles.scss';
-import { useAuthentication } from '../../contexts/authentication-context';
 
 const ChatView = () => {
-  const { activeChat, isChatViewLoading, activeView, windowDimensions } =
+  const { activeChat, isChatViewLoading, activeView, windowDimensions, chats } =
     useChatView();
 
   return (
@@ -30,7 +29,11 @@ const ChatView = () => {
           <MessageView />
         </>
       ) : (
-        <p>Create a chat to get started!</p>
+        <p>
+          {chats.length === 0
+            ? 'Create a chat to get started!'
+            : 'Select a chat to view!'}
+        </p>
       )}
     </div>
   );
