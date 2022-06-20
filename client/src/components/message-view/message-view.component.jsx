@@ -14,14 +14,14 @@ import {
 // Could definitely add timestamp data to the message as well, that would be pretty clean actually
 
 const ENDPOINT = 'http://localhost:4000';
-let socket, selectedChatCompare;
+let socket;
 
 const MessageView = () => {
   // Somehow we are going to have to get all of the message in a conversation potentially and then mark whether or not they are your messages or someone else's to style accordingly;
   const { currentUser } = useAuthentication();
-  const { activeChat, windowDimensions } = useChatView();
+  const { activeChat } = useChatView();
 
-  const [socketConnected, setSocketConnected] = useState(false);
+  // const [socketConnected, setSocketConnected] = useState(false);
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -31,7 +31,6 @@ const MessageView = () => {
   const handleKeyDown = async e => {
     const newMessage = e.target.innerHTML;
     if (e.key === 'Enter' && newMessage) {
-      console.log(newMessage);
       e.preventDefault();
       e.target.innerHTML = '';
       try {
@@ -71,7 +70,6 @@ const MessageView = () => {
     setMessages(messages);
     setIsLoading(false);
 
-    console.log('one person joined the chag');
     socket.emit('join chat', activeChat[0]._id);
   }, [activeChat, currentUser.token]);
 
@@ -80,24 +78,23 @@ const MessageView = () => {
   }, [fetchMessages, activeChat]);
 
   useEffect(() => {
-    console.log('heyyyadsfjhsadfhljk');
     socket = io(ENDPOINT);
     socket.emit('setup', currentUser);
-    socket.on('connected', () => setSocketConnected(true));
-  }, []);
+    return () => socket.disconnect();
+  }, [currentUser]);
 
   useEffect(() => {
-    console.log('aright wrf bto');
     socket.on('message received', message => {
-      console.log('the message is', message);
       if (!activeChat[0]._id || message.chat._id !== activeChat[0]._id) {
         // give notification
         console.log('fail some how');
       } else {
-        setMessages(prevState => [...prevState, message]);
+        setMessages(prevState => {
+          return [...prevState, message];
+        });
       }
     });
-  }, []);
+  }, [activeChat]);
 
   const setRef = useCallback(node => {
     if (node) {

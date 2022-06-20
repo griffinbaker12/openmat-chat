@@ -50,7 +50,6 @@ const UserInfoModal = () => {
 
     if (!ellipsisPress) {
       setShowDropdown(false);
-      console.log('hey from the user info');
     }
   };
 
