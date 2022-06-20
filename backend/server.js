@@ -31,11 +31,19 @@ const io = require('socket.io')(server, {
 io.on('connection', socket => {
   socket.on('setup', userData => {
     socket.join(userData._id);
-    socket.emit('connected');
   });
 
   socket.on('join chat', chatId => {
     socket.join(chatId);
+  });
+
+  socket.on('typing', (room, user) => {
+    socket.in(room).emit('typing', user.userName);
+  });
+
+  socket.on('stop typing', room => {
+    console.log('typing stopped');
+    socket.in(room).emit('stop typing');
   });
 
   socket.on('new message', message => {
@@ -43,7 +51,6 @@ io.on('connection', socket => {
     chat.users.forEach(user => {
       if (user._id === message.sender._id) return;
       socket.in(user._id).emit('message received', message);
-      console.log('message sent');
     });
   });
 });

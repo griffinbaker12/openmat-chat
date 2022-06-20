@@ -3,7 +3,7 @@
   flex-direction: column;
   overflow: auto;
   flex: 1;
-  gap: 10px;
+  gap: 8px;
   width: 100%;
   border-radius: 8px;
   background-color: rgb(78, 78, 78);
@@ -120,4 +120,13 @@
   content: attr(data-text);
   color: rgb(167, 165, 165);
   padding-left: 3px;
+}
+
+.lottie-container {
+  display: flex;
+  align-items: center;
+  color: lightgray;
+  font-size: 12px;
+  gap: 2px;
+  // overflow: hidden;
 }

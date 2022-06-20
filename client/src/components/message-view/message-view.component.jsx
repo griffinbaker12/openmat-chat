@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
+import Lottie from 'lottie-react';
 import { useChatView } from '../../contexts/chat-view-context';
 import Spinner from '../spinner/spinner.component';
 import './message-view.styles.scss';
 import { useAuthentication } from '../../contexts/authentication-context';
+import animationData from '../../animations/typing.json';
 import {
   defaultToast,
   sameSenderAndNotCurrentUser,
@@ -16,6 +18,15 @@ import {
 const ENDPOINT = 'http://localhost:4000';
 let socket;
 
+const defaultOptions = {
+  loop: true,
+  autoplay: true,
+  animationData: animationData,
+  rendererSettings: {
+    preserveAspectRatio: 'xMidYMid slice',
+  },
+};
+
 const MessageView = () => {
   // Somehow we are going to have to get all of the message in a conversation potentially and then mark whether or not they are your messages or someone else's to style accordingly;
   const { currentUser } = useAuthentication();
@@ -24,6 +35,9 @@ const MessageView = () => {
   // const [socketConnected, setSocketConnected] = useState(false);
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const [typing, setTyping] = useState(false);
+  const [typer, setTyper] = useState('');
 
   // So I am thinking that I can definitely scroll into view whatever message is actually clicked within whatever chat, I don't see why that would not be possible?
   // Pretty cool, when the component actually mounts, the ref for the element gets passed into the callback function, could actually do some pretyy coll things with this, like making an animation or shake the screen or bounce the message or anything when the message actually enters the screen...
@@ -51,9 +65,21 @@ const MessageView = () => {
       } catch (error) {
         defaultToast(TOAST_TYPE.error, 'Error sending');
       }
-    } else {
-      return;
     }
+    if (!typing) {
+      setTyping(true);
+      socket.emit('typing', activeChat[0]._id, currentUser);
+    }
+    let lastTypingTime = new Date().getTime();
+    var timerLength = 3000;
+    setTimeout(() => {
+      var timeNow = new Date().getTime();
+      var timeDiff = timeNow - lastTypingTime;
+      if (timeDiff >= timerLength && typing) {
+        socket.emit('stop typing', activeChat[0]._id);
+        setTyping(false);
+      }
+    }, timerLength);
   };
 
   const fetchMessages = useCallback(async () => {
@@ -78,8 +104,14 @@ const MessageView = () => {
   }, [fetchMessages, activeChat]);
 
   useEffect(() => {
+    console.log('hey');
     socket = io(ENDPOINT);
     socket.emit('setup', currentUser);
+    socket.on('typing', typer => {
+      setTyper(typer);
+      setIsTyping(true);
+    });
+    socket.on('stop typing', () => setIsTyping(false));
     return () => socket.disconnect();
   }, [currentUser]);
 
@@ -156,6 +188,17 @@ const MessageView = () => {
                   </div>
                 );
               })}
+            {isTyping && (
+              <div ref={isTyping ? setRef : null} className="lottie-container">
+                <p>@{typer} is typing</p>
+                <Lottie
+                  animationData={animationData}
+                  loop={true}
+                  autoplay={true}
+                  style={{ height: '16px' }}
+                />
+              </div>
+            )}
           </div>
 
           <div
