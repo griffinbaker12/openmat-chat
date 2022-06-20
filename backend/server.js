@@ -41,10 +41,9 @@ io.on('connection', socket => {
     socket.in(room).emit('typing', user.userName);
   });
 
-  socket.on('stop typing', room => {
-    console.log('typing stopped');
-    socket.in(room).emit('stop typing');
-  });
+  socket.on('stop typing', (room, user) =>
+    socket.in(room).emit('stop typing', user.userName)
+  );
 
   socket.on('new message', message => {
     let chat = message.chat;

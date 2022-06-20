@@ -11,6 +11,7 @@ import {
   sameSenderAndNotCurrentUser,
   TOAST_TYPE,
   userSent,
+  getTyperString,
 } from '../../utils/utils';
 
 // Could definitely add timestamp data to the message as well, that would be pretty clean actually
@@ -37,7 +38,11 @@ const MessageView = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [typing, setTyping] = useState(false);
-  const [typer, setTyper] = useState('');
+  const [typers, setTypers] = useState([]);
+  const [userWhoStoppedTyping, setuserWhoStoppedTyping] = useState('');
+
+  console.log('typers from outside', typers);
+  // const typers = useRef();
 
   // So I am thinking that I can definitely scroll into view whatever message is actually clicked within whatever chat, I don't see why that would not be possible?
   // Pretty cool, when the component actually mounts, the ref for the element gets passed into the callback function, could actually do some pretyy coll things with this, like making an animation or shake the screen or bounce the message or anything when the message actually enters the screen...
@@ -65,21 +70,26 @@ const MessageView = () => {
       } catch (error) {
         defaultToast(TOAST_TYPE.error, 'Error sending');
       }
-    }
-    if (!typing) {
-      setTyping(true);
-      socket.emit('typing', activeChat[0]._id, currentUser);
-    }
-    let lastTypingTime = new Date().getTime();
-    var timerLength = 3000;
-    setTimeout(() => {
-      var timeNow = new Date().getTime();
-      var timeDiff = timeNow - lastTypingTime;
-      if (timeDiff >= timerLength && typing) {
-        socket.emit('stop typing', activeChat[0]._id);
-        setTyping(false);
+    } else {
+      if (!typing) {
+        setTyping(true);
+        socket.emit('typing', activeChat[0]._id, currentUser);
       }
-    }, timerLength);
+      let lastTypingTime = new Date().getTime();
+      var timerLength = 3000;
+      setTimeout(() => {
+        var timeNow = new Date().getTime();
+        var timeDiff = timeNow - lastTypingTime;
+        if (timeDiff >= timerLength) {
+          console.log(
+            'this user is about to emit a stop typing',
+            currentUser.userName
+          );
+          socket.emit('stop typing', activeChat[0]._id, currentUser);
+          setTyping(false);
+        }
+      }, timerLength);
+    }
   };
 
   const fetchMessages = useCallback(async () => {
@@ -104,19 +114,22 @@ const MessageView = () => {
   }, [fetchMessages, activeChat]);
 
   useEffect(() => {
-    console.log('hey');
+    console.log('running');
     socket = io(ENDPOINT);
     socket.emit('setup', currentUser);
+    // For when the user refreshes the page or leaves the chat, otherwise the lottie is suspended
+    socket.emit('stop typing', activeChat[0]._id, currentUser);
     socket.on('typing', typer => {
-      setTyper(typer);
       setIsTyping(true);
+      setTypers(prevState => [typer, ...prevState]);
     });
-    socket.on('stop typing', () => setIsTyping(false));
     return () => socket.disconnect();
-  }, [currentUser]);
+  }, [currentUser, activeChat]);
 
   useEffect(() => {
     socket.on('message received', message => {
+      setIsTyping(false);
+      // setTyping(false);
       if (!activeChat[0]._id || message.chat._id !== activeChat[0]._id) {
         // give notification
         console.log('fail some how');
@@ -127,6 +140,19 @@ const MessageView = () => {
       }
     });
   }, [activeChat]);
+
+  useEffect(() => {
+    socket.on('stop typing', userName => {
+      const usersStillTyping = typers.filter(typer => typer !== userName);
+      if (usersStillTyping.length > 0) {
+        setIsTyping(true);
+        setTypers(usersStillTyping);
+        return;
+      }
+      setIsTyping(false);
+      setTypers([]);
+    });
+  }, [typers]);
 
   const setRef = useCallback(node => {
     if (node) {
@@ -190,7 +216,7 @@ const MessageView = () => {
               })}
             {isTyping && (
               <div ref={isTyping ? setRef : null} className="lottie-container">
-                <p>@{typer} is typing</p>
+                {typers.length ? getTyperString(typers) : ''}
                 <Lottie
                   animationData={animationData}
                   loop={true}

@@ -66,3 +66,11 @@ export const sameSenderAndNotCurrentUser = (i, messages, currentUser) => {
     currentUser._id !== messages[i].sender._id
   );
 };
+
+export const getTyperString = typers => {
+  if (typers.length === 1) return typers[0];
+  return typers
+    .slice(0, typers.length - 1)
+    .join(', ')
+    .concat(` and ${typers.at(-1)}`);
+};
