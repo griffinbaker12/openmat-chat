@@ -68,9 +68,16 @@ export const sameSenderAndNotCurrentUser = (i, messages, currentUser) => {
 };
 
 export const getTyperString = typers => {
-  if (typers.length === 1) return typers[0];
-  return typers
-    .slice(0, typers.length - 1)
-    .join(', ')
-    .concat(` and ${typers.at(-1)}`);
+  if (typers.length === 1) return typers[0] + ' is typing';
+  if (typers.length === 2) return typers[0] + typers[1] + ' are typing';
+  if (typers.length === 3)
+    return typers
+      .slice(0, 2)
+      .join(', ')
+      .concat(` and ${typers.at(-1)} are typing`);
+  else
+    return typers
+      .slice(0, 2)
+      .join(', ')
+      .concat(` and ${typers.length - 2} others are typing`);
 };

@@ -37,6 +37,8 @@ const ChatInfoModal = ({ userFlag }) => {
   const chatEditInputRef = useRef(null);
   // const [isLoading, setIsLoading] = useState(false);
 
+  console.log('the active chat name', activeChat[0]?.chatName, activeChat);
+
   // So yeah, cool, the chats will be updated whenever you create a new chat from the modal so can easily tell / check duplicate chats are being
 
   useEffect(() => {
@@ -47,23 +49,24 @@ const ChatInfoModal = ({ userFlag }) => {
   useEffect(() => {
     if (!activeChat[0]) return;
     if (!activeChat[0].isGroupChat) {
-      // setWasSoloChat(true);
+      setWasSoloChat(true);
       setNewChatName(
         generateChatNameForSoloChats(activeChat[0].users, currentUser)
       );
       return;
     }
+    console.log(activeChat[0].chatName, 'name from UE');
     setNewChatName(activeChat[0].chatName);
   }, [activeChat, showChatEdit, currentUser]);
 
   const checkForUsedToSoloAndCloseModal = () => {
-    if (activeChat[0].isGroupChat && !activeChat[0].chatName) {
+    if (wasSoloChat && !activeChat[0].chatName) {
       setShowChatEdit(true);
       chatEditInputRef.current.focus();
       defaultToast(TOAST_TYPE.failure, 'Please add chat name');
       return;
     }
-    // setWasSoloChat(false);
+    setWasSoloChat(false);
     closeModal();
     return;
   };
@@ -159,9 +162,7 @@ const ChatInfoModal = ({ userFlag }) => {
     }
   };
 
-  const handleChatNameChange = e => {
-    setNewChatName(e.target.value);
-  };
+  const handleChatNameChange = e => setNewChatName(e.target.value);
 
   const handleEditChatName = () => {
     setShowChatEdit(prevState => !prevState);

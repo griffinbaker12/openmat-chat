@@ -138,7 +138,7 @@ const addUserToChat = asyncHandler(async (req, res) => {
   } else {
     added = await Chat.findByIdAndUpdate(
       chatId,
-      { $push: { users: userId }, $set: { isGroupChat: true, chatName: '' } },
+      { $push: { users: userId } },
       { new: true }
     ).populate('users', '-password');
   }

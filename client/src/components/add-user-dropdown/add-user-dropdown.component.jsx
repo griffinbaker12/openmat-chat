@@ -21,8 +21,6 @@ const AddUserDropdown = ({ wasSoloChat }) => {
     setActiveChat,
   } = useChatView();
 
-  console.log('was solo chat from user dd', wasSoloChat);
-
   useEffect(() => {
     if (!addUserToChatRef.current) return;
     addUserToChatRef.current.focus();

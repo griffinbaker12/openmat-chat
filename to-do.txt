@@ -130,10 +130,6 @@ const MessageView = () => {
   const [typing, setTyping] = useState(false);
   const [typers, setTypers] = useState([]);
 
-  console.log('typers from outside', typers);
-  console.log('is typing', isTyping);
-  // const typers = useRef();
-
   // So I am thinking that I can definitely scroll into view whatever message is actually clicked within whatever chat, I don't see why that would not be possible?
   // Pretty cool, when the component actually mounts, the ref for the element gets passed into the callback function, could actually do some pretyy coll things with this, like making an animation or shake the screen or bounce the message or anything when the message actually enters the screen...
 

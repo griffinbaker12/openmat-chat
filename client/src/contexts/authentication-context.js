@@ -19,8 +19,6 @@ export const AuthenticationProvider = ({ children }) => {
 
   const navigate = useNavigate();
 
-  console.log('the cu from the provider', currentUser);
-
   const changeAuth = () =>
     setActiveAuth(prevState => (prevState === 'login' ? 'register' : 'login'));
 
@@ -31,7 +29,6 @@ export const AuthenticationProvider = ({ children }) => {
     if (userInfo) {
       setIsLoading(true);
       setCurrentUser(userInfo);
-      console.log('does this run');
     }
     if (!userInfo) navigate('/');
   }, [navigate]);

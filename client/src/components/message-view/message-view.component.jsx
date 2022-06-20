@@ -39,10 +39,6 @@ const MessageView = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [typing, setTyping] = useState(false);
   const [typers, setTypers] = useState([]);
-  const [userWhoStoppedTyping, setuserWhoStoppedTyping] = useState('');
-
-  console.log('typers from outside', typers);
-  // const typers = useRef();
 
   // So I am thinking that I can definitely scroll into view whatever message is actually clicked within whatever chat, I don't see why that would not be possible?
   // Pretty cool, when the component actually mounts, the ref for the element gets passed into the callback function, could actually do some pretyy coll things with this, like making an animation or shake the screen or bounce the message or anything when the message actually enters the screen...
@@ -81,10 +77,6 @@ const MessageView = () => {
         var timeNow = new Date().getTime();
         var timeDiff = timeNow - lastTypingTime;
         if (timeDiff >= timerLength) {
-          console.log(
-            'this user is about to emit a stop typing',
-            currentUser.userName
-          );
           socket.emit('stop typing', activeChat[0]._id, currentUser);
           setTyping(false);
         }
@@ -114,7 +106,6 @@ const MessageView = () => {
   }, [fetchMessages, activeChat]);
 
   useEffect(() => {
-    console.log('running');
     socket = io(ENDPOINT);
     socket.emit('setup', currentUser);
     // For when the user refreshes the page or leaves the chat, otherwise the lottie is suspended
@@ -132,7 +123,6 @@ const MessageView = () => {
       // setTyping(false);
       if (!activeChat[0]._id || message.chat._id !== activeChat[0]._id) {
         // give notification
-        console.log('fail some how');
       } else {
         setMessages(prevState => {
           return [...prevState, message];
