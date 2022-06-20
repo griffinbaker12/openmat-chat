@@ -59,6 +59,7 @@ const cors = require('cors');
 const userRoutes = require('./routes/userRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const messageRoutes = require('./routes/messageRoutes');
+const io = require('socket.io');
 
 const app = express();
 dotenv.config();
@@ -73,5 +74,37 @@ app.use('/api/message', messageRoutes);
 const PORT = process.env.port || 4000;
 
 db()
-  .then(() => app.listen(PORT, console.log(`listening on port ${PORT}`)))
+  .then(() => {
+    const server = app.listen(PORT, console.log(`listening on port ${PORT}`));
+    const socketProvider = io(server, {
+      // pingTimeout: 60000,
+      cors: {
+        origin: 'http://localhost:3000',
+      },
+    });
+    socketProvider.on('connection', socket => {
+      console.log('connected to socket.io');
+
+      socket.on('setup', userData => {
+        socket.join(userData._id);
+        socket.emit('connected');
+      });
+
+      socket.on('join chat', chatId => {
+        socket.join(chatId);
+        console.log('user joined chat room', chatId);
+      });
+
+      socket.on('new message', message => {
+        let chat = message.chat;
+        chat.users.forEach((user, i) => {
+          console.log(i);
+          console.log(user._id, message.sender._id);
+          if (user._id === message.sender._id) return;
+          socket.in(user._id).emit('message received', message);
+          console.log('running');
+        });
+      });
+    });
+  })
   .catch(e => console.log(e));

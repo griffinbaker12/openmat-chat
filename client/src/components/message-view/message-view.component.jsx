@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { io } from 'socket.io-client';
 import { useChatView } from '../../contexts/chat-view-context';
 import Spinner from '../spinner/spinner.component';
 import './message-view.styles.scss';
@@ -12,11 +13,15 @@ import {
 
 // Could definitely add timestamp data to the message as well, that would be pretty clean actually
 
+const ENDPOINT = 'http://localhost:4000';
+let socket, selectedChatCompare;
+
 const MessageView = () => {
   // Somehow we are going to have to get all of the message in a conversation potentially and then mark whether or not they are your messages or someone else's to style accordingly;
   const { currentUser } = useAuthentication();
   const { activeChat, windowDimensions } = useChatView();
 
+  const [socketConnected, setSocketConnected] = useState(false);
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -26,6 +31,7 @@ const MessageView = () => {
   const handleKeyDown = async e => {
     const newMessage = e.target.innerHTML;
     if (e.key === 'Enter' && newMessage) {
+      console.log(newMessage);
       e.preventDefault();
       e.target.innerHTML = '';
       try {
@@ -41,8 +47,8 @@ const MessageView = () => {
           }),
         });
         const message = await response.json();
-        console.log(message);
-        setMessages(prevState => [message, ...prevState]);
+        socket.emit('new message', message);
+        setMessages(prevState => [...prevState, message]);
       } catch (error) {
         defaultToast(TOAST_TYPE.error, 'Error sending');
       }
@@ -53,7 +59,6 @@ const MessageView = () => {
 
   const fetchMessages = useCallback(async () => {
     if (!activeChat) return;
-    console.log(activeChat);
     setIsLoading(true);
     const response = await fetch(
       `http://localhost:4000/api/message/${activeChat[0]._id}`,
@@ -65,19 +70,34 @@ const MessageView = () => {
     const messages = await response.json();
     setMessages(messages);
     setIsLoading(false);
-  }, [activeChat, currentUser.token]);
 
-  // const sendMessage = useCallback(async () => {
-  //   console.log('running');
-  // }, [newMessage, activeChat, currentUser.token]);
+    console.log('one person joined the chag');
+    socket.emit('join chat', activeChat[0]._id);
+  }, [activeChat, currentUser.token]);
 
   useEffect(() => {
     fetchMessages();
   }, [fetchMessages, activeChat]);
 
-  // useEffect(() => {
-  //   sendMessage();
-  // }, [sendMessage]);
+  useEffect(() => {
+    console.log('heyyyadsfjhsadfhljk');
+    socket = io(ENDPOINT);
+    socket.emit('setup', currentUser);
+    socket.on('connected', () => setSocketConnected(true));
+  }, []);
+
+  useEffect(() => {
+    console.log('aright wrf bto');
+    socket.on('message received', message => {
+      console.log('the message is', message);
+      if (!activeChat[0]._id || message.chat._id !== activeChat[0]._id) {
+        // give notification
+        console.log('fail some how');
+      } else {
+        setMessages(prevState => [...prevState, message]);
+      }
+    });
+  }, []);
 
   const setRef = useCallback(node => {
     if (node) {
@@ -131,7 +151,9 @@ const MessageView = () => {
                         }
                         className="message-view-text-info"
                       >
-                        <p>@{!userSentBool && message.sender.userName}</p>
+                        <p>
+                          @{!userSentBool ? message.sender.userName : 'You'}
+                        </p>
                       </div>
                     </div>
                   </div>
