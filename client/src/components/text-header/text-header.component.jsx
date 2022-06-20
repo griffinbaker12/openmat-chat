@@ -44,7 +44,7 @@ const TextHeader = () => {
           : activeChat[0].chatName}
       </p>
       <div onClick={handleClick} className="chat-information-button-container">
-        <button className="chat-information-button">i</button>
+        <span className="chat-information-button">i</span>
       </div>
     </div>
   );

@@ -43,13 +43,23 @@
 }
 
 .chat-information-button {
+  height: 20px;
+  width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: none;
   border-radius: 50%;
-  border: 1px solid white;
+  border: 1px solid rgba(255, 255, 255, 0.652);
   background: none;
   color: white;
   font-weight: bold;
-  font-size: 12px;
+  font-size: 14px;
+  outline: none;
+
+  &:hover {
+    cursor: pointer;
+  }
 
   // &:hover {
   //   cursor: pointer;

@@ -3,7 +3,12 @@ import { useChatView } from '../../contexts/chat-view-context';
 import Spinner from '../spinner/spinner.component';
 import './message-view.styles.scss';
 import { useAuthentication } from '../../contexts/authentication-context';
-import { defaultToast, TOAST_TYPE, userSent } from '../../utils/utils';
+import {
+  defaultToast,
+  sameSenderAndNotCurrentUser,
+  TOAST_TYPE,
+  userSent,
+} from '../../utils/utils';
 
 // Could definitely add timestamp data to the message as well, that would be pretty clean actually
 
@@ -92,23 +97,48 @@ const MessageView = () => {
               messages.map((message, i) => {
                 const lastMessageBool = messages.length - 1 === i + 1;
                 const userSentBool = userSent(currentUser, message);
-
+                const sameSenderAndNotCurrentUserBool =
+                  sameSenderAndNotCurrentUser(i, messages, currentUser);
                 return (
                   <div
                     key={i}
                     ref={lastMessageBool ? setRef : null}
-                    className={`message-view-text-container ${
+                    className={`message-view-message-container ${
                       userSentBool ? 'user-sent' : ''
                     }`}
                   >
-                    <div className="message-view-text">{message.text}</div>
-                    <div className="message-view-text-info">
-                      <p>{userSentBool ? 'You' : message.sender.userName}</p>
+                    <div
+                      className="message-view-message-image-container"
+                      style={
+                        sameSenderAndNotCurrentUserBool || userSentBool
+                          ? { visibility: 'hidden' }
+                          : { marginTop: '2px' }
+                      }
+                    >
+                      <img
+                        height="100%"
+                        src={message.sender.picture}
+                        alt="profile"
+                      />
+                    </div>
+                    <div className="message-view-text-container">
+                      <div className="message-view-text">{message.text}</div>
+                      <div
+                        style={
+                          sameSenderAndNotCurrentUserBool || userSentBool
+                            ? { display: 'none' }
+                            : {}
+                        }
+                        className="message-view-text-info"
+                      >
+                        <p>@{!userSentBool && message.sender.userName}</p>
+                      </div>
                     </div>
                   </div>
                 );
               })}
           </div>
+
           <div
             className="send-message-editable"
             data-text={`Message `}

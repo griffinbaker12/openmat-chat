@@ -6,14 +6,8 @@ import './application-view.styles.scss';
 import { useChatView } from '../../contexts/chat-view-context';
 
 const ApplicationView = () => {
-  const {
-    setWindowDimensions,
-    windowDimensions,
-    setActiveView,
-    setActiveChat,
-    chats,
-    activeChat,
-  } = useChatView();
+  const { setWindowDimensions, windowDimensions, setActiveView } =
+    useChatView();
 
   const handleResize = e => {
     const height = e.target.innerHeight;
@@ -21,12 +15,7 @@ const ApplicationView = () => {
     setWindowDimensions({ height, width });
     if (windowDimensions.width > 900) {
       setActiveView('chat');
-      //   if (activeChat.length) {
-      //     setActiveChat([chats[0]]);
-      //   } else {
-      //     setActiveChat([]);
     }
-    // }
   };
 
   useEffect(() => {

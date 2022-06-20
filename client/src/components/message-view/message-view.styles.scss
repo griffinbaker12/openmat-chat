@@ -7,10 +7,13 @@
   width: 100%;
   border-radius: 8px;
   background-color: rgb(78, 78, 78);
-  padding: 10px;
+  padding: 10px 10px 10px 10px;
 }
 
 .message-view-active-chat-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   flex: 1;
   overflow: auto;
   &::-webkit-scrollbar {
@@ -28,29 +31,58 @@
 
 // So this either has to move to the left or right essentially becuase this is the child that is getting aligned accordingly to above, so copy below styles above essentially
 
-.message-view-text-container.user-sent {
+.message-view-message-container.user-sent {
   display: flex;
-  flex-direction: column;
-  align-self: flex-end;
+  justify-content: flex-end;
   gap: 2px;
   width: 100%;
   padding-right: 4px;
 }
 
+.message-view-message-container {
+  display: flex;
+  width: 100%;
+  justify-content: flex-start;
+  gap: 8px;
+
+  .message-view-message-image-container {
+    height: 32px;
+    width: 32px;
+    overflow: hidden;
+    border-radius: 50%;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  // &:last-child {
+  //   .message-view-text-container {
+  //     .message-view-text {
+  //       margin-bottom: 0px;
+  //     }
+  //   }
+  // }
+}
+
 .message-view-text-container {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  max-width: 40%;
+  align-items: flex-start;
+  gap: 2px;
+  font-weight: normal;
 }
 
 .message-view-text {
+  max-width: 100%;
+  background-color: #1f2227;
+  font-size: 16px;
   word-wrap: break-word;
   padding: 8px;
-  border-radius: 5px;
+  border-radius: 8px;
   border: 1px solid gray;
-  max-width: 40%;
-  align-self: flex-end;
-  color: white;
+  text-align: left;
 }
 
 .message-view-text-info {
@@ -59,6 +91,13 @@
   font-size: smaller;
   gap: 2px;
   color: #999;
+  font-size: 14px;
+  color: white;
+
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
 }
 
 .send-message-editable {
@@ -70,6 +109,7 @@
   background-color: #303238;
   outline: none;
   text-align: left;
+  width: 100%;
 
   &:hover {
     cursor: text;
