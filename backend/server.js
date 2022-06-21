@@ -28,10 +28,30 @@ const io = require('socket.io')(server, {
   },
 });
 
-// global.onlineUsers = new Map();
+global.onlineUsers = new Map();
 io.on('connection', socket => {
   socket.on('setup', userId => {
     socket.join(userId);
+    console.log('logged in user change', userId);
+    global.onlineUsers.set(userId, socket.id);
+    console.log(global.onlineUsers);
+    for (const [
+      onlineUserId,
+      _onlineSocketId,
+    ] of global.onlineUsers.entries()) {
+      console.log('uh');
+      if (onlineUserId === userId) {
+        socket.emit('logged in user change', [...global.onlineUsers]);
+        return;
+      } else {
+        socket
+          .to(onlineUserId)
+          .emit('logged in user change', [...global.onlineUsers]);
+      }
+    }
+
+    // Add them to the set when they sign in and emit an event that contains all of the users and can handle this on the client side
+
     // onlineUsers.set(userId, socket.id);
     // console.log(onlineUsers);
     // for (const [onlineUser, onlineSocket] of global.onlineUsers.entries()) {
@@ -65,9 +85,23 @@ io.on('connection', socket => {
     socket.to(room).emit('stop typing', user.userName)
   );
 
-  socket.off('setup', () => {
-    onlineUsers.push('yo');
+  // Take them out of the set
+  socket.on('log out', userId => {
+    socket.leave(userId);
+    global.onlineUsers.delete(userId);
+    for (const [
+      onlineUserId,
+      _onlineSocketId,
+    ] of global.onlineUsers.entries()) {
+      socket
+        .to(onlineUserId)
+        .emit('logged in user change', [...global.onlineUsers]);
+    }
   });
+
+  // socket.off('setup', () => {
+  //   onlineUsers.push('yo');
+  // });
 });
 
 // io.on('connection', socket => {

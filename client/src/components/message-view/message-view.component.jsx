@@ -24,7 +24,7 @@ const MessageView = () => {
   const { currentUser } = useAuthentication();
   const { activeChat, notifications, setNotifications, fetchChats } =
     useChatView();
-  const socket = useSocket();
+  const { socket } = useSocket();
 
   // const [socketConnected, setSocketConnected] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -145,11 +145,16 @@ const MessageView = () => {
       socket.off('stop typing');
     };
   }, [socket, typers]);
-  const setRef = useCallback(node => {
-    if (node && isScrolledIntoView(node)) {
-      node.scrollIntoView({ smooth: true });
-    }
-  }, []);
+  const setRef = useCallback(
+    node => {
+      if (node && isTyping && isScrolledIntoView(node)) {
+        node.scrollIntoView({ smooth: true });
+      } else if (node && !isTyping) {
+        node.scrollIntoView({ smooth: true });
+      }
+    },
+    [isTyping]
+  );
 
   function isScrolledIntoView(el) {
     var rect = el.getBoundingClientRect();
