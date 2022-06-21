@@ -9,17 +9,18 @@ export const useSocket = () => useContext(SocketContext);
 
 const ENDPOINT = 'http://localhost:4000';
 
-export const SocketProvider = ({ userName, children }) => {
+export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState();
 
-  const { activeChat } = useChatView();
   const { currentUser } = useAuthentication();
 
   useEffect(() => {
+    if (!currentUser) return;
     const newSocket = io(ENDPOINT);
+    newSocket.emit('setup', currentUser._id);
     setSocket(newSocket);
     return () => newSocket.close();
-  }, [currentUser, activeChat]);
+  }, [currentUser]);
 
   return (
     <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>

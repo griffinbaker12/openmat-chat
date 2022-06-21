@@ -19,10 +19,13 @@ import { useSocket } from '../../contexts/socket-context';
 
 let typingTimer;
 
+const ENDPOINT = 'http://localhost:4000';
+
 const MessageView = () => {
   // Somehow we are going to have to get all of the message in a conversation potentially and then mark whether or not they are your messages or someone else's to style accordingly;
   const { currentUser } = useAuthentication();
-  const { activeChat } = useChatView();
+  const { activeChat, notifications, setNotifications, fetchChats } =
+    useChatView();
   const socket = useSocket();
 
   // const [socketConnected, setSocketConnected] = useState(false);
@@ -56,7 +59,7 @@ const MessageView = () => {
           }),
         });
         const message = await response.json();
-        socket.emit('new message', message);
+        socket.emit('send-msg', message);
         setMessages(prevState => [...prevState, message]);
         setTyping(false);
         return;
@@ -96,8 +99,6 @@ const MessageView = () => {
     const messages = await response.json();
     setMessages(messages);
     setIsLoading(false);
-
-    socket.emit('join chat', activeChat[0]._id);
   }, [activeChat, currentUser.token, socket]);
 
   useEffect(() => {
@@ -106,34 +107,34 @@ const MessageView = () => {
 
   useEffect(() => {
     if (!socket) return;
-    socket.emit('setup', currentUser);
-    // For when the user refreshes the page or leaves the chat, otherwise the lottie is suspended
+    socket.emit('join room', activeChat[0]._id);
     socket.emit('stop typing', activeChat[0]._id, currentUser);
+    return () => socket.emit('leave room', activeChat[0]._id);
+  }, [activeChat, socket, currentUser]);
+
+  useEffect(() => {
+    if (!socket) return;
+    socket.on('msg-received', message => {
+      if (!activeChat[0]._id || message.chat._id !== activeChat[0]._id) {
+        setNotifications(prevState => [message, ...prevState]);
+        return;
+      } else {
+        setIsTyping(false);
+        setMessages(prevState => [...prevState, message]);
+      }
+    });
+    return () => socket.off('msg-received');
+  }, [socket, activeChat, setNotifications]);
+
+  useEffect(() => {
+    if (!socket) return;
     socket.on('typing', typer => {
       setIsTyping(true);
       setTypers(prevState => [...new Set([typer, ...prevState])]);
     });
-    return () => socket.close();
-  }, [currentUser, activeChat, socket]);
-
-  useEffect(() => {
-    if (!socket) return;
-    socket.on('message received', message => {
-      setIsTyping(false);
-      if (!activeChat[0]._id || message.chat._id !== activeChat[0]._id) {
-        // give notification
-      } else {
-        setMessages(prevState => {
-          return [...prevState, message];
-        });
-      }
-    });
-  }, [activeChat, socket]);
-
-  useEffect(() => {
-    if (!socket) return;
     socket.on('stop typing', userName => {
       const usersStillTyping = typers.filter(typer => typer !== userName);
+      console.log(usersStillTyping);
       if (usersStillTyping.length > 0 && typers.length !== 0) {
         setIsTyping(true);
         setTypers(usersStillTyping);
@@ -142,7 +143,56 @@ const MessageView = () => {
       setIsTyping(false);
       setTypers([]);
     });
-  }, [typers, socket]);
+    return () => {
+      socket.off('typing');
+      socket.off('stop typing');
+    };
+  }, [socket, typers]);
+
+  // useEffect(() => {
+  //   // Well I want to try moving the setup to the main socket and then when the chat changes just the chatId obviously, this could work, because then each user ahs a room of their own, and each room creates their own room of sorts as well
+  //   if (!socket) return;
+  //   // For when the user refreshes the page or leaves the chat, otherwise the lottie is suspended
+  //   socket.emit('stop typing', activeChat[0]._id, currentUser);
+  //   socket.on('typing', typer => {
+  //     setIsTyping(true);
+  //     setTypers(prevState => [...new Set([typer, ...prevState])]);
+  //   });
+  //   return () => socket.emit('leave chat', activeChat[0]._id);
+  // }, [currentUser, activeChat, socket]);
+
+  // useEffect(() => {
+  //   if (!socket) return;
+  //   // socket.on('message received', message => {
+  //   //   console.log('received');
+  //   //   setIsTyping(false);
+  //   //   console.log('message rec', message.chat._id, 'ac', activeChat[0]._id);
+  //   //   if (!activeChat[0]._id || message.chat._id !== activeChat[0]._id) {
+  //   //     if (!notifications) return;
+  //   //     setNotifications(prevState => [message, ...prevState]);
+  //   //     return;
+  //   //   } else {
+  //   //     setMessages(prevState => {
+  //   //       return [...prevState, message];
+  //   //     });
+  //   //   }
+
+  //   });
+  // }, [activeChat, fetchChats, notifications, socket, setNotifications]);
+
+  // useEffect(() => {
+  //   if (!socket) return;
+  //   socket.on('stop typing', userName => {
+  //     const usersStillTyping = typers.filter(typer => typer !== userName);
+  //     if (usersStillTyping.length > 0 && typers.length !== 0) {
+  //       setIsTyping(true);
+  //       setTypers(usersStillTyping);
+  //       return;
+  //     }
+  //     setIsTyping(false);
+  //     setTypers([]);
+  //   });
+  // }, [typers, socket]);
 
   const setRef = useCallback(node => {
     if (node) {

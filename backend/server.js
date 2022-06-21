@@ -29,32 +29,91 @@ const io = require('socket.io')(server, {
 });
 
 io.on('connection', socket => {
-  socket.on('setup', userData => {
-    socket.join(userData._id);
+  socket.on('setup', userId => {
+    socket.join(userId);
   });
 
-  socket.on('join chat', chatId => {
+  socket.on('join room', chatId => {
     socket.join(chatId);
   });
 
-  socket.on('typing', (room, user) =>
-    socket.in(room).emit('typing', user.userName)
-  );
+  socket.on('leave room', chatId => {
+    socket.leave(chatId);
+  });
+
+  socket.on('send-msg', message => {
+    message.chat.users.forEach(user => {
+      if (user._id === message.sender._id) return;
+      socket.to(user._id).emit('msg-received', message);
+    });
+  });
+
+  socket.on('typing', (room, user) => {
+    socket.to(room).emit('typing', user.userName);
+  });
 
   socket.on('stop typing', (room, user) =>
-    socket.in(room).emit('stop typing', user.userName)
+    socket.to(room).emit('stop typing', user.userName)
   );
-
-  socket.on('new message', message => {
-    let chat = message.chat;
-    chat.users.forEach(user => {
-      if (user._id === message.sender._id) return;
-      socket.in(user._id).emit('message received', message);
-    });
-
-    socket.on('new chat', chat => {});
-  });
 });
+
+// io.on('connection', socket => {
+//   socket.on('setup', userData => {
+//     socket.join(userData._id);
+//   });
+
+//   socket.on('join chat', chatId => {
+//     // console.log('user joined a chat', chatId);
+//     socket.join(chatId);
+//   });
+
+//   socket.on('typing', (room, user) => {
+//     // console.log('user is in these rooms', socket.rooms, room);
+//     socket.in(room).emit('typing', user.userName);
+//   });
+
+//   socket.on('stop typing', (room, user) =>
+//     socket.in(room).emit('stop typing', user.userName)
+//   );
+
+//   socket.on('new message', message => {
+//     let chat = message.chat;
+//     socket.broadcast.emit('message received', message);
+//     // chat.users.forEach(user => {
+//     //   if (user._id === message.sender._id) return;
+//     //   socket.to(user._id).emit('message received', message);
+//     // });
+//   });
+
+//   // socket.on('new chat', chat => {});
+//   socket.on('leave chat', chatId => {
+//     // console.log('left', chatId);
+//     socket.leave(chatId);
+//   });
+// });
+
+// global.onlineUsers = new Map();
+// global.chatRooms = new Map();
+// io.on('connection', socket => {
+//   global.chatSocket = socket;
+//   socket.on('add-user', userId => {
+//     onlineUsers.set(userId, socket.id);
+//   });
+
+//   socket.on('send-msg', message => {
+//     message.chat.users.forEach(user => {
+//       if (user._id === message.sender._id) {
+//         console.log('do nothing');
+//         return;
+//       }
+//       const sendUserSocket = onlineUsers.get(user._id);
+//       if (sendUserSocket) {
+//         console.log('there was a socket');
+//         socket.to(sendUserSocket).emit('msg-receive', message);
+//       }
+//     });
+//   });
+// });
 
 // db()
 //   .then(() => {

@@ -37,8 +37,6 @@ const ChatInfoModal = ({ userFlag }) => {
   const chatEditInputRef = useRef(null);
   // const [isLoading, setIsLoading] = useState(false);
 
-  console.log('the active chat name', activeChat[0]?.chatName, activeChat);
-
   // So yeah, cool, the chats will be updated whenever you create a new chat from the modal so can easily tell / check duplicate chats are being
 
   useEffect(() => {

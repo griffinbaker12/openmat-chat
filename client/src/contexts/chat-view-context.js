@@ -47,6 +47,7 @@ export const ChatViewProvider = ({ children }) => {
     height: window.innerHeight,
     width: window.innerWidth,
   });
+  const [notifications, setNotifications] = useState([]);
 
   const { currentUser, setCurrentUser, setIsLoading } = useAuthentication();
   const navigate = useNavigate();
@@ -223,6 +224,8 @@ export const ChatViewProvider = ({ children }) => {
         activeView,
         setActiveView,
         windowDimensions,
+        notifications,
+        setNotifications,
         setWindowDimensions,
       }}
     >
