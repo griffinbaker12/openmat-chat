@@ -28,9 +28,18 @@ const io = require('socket.io')(server, {
   },
 });
 
+// global.onlineUsers = new Map();
 io.on('connection', socket => {
   socket.on('setup', userId => {
     socket.join(userId);
+    // onlineUsers.set(userId, socket.id);
+    // console.log(onlineUsers);
+    // for (const [onlineUser, onlineSocket] of global.onlineUsers.entries()) {
+    //   //   console.log('online socket', onlineSocket, 'socket', socket.id);
+    //   //   socket.to(onlineUser).emit('online users', global.onlineUsers);
+    //   socket.emit('user logged in', onlineUser);
+    // }
+    // // socket.emit('user logged in', userId);
   });
 
   socket.on('join room', chatId => {
@@ -55,6 +64,10 @@ io.on('connection', socket => {
   socket.on('stop typing', (room, user) =>
     socket.to(room).emit('stop typing', user.userName)
   );
+
+  socket.off('setup', () => {
+    onlineUsers.push('yo');
+  });
 });
 
 // io.on('connection', socket => {

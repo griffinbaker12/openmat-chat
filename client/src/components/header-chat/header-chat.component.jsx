@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import AccountDropdown from '../account-dropdown/account-dropdown.component';
+import NotificationDropdown from '../notification-dropdown/notification-dropdown.component';
 import { ReactComponent as NotificationBell } from '../../assets/notification-bell.svg';
 import { useAuthentication } from '../../contexts/authentication-context';
 import './header-chat.styles.scss';
@@ -10,6 +11,7 @@ const HeaderChat = ({ logo }) => {
   const { picture } = currentUser;
   const { notifications } = useChatView();
   const [toggleAccount, setToggleAccount] = useState(false);
+  const [toggleNotification, setToggleNotification] = useState(false);
   const accountContainerRef = useRef();
 
   // What I still need to do here obviously is track when new messages come in or friend requests and stuff like that, count them up, and then display them here
@@ -19,6 +21,8 @@ const HeaderChat = ({ logo }) => {
   const handleAccountClick = () => setToggleAccount(prevState => !prevState);
 
   const closeAccountDropdown = () => setToggleAccount(false);
+
+  const closeNotificationDropdown = () => setToggleNotification(false);
 
   return (
     <div className="header-chat-container">
@@ -47,11 +51,20 @@ const HeaderChat = ({ logo }) => {
           </button>
         </div>
       </div>
+      {toggleNotification && (
+        <NotificationDropdown
+          ref={accountContainerRef}
+          handleDropdown={setToggleNotification}
+          closeAccountDropdown={closeAccountDropdown}
+          closeNotificationDropdown={closeNotificationDropdown}
+        />
+      )}
       {toggleAccount && (
         <AccountDropdown
           ref={accountContainerRef}
           handleDropdown={setToggleAccount}
           closeAccountDropdown={closeAccountDropdown}
+          closeNotificationDropdown={closeNotificationDropdown}
         />
       )}
     </div>
