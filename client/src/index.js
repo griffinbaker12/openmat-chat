@@ -14,11 +14,11 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthenticationProvider>
-        <SocketProvider>
-          <ChatViewProvider>
+        <ChatViewProvider>
+          <SocketProvider>
             <App />
-          </ChatViewProvider>
-        </SocketProvider>
+          </SocketProvider>
+        </ChatViewProvider>
       </AuthenticationProvider>
     </BrowserRouter>
   </React.StrictMode>

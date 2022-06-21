@@ -37,9 +37,9 @@ io.on('connection', socket => {
     socket.join(chatId);
   });
 
-  socket.on('typing', (room, user) => {
-    socket.in(room).emit('typing', user.userName);
-  });
+  socket.on('typing', (room, user) =>
+    socket.in(room).emit('typing', user.userName)
+  );
 
   socket.on('stop typing', (room, user) =>
     socket.in(room).emit('stop typing', user.userName)
