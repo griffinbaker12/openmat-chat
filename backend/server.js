@@ -51,6 +51,8 @@ io.on('connection', socket => {
       if (user._id === message.sender._id) return;
       socket.in(user._id).emit('message received', message);
     });
+
+    socket.on('new chat', chat => {});
   });
 });
 

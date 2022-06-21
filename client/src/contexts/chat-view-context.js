@@ -191,6 +191,8 @@ export const ChatViewProvider = ({ children }) => {
     setFriends(currentUser.friends);
   }, [currentUser]);
 
+  useEffect(() => {});
+
   return (
     <ChatViewContext.Provider
       value={{

@@ -17,7 +17,7 @@ import {
 // Could definitely add timestamp data to the message as well, that would be pretty clean actually
 
 const ENDPOINT = 'http://localhost:4000';
-let socket;
+let socket, typingTimer;
 
 const defaultOptions = {
   loop: true,
@@ -71,11 +71,12 @@ const MessageView = () => {
         setTyping(true);
         socket.emit('typing', activeChat[0]._id, currentUser);
       }
-      let lastTypingTime = new Date().getTime();
-      var timerLength = 3000;
-      setTimeout(() => {
-        var timeNow = new Date().getTime();
-        var timeDiff = timeNow - lastTypingTime;
+      const lastTypingTime = new Date().getTime();
+      const timerLength = 3000;
+      if (typingTimer) clearTimeout(typingTimer);
+      typingTimer = setTimeout(() => {
+        const timeNow = new Date().getTime();
+        const timeDiff = timeNow - lastTypingTime;
         if (timeDiff >= timerLength) {
           socket.emit('stop typing', activeChat[0]._id, currentUser);
           setTyping(false);
@@ -134,7 +135,7 @@ const MessageView = () => {
   useEffect(() => {
     socket.on('stop typing', userName => {
       const usersStillTyping = typers.filter(typer => typer !== userName);
-      if (usersStillTyping.length > 0) {
+      if (usersStillTyping.length > 0 && typers.length !== 0) {
         setIsTyping(true);
         setTypers(usersStillTyping);
         return;
