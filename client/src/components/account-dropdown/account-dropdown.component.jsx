@@ -4,12 +4,16 @@ import { useAuthentication } from '../../contexts/authentication-context';
 import { defaultToast, TOAST_TYPE } from '../../utils/utils';
 import { useChatView, MODAL_TYPE } from '../../contexts/chat-view-context';
 import './account-dropdown.styles.scss';
+import { useSocket } from '../../contexts/socket-context';
 
 const AccountDropdown = forwardRef(({ closeAccountDropdown }, ref) => {
   const navigate = useNavigate();
   const dropDownRef = useRef();
   const { handleModal, setUserInfoModal } = useChatView();
   const { setIsLoading, setCurrentUser } = useAuthentication();
+
+  const { currentUser } = useAuthentication();
+  const { socket } = useSocket();
 
   const handleSignOutClick = e => {
     if (ref.current === e.target.closest('.header-chat-link')) {
@@ -36,6 +40,7 @@ const AccountDropdown = forwardRef(({ closeAccountDropdown }, ref) => {
     navigate('/');
     setCurrentUser(null);
     defaultToast(TOAST_TYPE.success, 'Goodbye 👋🏼');
+    socket.emit('log out', currentUser._id);
   };
 
   return (

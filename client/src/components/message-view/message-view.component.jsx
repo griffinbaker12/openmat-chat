@@ -185,6 +185,7 @@ const MessageView = () => {
                   <div
                     key={i}
                     ref={lastMessageBool ? setRef : null}
+                    style={i === 0 ? { paddingTop: '4px' } : {}}
                     className={`message-view-message-container ${
                       userSentBool ? 'user-sent' : ''
                     }`}

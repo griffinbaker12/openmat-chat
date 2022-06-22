@@ -15,20 +15,24 @@ export const SocketProvider = ({ children }) => {
 
   const { currentUser } = useAuthentication();
 
-  console.log('online users', onlineUsers);
-
   useEffect(() => {
     if (!currentUser) return;
     const newSocket = io(ENDPOINT);
     newSocket.emit('setup', currentUser._id);
+    setSocket(newSocket);
     newSocket.on('logged in user change', users => {
+      console.log('logged in user change from client', users);
       const userIdArr = users.map(([userId, socketId]) => userId);
       setOnlineUsers(userIdArr);
     });
-    setSocket(newSocket);
     return () => {
       newSocket.off('logged in user change');
-      newSocket.emit('log out', currentUser._id);
+      setOnlineUsers(prevState => {
+        const newOnlineUsers = prevState.filter(
+          user => user !== currentUser?._id
+        );
+        return newOnlineUsers;
+      });
     };
   }, [currentUser]);
 

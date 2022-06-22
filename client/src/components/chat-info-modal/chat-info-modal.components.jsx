@@ -53,7 +53,6 @@ const ChatInfoModal = ({ userFlag }) => {
       );
       return;
     }
-    console.log(activeChat[0].chatName, 'name from UE');
     setNewChatName(activeChat[0].chatName);
   }, [activeChat, showChatEdit, currentUser]);
 

@@ -81,3 +81,21 @@ export const getTyperString = typers => {
       .join(', ')
       .concat(` and ${typers.length - 2} others are typing`);
 };
+
+export const getUsersOnlineCount = (onlineUsers, chatUsers, currentUser) => {
+  let count = 0;
+  // console.log(onlineUsers, chatUsers);
+  onlineUsers.forEach(onlineUser => {
+    if (onlineUser === currentUser._id) return;
+    chatUsers.forEach(chatUser => {
+      if (onlineUser === chatUser._id) {
+        count++;
+      }
+    });
+    // if (user !== currentUser._id) {
+    //   count++;
+    // }
+  });
+  // console.log('count from utils', count);
+  return count;
+};

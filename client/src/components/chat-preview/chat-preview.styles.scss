@@ -31,3 +31,30 @@
 .chat-preview-list:hover {
   cursor: pointer;
 }
+
+.chat-preview-list-item-name-and-online {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.online-circle {
+  height: 8px;
+  width: 8px;
+  border-radius: 50%;
+  background-color: rgb(8, 238, 34);
+}
+
+.offline-circle {
+  height: 8px;
+  width: 8px;
+  border-radius: 50%;
+  background-color: red;
+}
+
+.chat-preview-list-circle-and-count-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
