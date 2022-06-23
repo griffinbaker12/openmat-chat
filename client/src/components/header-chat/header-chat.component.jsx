@@ -13,10 +13,16 @@ const HeaderChat = ({ logo }) => {
   const [toggleAccount, setToggleAccount] = useState(false);
   const [toggleNotification, setToggleNotification] = useState(false);
   const accountContainerRef = useRef();
+  const notificationContainerRef = useRef();
+
+  console.log(accountContainerRef);
 
   // What I still need to do here obviously is track when new messages come in or friend requests and stuff like that, count them up, and then display them here
 
   const handleAccountClick = () => setToggleAccount(prevState => !prevState);
+
+  const handleNotificationClick = () =>
+    setToggleNotification(prevState => !prevState);
 
   const closeAccountDropdown = () => setToggleAccount(false);
 
@@ -31,7 +37,11 @@ const HeaderChat = ({ logo }) => {
         <p>OpenMat Chat</p>
       </div>
       <div className="header-chat-links">
-        <div className="header-chat-link notification-bell">
+        <div
+          ref={notificationContainerRef}
+          onClick={handleNotificationClick}
+          className="header-chat-link notification-bell"
+        >
           <NotificationBell />
           {notifications && notifications.length > 0 ? (
             <div className="notification-count">{notifications.length}</div>
@@ -42,7 +52,7 @@ const HeaderChat = ({ logo }) => {
         <div
           ref={accountContainerRef}
           onClick={handleAccountClick}
-          className="header-chat-link"
+          className="header-chat-link user-account"
         >
           <button className="header-user-account-container">
             <img src={picture} alt="profile" />
@@ -51,7 +61,7 @@ const HeaderChat = ({ logo }) => {
       </div>
       {toggleNotification && (
         <NotificationDropdown
-          ref={accountContainerRef}
+          ref={notificationContainerRef}
           handleDropdown={setToggleNotification}
           closeAccountDropdown={closeAccountDropdown}
           closeNotificationDropdown={closeNotificationDropdown}

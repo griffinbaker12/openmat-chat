@@ -17,6 +17,7 @@ const AccountDropdown = forwardRef(({ closeAccountDropdown }, ref) => {
 
   const handleSignOutClick = e => {
     if (ref.current === e.target.closest('.header-chat-link')) {
+      console.log(ref.current, e.target.closest('.header-chat-link'));
       return;
     }
     if (dropDownRef.current && !dropDownRef.current.contains(e.target)) {

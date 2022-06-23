@@ -1,4 +1,5 @@
-import { forwardRef, useRef } from 'react';
+import { forwardRef, useRef, useEffect } from 'react';
+import './notification-dropdown.styles.scss';
 
 const NotificationDropdown = forwardRef(
   (
@@ -12,26 +13,26 @@ const NotificationDropdown = forwardRef(
         return;
       }
       if (dropDownRef.current && !dropDownRef.current.contains(e.target)) {
-        closeAccountDropdown();
+        // console.log(dropDownRef.current);
+        closeNotificationDropdown();
       }
     };
 
-    // useEffect(() => {
-    //   document.addEventListener('mousedown', handleSignOutClick);
-    //   return () => document.removeEventListener('mousedown', handleSignOutClick);
-    // });
+    useEffect(() => {
+      document.addEventListener('mousedown', handleSignOutClick);
+      return () =>
+        document.removeEventListener('mousedown', handleSignOutClick);
+    });
 
     return (
       <div
         onClick={handleSignOutClick}
         ref={dropDownRef}
-        className="account-dropdown-container"
+        className="notification-dropdown-container"
       >
-        <div className="account-dropdown-content-container">
-          {/* <p onClick={handleAccountClick}>View Profile</p> */}
-          {/* <button onClick={signOutUser} type="button"> */}
-          Sign Out
-          {/* </button> */}
+        <div className="notification-dropdown-content-container">
+          <p>View Profile</p>
+          <button type="button">Sign Out</button>
         </div>
       </div>
     );

@@ -75,6 +75,9 @@ io.on('connection', socket => {
     socket.to(room).emit('stop typing', user.userName)
   );
 
+  // Need to do something similar up top where I send the update to all of the people in the chat when there is a new message so that it can show in the chat view, as well as if they need to update the users or the name of the chat REGARDLESS of which chat is currently being viewed
+  socket.on('chat update', room => {});
+
   socket.on('log out', userId => {
     socket.leave(userId);
     global.onlineUsers.delete(socket.id);
