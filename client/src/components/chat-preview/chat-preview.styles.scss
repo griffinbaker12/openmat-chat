@@ -9,7 +9,7 @@
 .chat-preview-list {
   list-style: none;
   display: flex;
-
+  justify-content: space-between;
   height: 70px;
   border-top: 1px solid gray;
   display: flex;
@@ -57,4 +57,7 @@
   align-items: center;
   gap: 6px;
   font-size: 12px;
+}
+
+.chat-preview-list-latest-message-container {
 }

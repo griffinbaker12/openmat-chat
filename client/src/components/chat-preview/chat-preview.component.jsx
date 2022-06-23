@@ -17,23 +17,24 @@ const ChatPreview = () => {
   const { onlineUsers } = useSocket();
 
   const handleClick = e => {
-    const chatId = e.target.getAttribute('name');
+    const element = e.target.closest('.chat-preview-list');
+    const chatId = element.getAttribute('name');
 
     // Clicked on the container and not one of the list items, did not want to add the event handler to each individual item
-    if (!chatId) return;
+    if (!chatId || chatId === activeChat[0]._id) return;
 
     if (windowDimensions.width <= 900) {
       setActiveView('chat');
     }
 
-    const activeChat = chats.find(chat => chat._id === chatId);
-    setActiveChat([activeChat]);
+    const newActiveChat = chats.find(chat => chat._id === chatId);
+    setActiveChat([newActiveChat]);
   };
 
   return (
     <div className="chat-preview-container" onClick={handleClick}>
       {chats.length > 0 &&
-        chats.map(({ _id, chatName, users, isGroupChat }) => {
+        chats.map(({ _id, chatName, users, isGroupChat, latestMessage }) => {
           const userOnlineCount = getUsersOnlineCount(
             onlineUsers,
             users,
@@ -71,6 +72,19 @@ const ChatPreview = () => {
                   )}
                 </div>
               </div>
+              {latestMessage && (
+                <div className="chat-preview-list-latest-message-container">
+                  <div className="contact-preview-image-container">
+                    <img
+                      height="100%"
+                      src={latestMessage.sender.picture}
+                      alt="profile"
+                    />
+                  </div>
+                  {latestMessage.sender.userName}
+                  {latestMessage.text}
+                </div>
+              )}
             </div>
           );
         })}

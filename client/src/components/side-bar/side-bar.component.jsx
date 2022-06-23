@@ -1,26 +1,44 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { ReactComponent as SearchIcon } from '../../assets/search.svg';
 import ChatPreview from '../chat-preview/chat-preview.component';
 import './side-bar.styles.scss';
 import ContactPreview from '../contact-preview/contact-preview.component';
 import Spinner from '../spinner/spinner.component';
 import { useChatView, MODAL_TYPE } from '../../contexts/chat-view-context';
+import { useSocket } from '../../contexts/socket-context';
 // import { useAuthentication } from '../../contexts/authentication-context';
 
 // Can extract the useEffect functionality to search for whatever it is that we need to search for in the actual context itself where the data lives / is stored
 
 const SideBar = () => {
+  const { socket } = useSocket();
   const {
     search,
     isChatViewLoading,
-    // setSideBarCategory,
     updateSearchValue,
     handleSearchSubmit,
     handleModal,
     sideBarCategory,
     activeView,
     windowDimensions,
+    setChats,
+    setReloadCircuit,
   } = useChatView();
+
+  useEffect(() => {
+    if (!socket) return;
+    socket.on('updated chat', updatedChat => {
+      setReloadCircuit(true);
+      console.log(updatedChat, 'server return');
+      setChats(prevState => {
+        return prevState.map(chat => {
+          if (chat._id !== updatedChat._id) return chat;
+          else return updatedChat;
+        });
+      });
+    });
+    return () => socket.off('updated chat');
+  }, [socket, setChats, setReloadCircuit]);
 
   // const handleCategoryChange = e => {
   //   const clickedCategory = e.target.getAttribute('name');

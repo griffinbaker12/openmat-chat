@@ -150,6 +150,8 @@ const ChatInfoModal = ({ userFlag }) => {
         }
       );
 
+      // And then here send another update about the chat that has been edited and set the circuit to true
+
       const updatedChat = await response.json();
       setActiveChat([updatedChat]);
       setShowChatEdit(false);
@@ -250,26 +252,28 @@ const ChatInfoModal = ({ userFlag }) => {
             >
               {activeChat[0].users
                 .filter(user => user._id !== currentUser._id)
-                .map(user => (
-                  <div
-                    key={user._id}
-                    name={user._id}
-                    className="group-chat-modal-user-info-container"
-                  >
-                    <div className="group-chat-modal-user-info-picture-container">
-                      <img height="100%" src={user.picture} alt="user" />
-                    </div>
-                    <div className="user-name-user-userName-container">
-                      <div>
-                        <p>{user.name}</p>
-                        <p>@{user.userName}</p>
+                .map((user, i) => {
+                  return (
+                    <div
+                      key={user._id}
+                      name={user._id}
+                      className="group-chat-modal-user-info-container"
+                    >
+                      <div className="group-chat-modal-user-info-picture-container">
+                        <img height="100%" src={user.picture} alt="user" />
+                      </div>
+                      <div className="user-name-user-userName-container">
+                        <div>
+                          <p>{user.name}</p>
+                          <p>@{user.userName}</p>
+                        </div>
+                      </div>
+                      <div className="chevron-container">
+                        <ChevronRight />
                       </div>
                     </div>
-                    <div className="chevron-container">
-                      <ChevronRight />
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
             </div>
           </div>
           <div className="chat-info-modal-button">

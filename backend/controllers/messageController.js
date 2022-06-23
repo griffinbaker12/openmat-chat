@@ -23,10 +23,8 @@ const sendMessage = asyncHandler(async (req, res) => {
     // We are populating the instance of the mongoose class and not directly from the query above ??
     message = await message.populate('sender', 'userName picture');
     message = await message.populate('chat');
-    message = await User.populate(message, {
-      path: 'chat.users',
-      select: 'userName picture',
-    });
+
+    console.log('first message', message);
 
     const updatedChat = await Chat.findByIdAndUpdate(
       chatId,
@@ -34,17 +32,37 @@ const sendMessage = asyncHandler(async (req, res) => {
       { new: true }
     );
 
-    console.log(updatedChat._id);
-
     message = await Chat.populate(message, {
       path: 'chat',
     });
 
-    message = await Chat.populate(message, {
-      path: 'chat.latestMessage',
-    });
+    message = await message.populate('chat.users');
+    message = await message.populate('chat.latestMessage');
+    message = await message.populate('chat.latestMessage.sender');
+    message = await message.populate('chat.latestMessage.chat');
 
-    res.json(message, updatedChat);
+    console.log(message);
+
+    // console.log('updated chat', updatedChat);
+
+    // // message = await Chat.populate(message, {
+    // //   path: 'chat',
+    // // });
+
+    // message = await Chat.populate(message, {
+    //   path: 'chat.latestMessage',
+    // });
+
+    // console.log(message);
+
+    // message = await User.populate(message, {
+    //   path: 'chat.users',
+    //   select: 'userName name picture',
+    // });
+
+    // console.log(message);
+
+    res.json(message);
   } catch (e) {
     res.status(400);
     throw new Error(e.message);

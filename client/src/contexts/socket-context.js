@@ -14,6 +14,7 @@ export const SocketProvider = ({ children }) => {
   const [onlineUsers, setOnlineUsers] = useState([]);
 
   const { currentUser } = useAuthentication();
+  const { setReloadCircuit } = useChatView();
 
   useEffect(() => {
     if (!currentUser) return;

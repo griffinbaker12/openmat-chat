@@ -48,6 +48,7 @@ export const ChatViewProvider = ({ children }) => {
     width: window.innerWidth,
   });
   const [notifications, setNotifications] = useState([]);
+  const [reloadCircuit, setReloadCircuit] = useState(false);
 
   const { currentUser, setCurrentUser, setIsLoading } = useAuthentication();
   const navigate = useNavigate();
@@ -180,12 +181,15 @@ export const ChatViewProvider = ({ children }) => {
   }, [currentUser, fetchChats, setIsLoading]);
 
   useEffect(() => {
-    if (chats.length === 0) return;
-    else {
+    console.log(reloadCircuit);
+    if (chats.length === 0 || reloadCircuit) {
+      setReloadCircuit(false);
+      return;
+    } else {
       const activeChat = chats[0];
       setActiveChat([activeChat]);
     }
-  }, [chats]);
+  }, [chats, reloadCircuit]);
 
   useEffect(() => {
     if (!currentUser) return;
@@ -227,6 +231,7 @@ export const ChatViewProvider = ({ children }) => {
         notifications,
         setNotifications,
         setWindowDimensions,
+        setReloadCircuit,
       }}
     >
       {children}

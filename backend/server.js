@@ -76,12 +76,27 @@ io.on('connection', socket => {
   );
 
   // Need to do something similar up top where I send the update to all of the people in the chat when there is a new message so that it can show in the chat view, as well as if they need to update the users or the name of the chat REGARDLESS of which chat is currently being viewed
-  socket.on('chat update', room => {});
+  socket.on('chat update', chat => {
+    const userId = chat.latestMessage.sender;
+    console.log(userId);
+    for (const [
+      _onlineSocketId,
+      onlineUserId,
+    ] of global.onlineUsers.entries()) {
+      console.log(onlineUserId, userId);
+      if (onlineUserId === userId) {
+        console.log('running hey');
+        socket.emit('updated chat', chat);
+        return;
+      } else {
+        socket.to(onlineUserId).emit('updated chat', chat);
+      }
+    }
+  });
 
   socket.on('log out', userId => {
     socket.leave(userId);
     global.onlineUsers.delete(socket.id);
-    console.log(global.onlineUsers, 'log out');
     for (const [
       _onlineSocketId,
       onlineUserId,
@@ -94,7 +109,6 @@ io.on('connection', socket => {
 
   socket.on('disconnect', () => {
     global.onlineUsers.delete(socket.id);
-    console.log(global.onlineUsers, 'disconnect');
     for (const [
       _onlineSocketId,
       onlineUserId,

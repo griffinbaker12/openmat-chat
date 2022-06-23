@@ -22,7 +22,7 @@ let typingTimer;
 const MessageView = () => {
   // Somehow we are going to have to get all of the message in a conversation potentially and then mark whether or not they are your messages or someone else's to style accordingly;
   const { currentUser } = useAuthentication();
-  const { activeChat, setNotifications, setChats } = useChatView();
+  const { activeChat, setNotifications, setReloadCircuit } = useChatView();
   const { socket } = useSocket();
 
   // const [socketConnected, setSocketConnected] = useState(false);
@@ -55,12 +55,13 @@ const MessageView = () => {
             text: newMessage,
           }),
         });
-        const { message, updatedChat } = await response.json();
-        console.log(updatedChat, 'the updated chat');
+        const message = await response.json();
         socket.emit('send-msg', message);
         setMessages(prevState => [...prevState, message]);
         setTyping(false);
-
+        setReloadCircuit(true);
+        console.log('chat message', message.chat);
+        socket.emit('chat update', message.chat);
         return;
       } catch (error) {
         defaultToast(TOAST_TYPE.error, 'Error sending');
