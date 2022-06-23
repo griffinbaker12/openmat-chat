@@ -4,6 +4,8 @@ import ChatView from '../../components/chat-view/chat-view.component';
 import Modal from '../../components/modal/modal.component';
 import './application-view.styles.scss';
 import { useChatView } from '../../contexts/chat-view-context';
+import { useAuthentication } from '../../contexts/authentication-context';
+import { useSocket } from '../../contexts/socket-context';
 
 const ApplicationView = () => {
   const { setWindowDimensions, windowDimensions, setActiveView } =
@@ -18,9 +20,18 @@ const ApplicationView = () => {
     }
   };
 
+  // const handleUnload = () => {
+  //   console.log('handleUnload');
+  //   socket.emit('log out', currentUser._id);
+  // };
+
   useEffect(() => {
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    // window.addEventListener('beforeunload', handleUnload);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      // window.removeEventListener('beforeunload', handleUnload);
+    };
   });
 
   return (

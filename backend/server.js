@@ -32,10 +32,13 @@ global.onlineUsers = new Map();
 io.on('connection', socket => {
   socket.on('setup', userId => {
     socket.join(userId);
-    global.onlineUsers.set(userId, socket.id);
+    if (global.onlineUsers.get(socket.id) !== userId) {
+      global.onlineUsers.set(socket.id, userId);
+    }
+    console.log(global.onlineUsers, 'on connect');
     for (const [
-      onlineUserId,
       _onlineSocketId,
+      onlineUserId,
     ] of global.onlineUsers.entries()) {
       if (onlineUserId === userId) {
         socket.emit('logged in user change', [...global.onlineUsers]);
@@ -46,17 +49,6 @@ io.on('connection', socket => {
           .emit('logged in user change', [...global.onlineUsers]);
       }
     }
-
-    // Add them to the set when they sign in and emit an event that contains all of the users and can handle this on the client side
-
-    // onlineUsers.set(userId, socket.id);
-    // console.log(onlineUsers);
-    // for (const [onlineUser, onlineSocket] of global.onlineUsers.entries()) {
-    //   //   console.log('online socket', onlineSocket, 'socket', socket.id);
-    //   //   socket.to(onlineUser).emit('online users', global.onlineUsers);
-    //   socket.emit('user logged in', onlineUser);
-    // }
-    // // socket.emit('user logged in', userId);
   });
 
   socket.on('join room', chatId => {
@@ -82,15 +74,24 @@ io.on('connection', socket => {
     socket.to(room).emit('stop typing', user.userName)
   );
 
-  // Take them out of the set
   socket.on('log out', userId => {
     socket.leave(userId);
-    console.log('log out running');
-
-    global.onlineUsers.delete(userId);
+    global.onlineUsers.delete(socket.id);
     for (const [
-      onlineUserId,
       _onlineSocketId,
+      onlineUserId,
+    ] of global.onlineUsers.entries()) {
+      socket
+        .to(onlineUserId)
+        .emit('logged in user change', [...global.onlineUsers]);
+    }
+  });
+
+  socket.on('disconnect', () => {
+    global.onlineUsers.delete(socket.id);
+    for (const [
+      _onlineSocketId,
+      onlineUserId,
     ] of global.onlineUsers.entries()) {
       socket
         .to(onlineUserId)

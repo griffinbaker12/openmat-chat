@@ -13,7 +13,14 @@ export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState();
   const [onlineUsers, setOnlineUsers] = useState([]);
 
+  console.log(onlineUsers);
+
   const { currentUser } = useAuthentication();
+
+  // useEffect(() => {
+  //   if (!socket) return;
+  //   socket.emit('refresh users', onlineUsers);
+  // }, [socket]);
 
   useEffect(() => {
     if (!currentUser) return;
@@ -21,11 +28,14 @@ export const SocketProvider = ({ children }) => {
     newSocket.emit('setup', currentUser._id);
     setSocket(newSocket);
     newSocket.on('logged in user change', users => {
-      console.log('logged in user change from client', users);
-      const userIdArr = users.map(([userId, socketId]) => userId);
-      setOnlineUsers(userIdArr);
+      const onlineUserArr = users.map(([userId, socketId]) => [
+        userId,
+        socketId,
+      ]);
+      setOnlineUsers(onlineUserArr);
     });
     return () => {
+      newSocket.emit('test', 'hey');
       newSocket.off('logged in user change');
       setOnlineUsers(prevState => {
         const newOnlineUsers = prevState.filter(

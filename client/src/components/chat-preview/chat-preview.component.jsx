@@ -33,7 +33,6 @@ const ChatPreview = () => {
   return (
     <div className="chat-preview-container" onClick={handleClick}>
       {chats.length > 0 &&
-        activeChat[0] &&
         chats.map(({ _id, chatName, users, isGroupChat }) => {
           const userOnlineCount = getUsersOnlineCount(
             onlineUsers,
@@ -41,6 +40,7 @@ const ChatPreview = () => {
             currentUser
           );
 
+          console.log(userOnlineCount);
           return (
             <div
               key={_id}

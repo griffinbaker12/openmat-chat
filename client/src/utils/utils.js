@@ -84,11 +84,11 @@ export const getTyperString = typers => {
 
 export const getUsersOnlineCount = (onlineUsers, chatUsers, currentUser) => {
   let count = 0;
-  // console.log(onlineUsers, chatUsers);
   onlineUsers.forEach(onlineUser => {
-    if (onlineUser === currentUser._id) return;
+    const [, userId] = onlineUser;
+    if (userId === currentUser._id) return;
     chatUsers.forEach(chatUser => {
-      if (onlineUser === chatUser._id) {
+      if (userId === chatUser._id) {
         count++;
       }
     });
