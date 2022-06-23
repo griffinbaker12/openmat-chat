@@ -28,14 +28,15 @@ const io = require('socket.io')(server, {
   },
 });
 
+// global.loggedInUserId;
 global.onlineUsers = new Map();
 io.on('connection', socket => {
   socket.on('setup', userId => {
     socket.join(userId);
-    if (global.onlineUsers.get(socket.id) !== userId) {
+    const onlineUserIdArr = [...global.onlineUsers.values()];
+    if (!onlineUserIdArr.includes(userId)) {
       global.onlineUsers.set(socket.id, userId);
     }
-    console.log(global.onlineUsers, 'on connect');
     for (const [
       _onlineSocketId,
       onlineUserId,
@@ -77,6 +78,7 @@ io.on('connection', socket => {
   socket.on('log out', userId => {
     socket.leave(userId);
     global.onlineUsers.delete(socket.id);
+    console.log(global.onlineUsers, 'log out');
     for (const [
       _onlineSocketId,
       onlineUserId,
@@ -89,6 +91,7 @@ io.on('connection', socket => {
 
   socket.on('disconnect', () => {
     global.onlineUsers.delete(socket.id);
+    console.log(global.onlineUsers, 'disconnect');
     for (const [
       _onlineSocketId,
       onlineUserId,

@@ -13,14 +13,9 @@ export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState();
   const [onlineUsers, setOnlineUsers] = useState([]);
 
-  console.log(onlineUsers);
-
   const { currentUser } = useAuthentication();
 
-  // useEffect(() => {
-  //   if (!socket) return;
-  //   socket.emit('refresh users', onlineUsers);
-  // }, [socket]);
+  console.log(onlineUsers);
 
   useEffect(() => {
     if (!currentUser) return;
