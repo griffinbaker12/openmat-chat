@@ -39,8 +39,6 @@ const ChatPreview = () => {
             users,
             currentUser
           );
-
-          console.log(userOnlineCount);
           return (
             <div
               key={_id}

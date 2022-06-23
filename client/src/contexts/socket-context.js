@@ -15,8 +15,6 @@ export const SocketProvider = ({ children }) => {
 
   const { currentUser } = useAuthentication();
 
-  console.log(onlineUsers);
-
   useEffect(() => {
     if (!currentUser) return;
     const newSocket = io(ENDPOINT);

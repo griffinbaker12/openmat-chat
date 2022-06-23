@@ -6,7 +6,6 @@ const User = require('../models/userModel');
 
 const sendMessage = asyncHandler(async (req, res) => {
   const { text, chatId } = req.body;
-  console.log(text, chatId);
 
   if (!text || !chatId) {
     return res.sendStatus(400);
@@ -28,11 +27,24 @@ const sendMessage = asyncHandler(async (req, res) => {
       path: 'chat.users',
       select: 'userName picture',
     });
-    await Chat.findByIdAndUpdate(chatId, {
-      latestMessage: message,
+
+    const updatedChat = await Chat.findByIdAndUpdate(
+      chatId,
+      { latestMessage: message },
+      { new: true }
+    );
+
+    console.log(updatedChat._id);
+
+    message = await Chat.populate(message, {
+      path: 'chat',
     });
 
-    res.json(message);
+    message = await Chat.populate(message, {
+      path: 'chat.latestMessage',
+    });
+
+    res.json(message, updatedChat);
   } catch (e) {
     res.status(400);
     throw new Error(e.message);

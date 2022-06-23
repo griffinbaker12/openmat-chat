@@ -15,8 +15,6 @@ const HeaderChat = ({ logo }) => {
   const accountContainerRef = useRef();
   const notificationContainerRef = useRef();
 
-  console.log(accountContainerRef);
-
   // What I still need to do here obviously is track when new messages come in or friend requests and stuff like that, count them up, and then display them here
 
   const handleAccountClick = () => setToggleAccount(prevState => !prevState);
