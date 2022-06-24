@@ -43,6 +43,7 @@ const MessageView = () => {
     if (e.key === 'Enter' && newMessage) {
       e.preventDefault();
       e.target.innerHTML = '';
+      setReloadCircuit(true);
       try {
         const response = await fetch(`http://localhost:4000/api/message`, {
           method: 'post',
@@ -59,7 +60,6 @@ const MessageView = () => {
         socket.emit('send-msg', message);
         setMessages(prevState => [...prevState, message]);
         setTyping(false);
-        setReloadCircuit(true);
         console.log('chat message', message.chat);
         socket.emit('chat update', message.chat);
         return;

@@ -24,7 +24,7 @@ const sendMessage = asyncHandler(async (req, res) => {
     message = await message.populate('sender', 'userName picture');
     message = await message.populate('chat');
 
-    console.log('first message', message);
+    // console.log('first message', message);
 
     const updatedChat = await Chat.findByIdAndUpdate(
       chatId,
@@ -41,7 +41,7 @@ const sendMessage = asyncHandler(async (req, res) => {
     message = await message.populate('chat.latestMessage.sender');
     message = await message.populate('chat.latestMessage.chat');
 
-    console.log(message);
+    // console.log(message);
 
     // console.log('updated chat', updatedChat);
 

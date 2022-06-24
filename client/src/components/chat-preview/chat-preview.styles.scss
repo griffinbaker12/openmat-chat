@@ -1,20 +1,16 @@
 .chat-preview-container {
   margin-bottom: 8px;
   overflow: auto;
-  // flex: 1;
-  height: 100%;
   color: white;
 }
 
 .chat-preview-list {
   list-style: none;
   display: flex;
-  justify-content: space-between;
   height: 70px;
   border-top: 1px solid gray;
   display: flex;
   align-items: center;
-  padding-left: 10px;
 
   &:last-child {
     border-bottom: 1px solid gray;
@@ -25,17 +21,30 @@
   }
 }
 .chat-preview-list.active {
-  font-weight: bold;
+  background-color: rgb(63, 62, 62);
+
+  .chat-preview-list-name-container {
+    font-weight: bold;
+  }
+
+  .chat-preview-list-circle-and-count-container {
+    font-weight: bold;
+  }
 }
 
 .chat-preview-list:hover {
   cursor: pointer;
 }
 
-.chat-preview-list-item-name-and-online {
+.chat-preview-list-item {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
+  padding-left: 16px;
+  margin-right: auto;
+  font-size: 16px;
+  width: 70%;
+  justify-content: center;
 }
 
 .online-circle {
@@ -57,7 +66,23 @@
   align-items: center;
   gap: 6px;
   font-size: 12px;
+  width: 80px;
 }
 
 .chat-preview-list-latest-message-container {
+  display: flex;
+  // align-items: center;
+  font-size: 14px;
+  font-weight: normal;
+  color: rgb(192, 198, 212);
+  max-height: 32px;
+  width: 80%;
+  overflow: hidden;
+  // word-break: break-all;
+}
+
+.chat-preview-list-latest-text-container {
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
 }

@@ -28,6 +28,7 @@ const SideBar = () => {
   useEffect(() => {
     if (!socket) return;
     socket.on('updated chat', updatedChat => {
+      console.log('does this even get the message?');
       setReloadCircuit(true);
       console.log(updatedChat, 'server return');
       setChats(prevState => {
