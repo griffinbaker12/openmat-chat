@@ -175,11 +175,21 @@ const leaveChat = asyncHandler(async (req, res) => {
   // We need to chat to which we are going to add the specified user
   const { chatId } = req.body;
 
-  const removed = await Chat.findByIdAndUpdate(
+  let removed = await Chat.findByIdAndUpdate(
     chatId,
     { $pull: { users: req.user._id } },
     { new: true }
   ).populate('users', '-password');
+
+  console.log(removed);
+
+  if (removed.users.length === 2) {
+    removed = await Chat.findByIdAndUpdate(
+      chatId,
+      { $set: { isGroupChat: false } },
+      { new: true }
+    ).populate('users', '-password');
+  }
 
   if (!removed) {
     res.status(404);

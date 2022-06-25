@@ -41,7 +41,6 @@ export const ChatViewProvider = ({ children }) => {
   const [isActiveUserCurrentUser, setIsActiveUserCurrentUser] = useState(false);
   const [showActiveUserWithinChatInfo, setShowActiveUserWithinChatInfo] =
     useState(false);
-  const [friends, setFriends] = useState([]);
   const [activeView, setActiveView] = useState('chat');
   const [windowDimensions, setWindowDimensions] = useState({
     height: window.innerHeight,
@@ -60,6 +59,8 @@ export const ChatViewProvider = ({ children }) => {
     }
     setShowModal(false);
   };
+
+  console.log(reloadCircuit);
 
   const setUserInfoModal = async (id, currentUserFlag = null) => {
     if (currentUserFlag) {
@@ -189,12 +190,10 @@ export const ChatViewProvider = ({ children }) => {
     }
   }, [chats, reloadCircuit]);
 
-  useEffect(() => {
-    if (!currentUser) return;
-    setFriends(currentUser.friends);
-  }, [currentUser]);
-
-  useEffect(() => {});
+  // useEffect(() => {
+  //   if (!currentUser) return;
+  //   setFriends(currentUser.friends);
+  // }, [currentUser]);
 
   return (
     <ChatViewContext.Provider

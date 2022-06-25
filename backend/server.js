@@ -76,25 +76,39 @@ io.on('connection', socket => {
   );
 
   // Need to do something similar up top where I send the update to all of the people in the chat when there is a new message so that it can show in the chat view, as well as if they need to update the users or the name of the chat REGARDLESS of which chat is currently being viewed
-  socket.on('chat update', (chat, currentUser = null, removeFlag = null) => {
-    let userId;
-    if (!currentUser) {
-      userId = chat.latestMessage.sender._id;
-    } else {
-      userId = currentUser._id;
-    }
-    chat.users.forEach(user => {
-      if (user._id === currentUser._id) {
-        socket.emit('updated chat', chat);
+  socket.on(
+    'chat update',
+    (chat, currentUser = null, removeFlag = null, updateFlag = null) => {
+      let userId;
+      if (!currentUser) {
+        userId = chat.latestMessage.sender._id;
       } else {
-        socket.to(user._id).emit('updated chat', chat);
+        userId = currentUser._id;
       }
-    });
 
-    if (removeFlag) {
-      socket.emit('updated chat', chat, true);
+      if (updateFlag) {
+        chat.users.forEach(user => {
+          if (user._id === userId) {
+            socket.emit('updated chat', chat, null, updateFlag);
+          } else {
+            socket.to(user._id).emit('updated chat', chat, null, updateFlag);
+          }
+        });
+      } else {
+        chat.users.forEach(user => {
+          if (user._id === userId) {
+            socket.emit('updated chat', chat);
+          } else {
+            socket.to(user._id).emit('updated chat', chat);
+          }
+        });
+      }
+
+      if (removeFlag) {
+        socket.emit('updated chat', chat, true);
+      }
     }
-  });
+  );
 
   socket.on('new chat', (chat, currentUser) => {
     chat.users.forEach(user => {

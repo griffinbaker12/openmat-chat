@@ -16,7 +16,7 @@ import { defaultToast, TOAST_TYPE } from '../../utils/utils';
 // Will also need to add something where I can check if the user exists and as the person types have a little dropdown that can fill in suggestions? May not be necessary, but I know that discord does that and you can always @someone in that way, would be a nice feature to try and implement
 
 const NewConversationModal = () => {
-  const { closeModal, chats, setChats } = useChatView();
+  const { closeModal, chats, setChats, setActiveChat } = useChatView();
   const { currentUser } = useAuthentication();
   const { socket } = useSocket();
 
@@ -136,7 +136,7 @@ const NewConversationModal = () => {
         }
       );
       const newChat = await response.json();
-      // setActiveChat([newChat]);
+      setActiveChat([newChat]);
       setChats(prevState => [newChat, ...prevState]);
       socket.emit('new chat', newChat, currentUser);
       resetForm();

@@ -14,13 +14,8 @@ const AddUserDropdown = ({ wasSoloChat }) => {
   const addUserToChatRef = useRef();
 
   const { currentUser } = useAuthentication();
-  const {
-    activeChat,
-    fetchChats,
-    showAddUserInfoDropdown,
-    chats,
-    setActiveChat,
-  } = useChatView();
+  const { activeChat, showAddUserInfoDropdown, chats, setActiveChat } =
+    useChatView();
   const { socket } = useSocket();
 
   useEffect(() => {
@@ -108,9 +103,9 @@ const AddUserDropdown = ({ wasSoloChat }) => {
       );
       const newChat = await response.json();
       if (!newChat.latestMessage) {
-        socket.emit('chat update', newChat, currentUser);
+        socket.emit('chat update', newChat, currentUser, null, true);
       } else {
-        socket.emit('chat update', newChat, currentUser);
+        socket.emit('chat update', newChat, null, null, true);
       }
       defaultToast(TOAST_TYPE.success, 'User successfully added');
     } catch (error) {

@@ -31,24 +31,31 @@ const SideBar = () => {
 
   useEffect(() => {
     if (!socket) return;
-    socket.on('updated chat', (updatedChat, removeFlag = null) => {
-      setReloadCircuit(true);
-      if (removeFlag) {
+    socket.on(
+      'updated chat',
+      (updatedChat, removeFlag = null, updateFlag = null) => {
+        setReloadCircuit(true);
+        if (removeFlag) {
+          setChats(prevState => {
+            return prevState.filter(chat => chat._id !== updatedChat._id);
+          });
+          return;
+        }
+        if (
+          updateFlag &&
+          activeChat[0] &&
+          updatedChat._id === activeChat[0]._id
+        ) {
+          setActiveChat([updatedChat]);
+        }
         setChats(prevState => {
-          return prevState.filter(chat => chat._id !== updatedChat._id);
+          return prevState.map(chat => {
+            if (chat._id !== updatedChat._id) return chat;
+            else return updatedChat;
+          });
         });
-        return;
       }
-      if (activeChat[0] && updatedChat._id === activeChat[0]._id) {
-        setActiveChat([updatedChat]);
-      }
-      setChats(prevState => {
-        return prevState.map(chat => {
-          if (chat._id !== updatedChat._id) return chat;
-          else return updatedChat;
-        });
-      });
-    });
+    );
     return () => socket.off('updated chat');
   }, [socket, setChats, setReloadCircuit, activeChat, setActiveChat]);
 

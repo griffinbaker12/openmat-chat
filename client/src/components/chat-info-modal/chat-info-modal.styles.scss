@@ -118,8 +118,20 @@
   overflow: auto;
   gap: 12px;
   padding: 8px 12px 4px 12px;
-  max-height: 400px;
+  max-height: 250px;
   overflow: auto;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-right: 1px solid transparent;
+    border-left: 1px solid transparent;
+    background: rgb(30, 30, 30);
+    background-clip: padding-box;
+    border-radius: 100px;
+  }
 }
 
 .group-chat-modal-user-info-container {
