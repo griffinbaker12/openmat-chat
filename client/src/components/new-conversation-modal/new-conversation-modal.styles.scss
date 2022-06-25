@@ -62,22 +62,6 @@
   border-radius: 4px;
   margin-bottom: 4px;
 
-  &::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    border-right: 1px solid transparent;
-    border-left: 1px solid transparent;
-    border-top: 1px solid transparent;
-    border-bottom: 1px solid transparent;
-
-    background: black;
-    background-clip: padding-box;
-    border-radius: 100px;
-  }
-
   &:hover {
     background: #606060;
   }
@@ -95,6 +79,22 @@
   gap: 12px;
   margin-top: 2px;
   margin-bottom: 10px;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    margin: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-right: 1px solid transparent;
+    border-left: 1px solid transparent;
+    background: darkgray;
+    background-clip: padding-box;
+    border-radius: 100px;
+  }
 }
 
 .button-no-search-results {

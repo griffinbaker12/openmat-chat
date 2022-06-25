@@ -6,6 +6,7 @@ import SearchResult from '../search-result/search-result-component';
 import Spinner from '../spinner/spinner.component';
 import { toast } from 'react-toastify';
 import { useChatView } from '../../contexts/chat-view-context';
+import { useSocket } from '../../contexts/socket-context';
 import './new-conversation-modal.styles.scss';
 import { useAuthentication } from '../../contexts/authentication-context';
 import { defaultToast, TOAST_TYPE } from '../../utils/utils';
@@ -17,6 +18,7 @@ import { defaultToast, TOAST_TYPE } from '../../utils/utils';
 const NewConversationModal = () => {
   const { closeModal, chats, setChats } = useChatView();
   const { currentUser } = useAuthentication();
+  const { socket } = useSocket();
 
   const [chatParticipants, setChatParticipants] = useState([]);
   const [formInput, setFormInput] = useState({ chatName: '', name: '' });
@@ -134,7 +136,9 @@ const NewConversationModal = () => {
         }
       );
       const newChat = await response.json();
+      // setActiveChat([newChat]);
       setChats(prevState => [newChat, ...prevState]);
+      socket.emit('new chat', newChat, currentUser);
       resetForm();
       closeModal();
       toast.success('Chat creation successful', {

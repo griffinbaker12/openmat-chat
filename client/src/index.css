@@ -13,6 +13,22 @@ input:-webkit-autofill:focus {
   transition: background-color 600000s 0s, color 600000s 0s;
 }
 
+/* ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-right: 1px solid transparent;
+  border-left: 1px solid transparent;
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+
+  background: rgb(30, 30, 30);
+  background-clip: padding-box;
+  border-radius: 100px;
+} */
+
 /* #root, */
 body > #root > div {
   height: 100vh;

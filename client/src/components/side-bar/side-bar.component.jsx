@@ -26,12 +26,12 @@ const SideBar = () => {
     setReloadCircuit,
     activeChat,
     setActiveChat,
+    chats,
   } = useChatView();
 
   useEffect(() => {
     if (!socket) return;
     socket.on('updated chat', updatedChat => {
-      console.log('so uh');
       setReloadCircuit(true);
       if (updatedChat._id === activeChat[0]._id) {
         setActiveChat([updatedChat]);
@@ -45,6 +45,29 @@ const SideBar = () => {
     });
     return () => socket.off('updated chat');
   }, [socket, setChats, setReloadCircuit, activeChat, setActiveChat]);
+
+  useEffect(() => {
+    if (!socket) return;
+    socket.on(
+      'chat creation',
+      newChat => {
+        console.log(newChat);
+        setReloadCircuit(true);
+        if (chats.length === 0) {
+          setChats([newChat]);
+          return;
+        }
+        setChats(prevState => {
+          return prevState.map(chat => {
+            if (chat._id !== newChat._id) return chat;
+            else return newChat;
+          });
+        });
+        return () => socket.off('chat creation');
+      },
+      [socket, setChats, setReloadCircuit]
+    );
+  });
 
   // const handleCategoryChange = e => {
   //   const clickedCategory = e.target.getAttribute('name');
