@@ -6,6 +6,7 @@ import ContactPreview from '../contact-preview/contact-preview.component';
 import Spinner from '../spinner/spinner.component';
 import { useChatView, MODAL_TYPE } from '../../contexts/chat-view-context';
 import { useSocket } from '../../contexts/socket-context';
+
 // import { useAuthentication } from '../../contexts/authentication-context';
 
 // Can extract the useEffect functionality to search for whatever it is that we need to search for in the actual context itself where the data lives / is stored
@@ -23,14 +24,18 @@ const SideBar = () => {
     windowDimensions,
     setChats,
     setReloadCircuit,
+    activeChat,
+    setActiveChat,
   } = useChatView();
 
   useEffect(() => {
     if (!socket) return;
     socket.on('updated chat', updatedChat => {
-      console.log('does this even get the message?');
+      console.log('so uh');
       setReloadCircuit(true);
-      console.log(updatedChat, 'server return');
+      if (updatedChat._id === activeChat[0]._id) {
+        setActiveChat([updatedChat]);
+      }
       setChats(prevState => {
         return prevState.map(chat => {
           if (chat._id !== updatedChat._id) return chat;
@@ -39,7 +44,7 @@ const SideBar = () => {
       });
     });
     return () => socket.off('updated chat');
-  }, [socket, setChats, setReloadCircuit]);
+  }, [socket, setChats, setReloadCircuit, activeChat, setActiveChat]);
 
   // const handleCategoryChange = e => {
   //   const clickedCategory = e.target.getAttribute('name');
@@ -72,17 +77,8 @@ const SideBar = () => {
       </div>
 
       <div style={{ flex: '1' }}>
-        {sideBarCategory === 'conversations' ? (
-          isChatViewLoading ? (
-            <Spinner type="search" />
-          ) : (
-            <ChatPreview />
-          )
-        ) : isChatViewLoading ? (
-          <Spinner type="search" />
-        ) : (
-          <ContactPreview />
-        )}
+        <ChatPreview />
+        {isChatViewLoading ? <Spinner type="search" /> : <ContactPreview />}
       </div>
 
       <button

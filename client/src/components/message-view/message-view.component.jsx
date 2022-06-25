@@ -60,7 +60,6 @@ const MessageView = () => {
         socket.emit('send-msg', message);
         setMessages(prevState => [...prevState, message]);
         setTyping(false);
-        console.log('chat message', message.chat);
         socket.emit('chat update', message.chat);
         return;
       } catch (error) {

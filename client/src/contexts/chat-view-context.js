@@ -181,9 +181,7 @@ export const ChatViewProvider = ({ children }) => {
   }, [currentUser, fetchChats, setIsLoading]);
 
   useEffect(() => {
-    // console.log(reloadCircuit);
     if (chats.length === 0 || reloadCircuit) {
-      // setReloadCircuit(false);
       return;
     } else {
       const activeChat = chats[0];

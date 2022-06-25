@@ -1,6 +1,7 @@
 import { Fragment, useState, useEffect, useRef } from 'react';
 import { useAuthentication } from '../../contexts/authentication-context';
 import { useChatView } from '../../contexts/chat-view-context';
+import { useSocket } from '../../contexts/socket-context';
 import { TOAST_TYPE, defaultToast } from '../../utils/utils';
 import SearchResult, {
   SEARCH_RESULT_TYPE,
@@ -20,6 +21,7 @@ const AddUserDropdown = ({ wasSoloChat }) => {
     chats,
     setActiveChat,
   } = useChatView();
+  const { socket } = useSocket();
 
   useEffect(() => {
     if (!addUserToChatRef.current) return;
@@ -105,7 +107,9 @@ const AddUserDropdown = ({ wasSoloChat }) => {
         }
       );
       const newChat = await response.json();
-      fetchChats();
+      console.log(newChat);
+      socket.emit('chat update', newChat);
+      // fetchChats();
       defaultToast(TOAST_TYPE.success, 'User successfully added');
     } catch (error) {
       defaultToast(TOAST_TYPE.failure, 'Error adding user');

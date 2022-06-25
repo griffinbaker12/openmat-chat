@@ -9,7 +9,6 @@ import {
 import { useSocket } from '../../contexts/socket-context';
 
 const ChatPreview = () => {
-  // And then we can also pull the active conversation up into higher state or into a context just so that we can actually store this variable without losing it when we switch between categories b/c that triggers a re-render
   const { currentUser } = useAuthentication();
   const { activeChat, setActiveChat, chats, windowDimensions, setActiveView } =
     useChatView();
@@ -20,7 +19,6 @@ const ChatPreview = () => {
     const element = e.target.closest('.chat-preview-list');
     const chatId = element.getAttribute('name');
 
-    // Clicked on the container and not one of the list items, did not want to add the event handler to each individual item
     if (!chatId || chatId === activeChat[0]?._id) return;
 
     if (windowDimensions.width <= 900) {
@@ -40,6 +38,7 @@ const ChatPreview = () => {
             users,
             currentUser
           );
+
           return (
             <div
               key={_id}
@@ -57,11 +56,13 @@ const ChatPreview = () => {
                 {latestMessage && (
                   // <div className="chat-preview-list-latest-message-container">
                   <div className="chat-preview-list-latest-message-container">
-                    {`${
-                      userSent(currentUser, latestMessage)
-                        ? 'You'
-                        : latestMessage.sender.name.split(' ')[0]
-                    }`}
+                    <span>
+                      {`${
+                        userSent(currentUser, latestMessage)
+                          ? 'You'
+                          : latestMessage.sender.name.split(' ')[0]
+                      }`}
+                    </span>
                     : {latestMessage.text}
                   </div>
                 )}

@@ -1,6 +1,7 @@
-import { useEffect, useState, useRef, Fragment } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useAuthentication } from '../../contexts/authentication-context';
 import { useChatView } from '../../contexts/chat-view-context';
+import { useSocket } from '../../contexts/socket-context';
 import UserInfoModal from '../user-info-modal/user-info-modal.component';
 import { ReactComponent as ChevronRight } from '../../assets/chevron-right.svg';
 import { ReactComponent as EditPencil } from '../../assets/pencil.svg';
@@ -19,7 +20,6 @@ const ChatInfoModal = ({ userFlag }) => {
     activeChat,
     setActiveChat,
     chats,
-    setChats,
     showModal,
     closeModal,
     fetchChats,
@@ -29,7 +29,9 @@ const ChatInfoModal = ({ userFlag }) => {
     setShowActiveUserWithinChatInfo,
     setActiveUserInfo,
     setIsActiveUserCurrentUser,
+    setReloadCircuit,
   } = useChatView();
+  const { socket } = useSocket();
 
   const [showChatEdit, setShowChatEdit] = useState(false);
   const [newChatName, setNewChatName] = useState('');
@@ -149,13 +151,10 @@ const ChatInfoModal = ({ userFlag }) => {
           }),
         }
       );
-
-      // And then here send another update about the chat that has been edited and set the circuit to true
-
       const updatedChat = await response.json();
       setActiveChat([updatedChat]);
       setShowChatEdit(false);
-      fetchChats();
+      socket.emit('chat update', updatedChat);
     } catch (error) {
       defaultToast(TOAST_TYPE.failure, 'Error re-naming chat');
     }
@@ -217,7 +216,6 @@ const ChatInfoModal = ({ userFlag }) => {
                 className="edit-pencil-container"
                 onClick={handleEditChatName}
               >
-                {/* Add a check for whether it is a group chat or not */}
                 <EditPencil />
               </div>
             </Tooltip>

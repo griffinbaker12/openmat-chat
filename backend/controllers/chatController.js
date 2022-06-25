@@ -107,11 +107,21 @@ const renameChat = asyncHandler(async (req, res) => {
   const { chatId, chatName } = req.body;
 
   // Does not really make sense why we need to put the new true if we are updating this stuff
-  const updatedChat = await Chat.findByIdAndUpdate(
+  let updatedChat = await Chat.findByIdAndUpdate(
     chatId,
     { chatName },
     { new: true }
-  ).populate('users', '-password');
+  )
+    .populate('users', '-password')
+    .populate('latestMessage');
+
+  updatedChat = await Chat.populate(updatedChat, {
+    path: 'latestMessage.sender',
+  });
+
+  updatedChat = await Chat.populate(updatedChat, {
+    path: 'latestMessage.chat',
+  });
 
   if (!updatedChat) {
     res.status(404);
@@ -140,8 +150,18 @@ const addUserToChat = asyncHandler(async (req, res) => {
       chatId,
       { $push: { users: userId } },
       { new: true }
-    ).populate('users', '-password');
+    )
+      .populate('users', '-password')
+      .populate('latestMessage');
   }
+
+  added = await Chat.populate(added, {
+    path: 'latestMessage.sender',
+  });
+
+  added = await Chat.populate(added, {
+    path: 'latestMessage.chat',
+  });
 
   if (!added) {
     res.status(404);

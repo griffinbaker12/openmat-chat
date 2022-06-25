@@ -12,7 +12,6 @@ const TextHeader = () => {
     setActiveView,
     windowDimensions,
     setActiveChat,
-    chats,
   } = useChatView();
   const { currentUser } = useAuthentication();
 
