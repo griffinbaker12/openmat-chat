@@ -29,7 +29,7 @@ const SideBar = () => {
     chats,
   } = useChatView();
 
-  console.log(chats);
+  console.log(chats, 'chats', chats.length);
 
   useEffect(() => {
     if (!socket) return;
@@ -68,33 +68,12 @@ const SideBar = () => {
 
   useEffect(() => {
     if (!socket) return;
-    socket.on(
-      'chat creation',
-      newChat => {
-        console.log(newChat);
-        setReloadCircuit(true);
-        if (chats.length === 0) {
-          setChats([newChat]);
-          return;
-        }
-        setChats(prevState => {
-          return prevState.map(chat => {
-            if (chat._id !== newChat._id) return chat;
-            else return newChat;
-          });
-        });
-        return () => socket.off('chat creation');
-      },
-      [socket, setChats, setReloadCircuit]
-    );
-  });
-
-  // const handleCategoryChange = e => {
-  //   const clickedCategory = e.target.getAttribute('name');
-  //   setSideBarCategory(clickedCategory);
-  // };
-
-  // submit just get whatever that value was and actually set the search loading to true and all that jazz
+    socket.on('chat creation', newChat => {
+      setReloadCircuit(true);
+      setChats(prevState => [newChat, ...prevState]);
+    });
+    return () => socket.off('chat creation');
+  }, [socket, setChats, setReloadCircuit]);
 
   return (
     <div

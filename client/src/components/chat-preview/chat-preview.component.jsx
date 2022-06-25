@@ -54,11 +54,7 @@ const ChatPreview = () => {
                     : chatName}
                 </p>
                 {latestMessage && (
-                  <div
-                    className={`chat-preview-list-latest-message-container ${
-                      _id !== activeChat[0]?._id ? 'unread' : ''
-                    }`}
-                  >
+                  <div className="chat-preview-list-latest-message-container">
                     <span>
                       {`${
                         userSent(currentUser, latestMessage)

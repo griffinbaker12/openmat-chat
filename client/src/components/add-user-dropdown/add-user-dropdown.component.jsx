@@ -54,6 +54,8 @@ const AddUserDropdown = ({ wasSoloChat }) => {
     }
   };
 
+  // LETS LOOK AT THIS FIRST THING TOMORROW. WHEN YOU CREATE A SOLO CHAT AND THEN ADD SOMEONE TO THE CHAT WITH THAT PERSON, YOU GET WEIRD BEHAVIOR AND THEY GET GROUPED TOGETHER IN THE SAME CHAT. BUT THEN AFTER WE KNOCK THAT OUT, WE JUST DO THE LAST MESSAGES AND WHETHER THEY HAVE BEEN READ (JUST USE STATE AND CHECK WHETHER THEY HAVE BEEN READ; CAN STORE THEM IN AN OBJECT WITH THE MESSAGE, SENDER, TEXT, AND READ STATUS) - WHEN YOU ADD A MESSAGE IT GOES TO UNREAD BUT THEN WHEN YOU CLICK IT GOES TO READ. THEN WE JUST HANDLE NOTIFICATIONS AND WE ARE DONEZO :)
+
   const handleAddUser = async e => {
     const closestContainer = e.target.closest(
       '.add-user-to-existing-chat-container'
@@ -77,6 +79,8 @@ const AddUserDropdown = ({ wasSoloChat }) => {
       if (chat[0].length !== sortedChatUsers.length) return false;
       return chat[0].every((user, i) => user === sortedChatUsers[i]);
     });
+
+    console.log(existingChatUsersAndId);
 
     if (existingChatUsersAndId) {
       const existingChat = chats.find(
