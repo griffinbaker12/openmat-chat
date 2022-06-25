@@ -33,7 +33,7 @@ const SideBar = () => {
     if (!socket) return;
     socket.on('updated chat', updatedChat => {
       setReloadCircuit(true);
-      if (updatedChat._id === activeChat[0]._id) {
+      if (activeChat[0] && updatedChat._id === activeChat[0]._id) {
         setActiveChat([updatedChat]);
       }
       setChats(prevState => {

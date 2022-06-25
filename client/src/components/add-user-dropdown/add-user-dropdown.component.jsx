@@ -107,7 +107,11 @@ const AddUserDropdown = ({ wasSoloChat }) => {
         }
       );
       const newChat = await response.json();
-      socket.emit('chat update', newChat);
+      if (!newChat.latestMessage) {
+        socket.emit('chat update', newChat, currentUser);
+      } else {
+        socket.emit('chat update', newChat, currentUser);
+      }
       defaultToast(TOAST_TYPE.success, 'User successfully added');
     } catch (error) {
       defaultToast(TOAST_TYPE.failure, 'Error adding user');

@@ -151,10 +151,11 @@ const ChatInfoModal = ({ userFlag }) => {
           }),
         }
       );
+
       const updatedChat = await response.json();
       setActiveChat([updatedChat]);
       setShowChatEdit(false);
-      socket.emit('chat update', updatedChat);
+      socket.emit('chat update', updatedChat, true);
     } catch (error) {
       defaultToast(TOAST_TYPE.failure, 'Error re-naming chat');
     }
