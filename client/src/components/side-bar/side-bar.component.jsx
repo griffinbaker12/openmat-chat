@@ -29,6 +29,8 @@ const SideBar = () => {
     chats,
   } = useChatView();
 
+  console.log(chats);
+
   useEffect(() => {
     if (!socket) return;
     socket.on(
@@ -48,11 +50,16 @@ const SideBar = () => {
         ) {
           setActiveChat([updatedChat]);
         }
+
         setChats(prevState => {
-          return prevState.map(chat => {
-            if (chat._id !== updatedChat._id) return chat;
-            else return updatedChat;
-          });
+          if (prevState.length === 0) {
+            return [updatedChat];
+          } else {
+            return prevState.map(chat => {
+              if (chat._id !== updatedChat._id) return chat;
+              else return updatedChat;
+            });
+          }
         });
       }
     );

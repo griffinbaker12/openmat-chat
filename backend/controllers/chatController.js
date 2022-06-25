@@ -85,6 +85,15 @@ const fetchChats = asyncHandler(async (req, res) => {
   try {
     // Find the chats where the element (b/c we are dealing with object ids) is equal to the user id that we have received (from the MW)
     // Since we do not have any data fields in the latest message right now that does not show up in Postman apparently
+
+    // removed = await Chat.populate(removed, {
+    //   path: 'latestMessage.sender',
+    // });
+
+    // removed = await Chat.populate(removed, {
+    //   path: 'latestMessage.chat',
+    // });
+
     Chat.find({ users: { $elemMatch: { $eq: req.user._id } } })
       .populate('users', '-hash')
       .populate('latestMessage')
@@ -144,7 +153,9 @@ const addUserToChat = asyncHandler(async (req, res) => {
       chatId,
       { $push: { users: userId }, $set: { isGroupChat: true, chatName: '' } },
       { new: true }
-    ).populate('users', '-password');
+    )
+      .populate('users', '-password')
+      .populate('latestMessage');
   } else {
     added = await Chat.findByIdAndUpdate(
       chatId,
@@ -179,17 +190,27 @@ const leaveChat = asyncHandler(async (req, res) => {
     chatId,
     { $pull: { users: req.user._id } },
     { new: true }
-  ).populate('users', '-password');
-
-  console.log(removed);
+  )
+    .populate('users', '-password')
+    .populate('latestMessage');
 
   if (removed.users.length === 2) {
     removed = await Chat.findByIdAndUpdate(
       chatId,
       { $set: { isGroupChat: false } },
       { new: true }
-    ).populate('users', '-password');
+    )
+      .populate('users', '-password')
+      .populate('latestMessage');
   }
+
+  removed = await Chat.populate(removed, {
+    path: 'latestMessage.sender',
+  });
+
+  removed = await Chat.populate(removed, {
+    path: 'latestMessage.chat',
+  });
 
   if (!removed) {
     res.status(404);

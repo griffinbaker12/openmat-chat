@@ -59,7 +59,10 @@ const ChatInfoModal = ({ userFlag }) => {
   }, [activeChat, showChatEdit, currentUser]);
 
   const checkForUsedToSoloAndCloseModal = () => {
-    if (wasSoloChat && !activeChat[0].chatName) {
+    if (
+      (wasSoloChat && !activeChat[0].chatName) ||
+      (activeChat[0].isGroupChat && !activeChat[0].chatName)
+    ) {
       setShowChatEdit(true);
       chatEditInputRef.current.focus();
       defaultToast(TOAST_TYPE.failure, 'Please add chat name');
@@ -67,6 +70,7 @@ const ChatInfoModal = ({ userFlag }) => {
     }
     setWasSoloChat(false);
     closeModal();
+    setShowChatEdit(false);
     return;
   };
 
@@ -87,11 +91,13 @@ const ChatInfoModal = ({ userFlag }) => {
   };
 
   const closeAddUserInfoAndStopPropagation = e => {
-    const addButtonPress = e.target.closest('.add-button-container');
     e.stopPropagation();
+    const buttonPress = e.target.classList.contains(
+      'chat-info-modal-content-close-button'
+    );
 
-    if (!addButtonPress) {
-      setShowAddUserInfoDropdown(false);
+    if (buttonPress) {
+      checkForUsedToSoloAndCloseModal();
     }
   };
 
@@ -114,6 +120,7 @@ const ChatInfoModal = ({ userFlag }) => {
       const updatedChat = await response.json();
       closeModal();
 
+      console.log(updatedChat);
       if (!updatedChat.latestMessage) {
         socket.emit('chat update', updatedChat, currentUser, true, true);
       } else {
@@ -232,7 +239,7 @@ const ChatInfoModal = ({ userFlag }) => {
             </Tooltip>
           )}
           <button
-            onClick={closeModal}
+            className="chat-info-modal-content-close-button"
             type="button"
             style={{ color: 'white', marginLeft: 'auto' }}
           >

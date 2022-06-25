@@ -60,8 +60,6 @@ export const ChatViewProvider = ({ children }) => {
     setShowModal(false);
   };
 
-  console.log(reloadCircuit);
-
   const setUserInfoModal = async (id, currentUserFlag = null) => {
     if (currentUserFlag) {
       setActiveUserInfo(currentUser);
