@@ -8,12 +8,15 @@
   width: 100%;
   justify-content: space-between;
   padding: 20px 4px 20px 4px;
-}
 
-// .text-header-content-container {
-//   display: flex;
-//   justify-content: center;
-// }
+  p {
+    width: 80%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-align: left;
+    white-space: nowrap;
+  }
+}
 
 .chat-information-button-box {
   border: 1px solid gray;

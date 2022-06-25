@@ -26,10 +26,7 @@ const SideBar = () => {
     setReloadCircuit,
     activeChat,
     setActiveChat,
-    chats,
   } = useChatView();
-
-  console.log(chats, 'chats', chats.length);
 
   useEffect(() => {
     if (!socket) return;

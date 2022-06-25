@@ -49,6 +49,13 @@
   font-size: 16px;
   width: 70%;
   justify-content: center;
+
+  .chat-preview-list-name-container {
+    width: 80%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
 }
 
 .online-circle {

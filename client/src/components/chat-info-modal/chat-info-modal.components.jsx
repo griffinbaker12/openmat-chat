@@ -22,14 +22,12 @@ const ChatInfoModal = ({ userFlag }) => {
     chats,
     showModal,
     closeModal,
-    fetchChats,
     showAddUserInfoDropdown,
     setShowAddUserInfoDropdown,
     showActiveUserWithinChatInfo,
     setShowActiveUserWithinChatInfo,
     setActiveUserInfo,
     setIsActiveUserCurrentUser,
-    setReloadCircuit,
   } = useChatView();
   const { socket } = useSocket();
 

@@ -21,7 +21,7 @@
 .chat-info-modal-content {
   display: flex;
   flex-direction: column;
-  min-width: 325px;
+  max-width: 350px;
   width: auto;
   border: 1px solid white;
   border-radius: 4px;
@@ -47,6 +47,14 @@
   button:hover {
     cursor: pointer;
     font-weight: bold;
+  }
+
+  p {
+    width: 80%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-align: left;
+    white-space: nowrap;
   }
 }
 

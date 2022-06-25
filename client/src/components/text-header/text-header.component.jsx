@@ -37,7 +37,13 @@ const TextHeader = () => {
       >
         <BackArrow />
       </div>
-      <p>
+      <p
+      // style={
+      // windowDimensions.width > 900
+      // ? { textAlign: 'left' }
+      // : { textAlign: 'center' }
+      // }
+      >
         {activeChat.length > 0 && !activeChat[0].isGroupChat
           ? generateChatNameForSoloChats(activeChat[0].users, currentUser)
           : activeChat[0].chatName}
