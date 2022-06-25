@@ -31,8 +31,14 @@ const SideBar = () => {
 
   useEffect(() => {
     if (!socket) return;
-    socket.on('updated chat', updatedChat => {
+    socket.on('updated chat', (updatedChat, removeFlag = null) => {
       setReloadCircuit(true);
+      if (removeFlag) {
+        setChats(prevState => {
+          return prevState.filter(chat => chat._id !== updatedChat._id);
+        });
+        return;
+      }
       if (activeChat[0] && updatedChat._id === activeChat[0]._id) {
         setActiveChat([updatedChat]);
       }

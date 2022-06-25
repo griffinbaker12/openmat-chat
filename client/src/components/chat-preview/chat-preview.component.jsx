@@ -29,8 +29,6 @@ const ChatPreview = () => {
     setActiveChat([newActiveChat]);
   };
 
-  console.log('chats are', chats);
-
   return (
     <div className="chat-preview-container" onClick={handleClick}>
       {chats.length > 0 &&

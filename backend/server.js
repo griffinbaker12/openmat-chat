@@ -76,22 +76,23 @@ io.on('connection', socket => {
   );
 
   // Need to do something similar up top where I send the update to all of the people in the chat when there is a new message so that it can show in the chat view, as well as if they need to update the users or the name of the chat REGARDLESS of which chat is currently being viewed
-  socket.on('chat update', (chat, currentUser = null) => {
+  socket.on('chat update', (chat, currentUser = null, removeFlag = null) => {
     let userId;
     if (!currentUser) {
       userId = chat.latestMessage.sender._id;
     } else {
       userId = currentUser._id;
     }
-    for (const [
-      _onlineSocketId,
-      onlineUserId,
-    ] of global.onlineUsers.entries()) {
-      if (onlineUserId === userId) {
+    chat.users.forEach(user => {
+      if (user._id === currentUser._id) {
         socket.emit('updated chat', chat);
       } else {
-        socket.to(onlineUserId).emit('updated chat', chat);
+        socket.to(user._id).emit('updated chat', chat);
       }
+    });
+
+    if (removeFlag) {
+      socket.emit('updated chat', chat, true);
     }
   });
 
