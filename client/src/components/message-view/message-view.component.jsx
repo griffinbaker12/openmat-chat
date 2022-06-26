@@ -72,8 +72,6 @@ const MessageView = () => {
           if (!isOnline) usersOtherThanCurrentAndOffline.push(user);
         });
 
-        console.log(usersOtherThanCurrentAndOffline);
-
         // Log the notification for every user that is offline so it appears when they log in
         usersOtherThanCurrentAndOffline.forEach(async user => {
           const logNotificationForSomeoneNotOnline = await fetch(

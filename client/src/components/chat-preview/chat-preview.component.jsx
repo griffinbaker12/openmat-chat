@@ -5,17 +5,25 @@ import {
   generateChatNameForSoloChats,
   getUsersOnlineCount,
   userSent,
+  defaultToast,
+  TOAST_TYPE,
 } from '../../utils/utils';
 import { useSocket } from '../../contexts/socket-context';
 
 const ChatPreview = () => {
   const { currentUser } = useAuthentication();
-  const { activeChat, setActiveChat, chats, windowDimensions, setActiveView } =
-    useChatView();
+  const {
+    activeChat,
+    setActiveChat,
+    chats,
+    windowDimensions,
+    setActiveView,
+    setNotifications,
+  } = useChatView();
 
   const { onlineUsers } = useSocket();
 
-  const handleClick = e => {
+  const handleClick = async e => {
     const element = e.target.closest('.chat-preview-list');
     const chatId = element.getAttribute('name');
 
@@ -27,6 +35,26 @@ const ChatPreview = () => {
 
     const newActiveChat = chats.find(chat => chat._id === chatId);
     setActiveChat([newActiveChat]);
+
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/notification/removeNotification`,
+        {
+          method: 'post',
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            chatId: newActiveChat._id,
+          }),
+        }
+      );
+      const updatedNotifications = await response.json();
+      setNotifications(updatedNotifications);
+    } catch (error) {
+      defaultToast(TOAST_TYPE.error, 'Error updating notifications');
+    }
   };
 
   return (
