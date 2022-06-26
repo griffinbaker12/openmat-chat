@@ -1,7 +1,11 @@
 import { forwardRef, useRef, useEffect, useState } from 'react';
 import { useAuthentication } from '../../contexts/authentication-context';
 import { useChatView } from '../../contexts/chat-view-context';
-import { generateChatNameForSoloChats } from '../../utils/utils';
+import {
+  generateChatNameForSoloChats,
+  defaultToast,
+  TOAST_TYPE,
+} from '../../utils/utils';
 import './notification-dropdown.styles.scss';
 
 const NotificationDropdown = forwardRef(
@@ -9,7 +13,8 @@ const NotificationDropdown = forwardRef(
     { handleDropdown, closeAccountDropdown, closeNotificationDropdown },
     ref
   ) => {
-    const { notifications, setActiveChat, chats } = useChatView();
+    const { notifications, setActiveChat, chats, setNotifications } =
+      useChatView();
     const { currentUser } = useAuthentication();
     const [groupedNotifications, setGroupedNotifications] = useState([]);
     const dropDownRef = useRef();
@@ -31,6 +36,7 @@ const NotificationDropdown = forwardRef(
 
     useEffect(() => {
       const chatCounter = [];
+      if (notifications.length === 0) return;
       notifications.forEach(notification => {
         const alreadyInCounterIndex = chatCounter.findIndex(
           notificaitonInChatCounter =>
@@ -46,12 +52,32 @@ const NotificationDropdown = forwardRef(
       setGroupedNotifications(chatCounter);
     }, [notifications]);
 
-    const handleNotificationClick = e => {
+    const handleNotificationClick = async e => {
       const chatId = e.target
         .closest('.notification-dropdown-content-item-container')
         .getAttribute('name');
       const chat = chats.find(chat => chat._id === chatId);
       setActiveChat([chat]);
+
+      try {
+        const response = await fetch(
+          `http://localhost:4000/api/notification/removeNotification`,
+          {
+            method: 'post',
+            headers: {
+              Authorization: `Bearer ${currentUser.token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              chatId: chat._id,
+            }),
+          }
+        );
+        const updatedNotifications = await response.json();
+        setNotifications(updatedNotifications);
+      } catch (error) {
+        defaultToast(TOAST_TYPE.error, 'Error updating notifications');
+      }
     };
 
     return (
