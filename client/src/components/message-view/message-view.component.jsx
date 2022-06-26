@@ -22,8 +22,9 @@ let typingTimer;
 const MessageView = () => {
   // Somehow we are going to have to get all of the message in a conversation potentially and then mark whether or not they are your messages or someone else's to style accordingly;
   const { currentUser } = useAuthentication();
-  const { activeChat, setNotifications, setReloadCircuit } = useChatView();
-  const { socket } = useSocket();
+  const { activeChat, setNotifications, setReloadCircuit, notifications } =
+    useChatView();
+  const { socket, onlineUsers } = useSocket();
 
   // const [socketConnected, setSocketConnected] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -61,7 +62,35 @@ const MessageView = () => {
         setMessages(prevState => [...prevState, message]);
         setTyping(false);
         socket.emit('chat update', message.chat);
-        return;
+
+        const usersOtherThanCurrentAndOffline = [];
+        message.chat.users.forEach(user => {
+          if (user._id === currentUser._id) return;
+          const isOnline = onlineUsers.some(onlineUserArr =>
+            onlineUserArr.includes(user._id)
+          );
+          if (!isOnline) usersOtherThanCurrentAndOffline.push(user);
+        });
+
+        console.log(usersOtherThanCurrentAndOffline);
+
+        // Log the notification for every user that is offline so it appears when they log in
+        usersOtherThanCurrentAndOffline.forEach(async user => {
+          const logNotificationForSomeoneNotOnline = await fetch(
+            `http://localhost:4000/api/notification/addNotification`,
+            {
+              method: 'post',
+              headers: {
+                Authorization: `Bearer ${currentUser.token}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                message,
+                userId: user._id,
+              }),
+            }
+          );
+        });
       } catch (error) {
         defaultToast(TOAST_TYPE.error, 'Error sending');
       }
@@ -203,6 +232,14 @@ const MessageView = () => {
                 const userSentBool = userSent(currentUser, message);
                 const sameSenderAndNotCurrentUserBool =
                   sameSenderAndNotCurrentUser(i, messages, currentUser);
+                // const isFirstMessageInNotifications =
+                //   notifications
+                //     .filter(
+                //       notification => notification.chat._id === message.chat._id
+                //     )
+                //     .at(-1).message._id === message._id;
+
+                // console.log(isFirstMessageInNotifications, message);
                 return (
                   <div
                     key={i}

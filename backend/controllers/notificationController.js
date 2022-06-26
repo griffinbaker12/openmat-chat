@@ -28,13 +28,23 @@ const getNotifications = asyncHandler(async (req, res) => {
 });
 
 const addNotification = asyncHandler(async (req, res) => {
-  const { message } = req.body;
+  const { message, userId } = req.body;
 
-  const newNotification = {
-    user: req.user._id,
-    message,
-    chat: message.chat,
-  };
+  let newNotification;
+
+  if (userId) {
+    newNotification = {
+      user: userId,
+      message,
+      chat: message.chat,
+    };
+  } else {
+    newNotification = {
+      user: req.user.userId,
+      message,
+      chat: message.chat,
+    };
+  }
 
   try {
     let notification = await Notification.create(newNotification);

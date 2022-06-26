@@ -87,7 +87,14 @@ const NotificationDropdown = forwardRef(
         className="notification-dropdown-container"
       >
         {notifications.length === 0 ? (
-          <p>No new notifications!</p>
+          <p
+            style={{
+              padding: '20px',
+              textAlign: 'center',
+            }}
+          >
+            No new notifications!
+          </p>
         ) : (
           groupedNotifications.map((groupedNotification, i) => (
             <div
