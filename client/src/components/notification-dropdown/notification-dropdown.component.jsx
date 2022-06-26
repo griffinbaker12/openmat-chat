@@ -9,7 +9,7 @@ const NotificationDropdown = forwardRef(
     { handleDropdown, closeAccountDropdown, closeNotificationDropdown },
     ref
   ) => {
-    const { notifications } = useChatView();
+    const { notifications, setActiveChat, chats } = useChatView();
     const { currentUser } = useAuthentication();
     const [groupedNotifications, setGroupedNotifications] = useState([]);
     const dropDownRef = useRef();
@@ -36,7 +36,6 @@ const NotificationDropdown = forwardRef(
           notificaitonInChatCounter =>
             notificaitonInChatCounter.chat._id === notification.message.chat._id
         );
-        console.log(alreadyInCounterIndex);
         if (alreadyInCounterIndex >= 0) {
           let objToInc = chatCounter[alreadyInCounterIndex];
           objToInc.count = objToInc.count + 1;
@@ -47,7 +46,13 @@ const NotificationDropdown = forwardRef(
       setGroupedNotifications(chatCounter);
     }, [notifications]);
 
-    console.log(groupedNotifications, 'gns');
+    const handleNotificationClick = e => {
+      const chatId = e.target
+        .closest('.notification-dropdown-content-item-container')
+        .getAttribute('name');
+      const chat = chats.find(chat => chat._id === chatId);
+      setActiveChat([chat]);
+    };
 
     return (
       <div
@@ -60,6 +65,8 @@ const NotificationDropdown = forwardRef(
         ) : (
           groupedNotifications.map((groupedNotification, i) => (
             <div
+              onClick={handleNotificationClick}
+              name={groupedNotification.chat._id}
               key={i}
               className="notification-dropdown-content-item-container"
             >

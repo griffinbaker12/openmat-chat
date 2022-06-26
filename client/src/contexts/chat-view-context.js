@@ -201,7 +201,6 @@ export const ChatViewProvider = ({ children }) => {
       return;
     }
     if (currentUser._id) {
-      console.log('is this running?');
       fetchChats();
       fetchNotifications();
     }
