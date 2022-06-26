@@ -11,6 +11,7 @@
   border-top: 1px solid gray;
   display: flex;
   align-items: center;
+  position: relative;
 
   &:last-child {
     border-bottom: 1px solid gray;
@@ -38,6 +39,15 @@
 
 .chat-preview-list:hover {
   cursor: pointer;
+}
+
+.unread {
+  height: 10px;
+  width: 10px;
+  position: absolute;
+  right: 3px;
+  background-color: blue;
+  border-radius: 50%;
 }
 
 .chat-preview-list-item {
@@ -92,15 +102,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   position: relative;
-}
-
-.chat-preview-list-latest-message-container-unread {
-  height: 10px;
-  width: 10px;
-  position: absolute;
-  right: 3px;
-  background-color: blue;
-  border-radius: 50%;
 }
 
 .chat-preview-list-latest-text-container {

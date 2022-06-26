@@ -23,7 +23,7 @@ const Login = () => {
 
   const { changeAuth, isLoading, setIsLoading } = useAuthentication();
 
-  const { fetchChats } = useChatView();
+  const { fetchChats, fetchNotifications } = useChatView();
 
   const handleLogin = async () => {
     if (!text.emailOrUserName) {
@@ -51,6 +51,7 @@ const Login = () => {
       .then(res => res.json())
       .then(data => {
         fetchChats(data.token, data);
+        fetchNotifications(data.token);
         localStorage.setItem('userInfo', JSON.stringify(data));
       })
       .catch(err => {

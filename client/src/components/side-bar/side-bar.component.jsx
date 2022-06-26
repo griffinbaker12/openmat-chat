@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ReactComponent as SearchIcon } from '../../assets/search.svg';
 import ChatPreview from '../chat-preview/chat-preview.component';
 import './side-bar.styles.scss';
@@ -6,10 +6,6 @@ import ContactPreview from '../contact-preview/contact-preview.component';
 import Spinner from '../spinner/spinner.component';
 import { useChatView, MODAL_TYPE } from '../../contexts/chat-view-context';
 import { useSocket } from '../../contexts/socket-context';
-
-// import { useAuthentication } from '../../contexts/authentication-context';
-
-// Can extract the useEffect functionality to search for whatever it is that we need to search for in the actual context itself where the data lives / is stored
 
 const SideBar = () => {
   const { socket } = useSocket();
@@ -47,6 +43,18 @@ const SideBar = () => {
         ) {
           setActiveChat([updatedChat]);
         }
+
+        // if (updatedChat._id !== activeChat[0]?._id) {
+        //   setLatestMessages(prevState => {
+        //     const filteredState = prevState.filter(
+        //       ({ message }) => message.chat._id !== updatedChat._id
+        //     );
+        //     return [
+        //       { message: updatedChat.latestMessage, read: false },
+        //       ...filteredState,
+        //     ];
+        //   });
+        // }
 
         setChats(prevState => {
           if (prevState.length === 0) {

@@ -126,6 +126,33 @@ export const ChatViewProvider = ({ children }) => {
     [currentUser, navigate, setIsLoading, setCurrentUser]
   );
 
+  const fetchNotifications = useCallback(
+    async (tokenForLogin = null) => {
+      try {
+        const response = await fetch(`http://localhost:4000/api/notification`, {
+          method: 'get',
+          headers: {
+            Authorization: `Bearer ${tokenForLogin || currentUser.token}`,
+          },
+        });
+        const notifications = await response.json();
+        setNotifications(notifications);
+      } catch (error) {
+        toast.error('Error fetching notifications', {
+          position: 'bottom-center',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
+      }
+    },
+    [currentUser]
+  );
+
   const handleModal = modalType => {
     setModalType(modalType);
     setShowModal(true);
@@ -174,10 +201,12 @@ export const ChatViewProvider = ({ children }) => {
       return;
     }
     if (currentUser._id) {
+      console.log('is this running?');
       fetchChats();
+      fetchNotifications();
     }
     return;
-  }, [currentUser, fetchChats, setIsLoading]);
+  }, [currentUser, fetchChats, setIsLoading, fetchNotifications]);
 
   useEffect(() => {
     if (chats.length === 0 || reloadCircuit) {
@@ -227,6 +256,7 @@ export const ChatViewProvider = ({ children }) => {
         setNotifications,
         setWindowDimensions,
         setReloadCircuit,
+        fetchNotifications,
       }}
     >
       {children}

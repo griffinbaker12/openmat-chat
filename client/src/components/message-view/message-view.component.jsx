@@ -113,17 +113,38 @@ const MessageView = () => {
 
   useEffect(() => {
     if (!socket) return;
-    socket.on('msg-received', message => {
+    socket.on('msg-received', async message => {
       if (!activeChat[0]._id || message.chat._id !== activeChat[0]._id) {
-        setNotifications(prevState => [message, ...prevState]);
-        return;
+        try {
+          const response = await fetch(
+            `http://localhost:4000/api/notification/addNotification`,
+            {
+              method: 'post',
+              headers: {
+                Authorization: `Bearer ${currentUser.token}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                message,
+              }),
+            }
+          );
+          const notification = await response.json();
+          setNotifications(prevState => [notification, ...prevState]);
+        } catch (error) {
+          defaultToast(TOAST_TYPE.error, 'Error setting notifications');
+        }
       } else {
         setIsTyping(false);
         setMessages(prevState => [...prevState, message]);
       }
     });
     return () => socket.off('msg-received');
-  }, [socket, activeChat, setNotifications]);
+  }, [socket, activeChat, setNotifications, currentUser.token]);
+
+  useEffect(() => {
+    setIsTyping(false);
+  }, [activeChat]);
 
   useEffect(() => {
     if (!socket) return;

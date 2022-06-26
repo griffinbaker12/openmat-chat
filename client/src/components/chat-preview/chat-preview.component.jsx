@@ -39,6 +39,13 @@ const ChatPreview = () => {
             currentUser
           );
 
+          // const isLatestMessageUnread =
+          //   _id !== activeChat[0]?._id &&
+          //   !latestMessages.find(({ message }) => message.chat._id === _id)
+          //     ?.read;
+
+          // console.log(isLatestMessageUnread);
+
           return (
             <div
               key={_id}
@@ -47,6 +54,9 @@ const ChatPreview = () => {
                 _id === activeChat[0]?._id ? 'active' : ''
               }`}
             >
+              {/* {latestMessage && isLatestMessageUnread && (
+                <span className="unread"></span>
+              )} */}
               <div className="chat-preview-list-item">
                 <p className="chat-preview-list-name-container">
                   {!isGroupChat
