@@ -48,7 +48,7 @@ export const ChatViewProvider = ({ children }) => {
   });
   const [notifications, setNotifications] = useState([]);
   const [reloadCircuit, setReloadCircuit] = useState(false);
-  // const [unreadMessagesInChat, ]
+  const [unreadMessages, setUnreadMessages] = useState([]);
 
   const { currentUser, setCurrentUser, setIsLoading } = useAuthentication();
   const navigate = useNavigate();
@@ -257,6 +257,8 @@ export const ChatViewProvider = ({ children }) => {
         setWindowDimensions,
         setReloadCircuit,
         fetchNotifications,
+        unreadMessages,
+        setUnreadMessages,
       }}
     >
       {children}

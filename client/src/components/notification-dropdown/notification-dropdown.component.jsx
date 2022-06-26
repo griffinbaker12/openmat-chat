@@ -13,13 +13,8 @@ const NotificationDropdown = forwardRef(
     { handleDropdown, closeAccountDropdown, closeNotificationDropdown },
     ref
   ) => {
-    const {
-      notifications,
-      setActiveChat,
-      chats,
-      setNotifications,
-      activeChat,
-    } = useChatView();
+    const { notifications, setActiveChat, chats, setNotifications } =
+      useChatView();
     const { currentUser } = useAuthentication();
     const [groupedNotifications, setGroupedNotifications] = useState([]);
     const dropDownRef = useRef();

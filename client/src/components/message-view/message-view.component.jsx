@@ -22,21 +22,15 @@ let typingTimer;
 const MessageView = () => {
   // Somehow we are going to have to get all of the message in a conversation potentially and then mark whether or not they are your messages or someone else's to style accordingly;
   const { currentUser } = useAuthentication();
-  const { activeChat, setNotifications, setReloadCircuit, notifications } =
+  const { activeChat, setNotifications, setReloadCircuit, unreadMessages } =
     useChatView();
   const { socket, onlineUsers } = useSocket();
 
-  // const [socketConnected, setSocketConnected] = useState(false);
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [typing, setTyping] = useState(false);
   const [typers, setTypers] = useState([]);
-
-  // console.log('typers from outside', typers);
-
-  // So I am thinking that I can definitely scroll into view whatever message is actually clicked within whatever chat, I don't see why that would not be possible?
-  // Pretty cool, when the component actually mounts, the ref for the element gets passed into the callback function, could actually do some pretyy coll things with this, like making an animation or shake the screen or bounce the message or anything when the message actually enters the screen...
 
   const handleKeyDown = async e => {
     if (!socket) return;
@@ -74,7 +68,7 @@ const MessageView = () => {
 
         // Log the notification for every user that is offline so it appears when they log in
         usersOtherThanCurrentAndOffline.forEach(async user => {
-          const logNotificationForSomeoneNotOnline = await fetch(
+          await fetch(
             `http://localhost:4000/api/notification/addNotification`,
             {
               method: 'post',
@@ -216,7 +210,7 @@ const MessageView = () => {
     //isVisible = elemTop < window.innerHeight && elemBottom >= 0;
     return isVisible;
   }
-  // What is the best way to make it so that the text bubble can expland if it needs to??
+
   return (
     <div className="message-view-container">
       {isLoading ? (
@@ -230,53 +224,60 @@ const MessageView = () => {
                 const userSentBool = userSent(currentUser, message);
                 const sameSenderAndNotCurrentUserBool =
                   sameSenderAndNotCurrentUser(i, messages, currentUser);
-                // const isFirstMessageInNotifications =
-                //   notifications
-                //     .filter(
-                //       notification => notification.chat._id === message.chat._id
-                //     )
-                //     .at(-1).message._id === message._id;
+                console.log('the unread message', unreadMessages);
+                const firstUnreadMessage =
+                  unreadMessages.length > 0 &&
+                  unreadMessages.at(-1).message._id === message._id;
 
-                // console.log(isFirstMessageInNotifications, message);
+                console.log(firstUnreadMessage);
+
                 return (
-                  <div
-                    key={i}
-                    ref={lastMessageBool ? setRef : null}
-                    style={i === 0 ? { paddingTop: '6px' } : {}}
-                    className={`message-view-message-container ${
-                      userSentBool ? 'user-sent' : ''
-                    }`}
-                  >
+                  <>
+                    {firstUnreadMessage && (
+                      <div className="first-unread-message-container">
+                        <p>New</p>
+                      </div>
+                    )}
+
                     <div
-                      className="message-view-message-image-container"
-                      style={
-                        sameSenderAndNotCurrentUserBool || userSentBool
-                          ? { visibility: 'hidden' }
-                          : { marginTop: '2px' }
-                      }
+                      key={i}
+                      ref={lastMessageBool ? setRef : null}
+                      style={i === 0 ? { paddingTop: '6px' } : {}}
+                      className={`message-view-message-container ${
+                        userSentBool ? 'user-sent' : ''
+                      }`}
                     >
-                      <img
-                        height="100%"
-                        src={message.sender.picture}
-                        alt="profile"
-                      />
-                    </div>
-                    <div className="message-view-text-container">
-                      <div className="message-view-text">{message.text}</div>
                       <div
+                        className="message-view-message-image-container"
                         style={
                           sameSenderAndNotCurrentUserBool || userSentBool
-                            ? { display: 'none' }
-                            : {}
+                            ? { visibility: 'hidden' }
+                            : { marginTop: '2px' }
                         }
-                        className="message-view-text-info"
                       >
-                        <p>
-                          @{!userSentBool ? message.sender.userName : 'You'}
-                        </p>
+                        <img
+                          height="100%"
+                          src={message.sender.picture}
+                          alt="profile"
+                        />
+                      </div>
+                      <div className="message-view-text-container">
+                        <div className="message-view-text">{message.text}</div>
+                        <div
+                          style={
+                            sameSenderAndNotCurrentUserBool || userSentBool
+                              ? { display: 'none' }
+                              : {}
+                          }
+                          className="message-view-text-info"
+                        >
+                          <p>
+                            @{!userSentBool ? message.sender.userName : 'You'}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </>
                 );
               })}
           </div>

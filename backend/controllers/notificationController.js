@@ -13,6 +13,8 @@ const getNotifications = asyncHandler(async (req, res) => {
       .populate('user')
       .populate('chat');
 
+    console.log(notifications);
+
     notifications = await Message.populate(notifications, {
       path: 'message.chat',
     });
@@ -40,7 +42,7 @@ const addNotification = asyncHandler(async (req, res) => {
     };
   } else {
     newNotification = {
-      user: req.user.userId,
+      user: req.user._id,
       message,
       chat: message.chat,
     };

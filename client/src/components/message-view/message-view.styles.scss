@@ -16,16 +16,9 @@
   gap: 4px;
   flex: 1;
   overflow: auto;
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
 
-  &::-webkit-scrollbar-thumb {
-    border-right: 1px solid transparent;
-    border-left: 1px solid transparent;
-    background: rgb(30, 30, 30);
-    background-clip: padding-box;
-    border-radius: 100px;
+  &::-webkit-scrollbar {
+    display: none;
   }
 }
 
@@ -129,4 +122,22 @@
   font-size: 12px;
   gap: 2px;
   // overflow: hidden;
+}
+
+.first-unread-message-container {
+  display: flex;
+  width: 98%;
+  margin: 4px 0px;
+  border: 1px solid rgb(199, 119, 133);
+  position: relative;
+
+  p {
+    position: absolute;
+    right: -17px;
+    top: -13px;
+    font-size: 16px;
+    background-color: rgb(199, 119, 133);
+    border-radius: 12px;
+    padding: 4px 8px;
+  }
 }

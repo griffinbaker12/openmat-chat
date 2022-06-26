@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useAuthentication } from '../../contexts/authentication-context';
 import { useChatView } from '../../contexts/chat-view-context';
 import './chat-preview.styles.scss';
@@ -19,6 +20,8 @@ const ChatPreview = () => {
     windowDimensions,
     setActiveView,
     setNotifications,
+    notifications,
+    setUnreadMessages,
   } = useChatView();
 
   const { onlineUsers } = useSocket();
@@ -35,6 +38,12 @@ const ChatPreview = () => {
 
     const newActiveChat = chats.find(chat => chat._id === chatId);
     setActiveChat([newActiveChat]);
+
+    const unreadNotificationsInChat = notifications.filter(
+      notification => notification.chat._id === chatId
+    );
+    console.log(unreadNotificationsInChat);
+    setUnreadMessages(unreadNotificationsInChat);
 
     try {
       const response = await fetch(
@@ -67,13 +76,6 @@ const ChatPreview = () => {
             currentUser
           );
 
-          // const isLatestMessageUnread =
-          //   _id !== activeChat[0]?._id &&
-          //   !latestMessages.find(({ message }) => message.chat._id === _id)
-          //     ?.read;
-
-          // console.log(isLatestMessageUnread);
-
           return (
             <div
               key={_id}
@@ -82,9 +84,6 @@ const ChatPreview = () => {
                 _id === activeChat[0]?._id ? 'active' : ''
               }`}
             >
-              {/* {latestMessage && isLatestMessageUnread && (
-                <span className="unread"></span>
-              )} */}
               <div className="chat-preview-list-item">
                 <p className="chat-preview-list-name-container">
                   {!isGroupChat
