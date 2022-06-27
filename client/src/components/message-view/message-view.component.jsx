@@ -213,12 +213,6 @@ const MessageView = () => {
     const bottom =
       e.target.scrollHeight - Math.round(e.target.scrollTop) ===
       e.target.clientHeight;
-    console.log(
-      e.target.scrollHeight,
-      e.target.scrollTop,
-      e.target.clientHeight
-    );
-    console.log(bottom, showFlag);
     if (bottom && showFlag) {
       setUnreadMessages([]);
     }

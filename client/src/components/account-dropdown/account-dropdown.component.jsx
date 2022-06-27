@@ -10,10 +10,10 @@ const AccountDropdown = forwardRef(({ closeAccountDropdown }, ref) => {
   const navigate = useNavigate();
   const dropDownRef = useRef();
   const { handleModal, setUserInfoModal } = useChatView();
-  const { setIsLoading, setCurrentUser } = useAuthentication();
+  const { setCurrentUser } = useAuthentication();
 
   const { currentUser } = useAuthentication();
-  const { socket } = useSocket();
+  const { socket, onlineUsers } = useSocket();
 
   const handleSignOutClick = e => {
     if (ref.current === e.target.closest('.header-chat-link')) {
@@ -39,9 +39,13 @@ const AccountDropdown = forwardRef(({ closeAccountDropdown }, ref) => {
   const signOutUser = () => {
     localStorage.removeItem('userInfo');
     navigate('/');
+    const socketOfLoggedOutUser = onlineUsers.filter(
+      ([socketId, userId]) => userId === currentUser._id
+    )[0][0];
+    console.log(socketOfLoggedOutUser, 'logged out socket');
+    socket.emit('log out', currentUser._id, socketOfLoggedOutUser);
     setCurrentUser(null);
     defaultToast(TOAST_TYPE.success, 'Goodbye 👋🏼');
-    socket.emit('log out', currentUser._id);
   };
 
   return (

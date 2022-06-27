@@ -137,6 +137,7 @@ export const ChatViewProvider = ({ children }) => {
           },
         });
         const notifications = await response.json();
+        console.log(notifications);
         setNotifications(notifications);
       } catch (error) {
         toast.error('Error fetching notifications', {

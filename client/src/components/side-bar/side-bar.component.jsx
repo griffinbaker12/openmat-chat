@@ -20,10 +20,7 @@ const SideBar = () => {
     activeChat,
     setActiveChat,
     chats,
-    searchResults,
   } = useChatView();
-
-  console.log(searchResults);
 
   useEffect(() => {
     if (!socket) return;

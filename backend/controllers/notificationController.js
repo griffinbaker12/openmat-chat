@@ -7,13 +7,13 @@ const Chat = require('../models/chatModel');
 const getNotifications = asyncHandler(async (req, res) => {
   const { user } = req;
 
+  console.log(user, 'the user is');
+
   try {
     let notifications = await Notification.find({ user: user._id })
       .populate('message')
       .populate('user')
       .populate('chat');
-
-    console.log(notifications);
 
     notifications = await Message.populate(notifications, {
       path: 'message.chat',
@@ -32,6 +32,8 @@ const getNotifications = asyncHandler(async (req, res) => {
 const addNotification = asyncHandler(async (req, res) => {
   const { message, userId } = req.body;
 
+  console.log('hey');
+
   let newNotification;
 
   if (userId) {
@@ -48,6 +50,8 @@ const addNotification = asyncHandler(async (req, res) => {
     };
   }
 
+  // console.log(userId, newNotification);
+
   try {
     let notification = await Notification.create(newNotification);
     notification = await notification.populate('message');
@@ -55,6 +59,7 @@ const addNotification = asyncHandler(async (req, res) => {
     notification = await notification.populate('message.chat.users');
     notification = await notification.populate('user', '-hash');
     notification = await notification.populate('chat');
+    console.log('added notification', notification._id);
     res.json(notification);
   } catch (error) {
     res.status(400);

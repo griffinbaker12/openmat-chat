@@ -14,7 +14,6 @@ export const SocketProvider = ({ children }) => {
   const [onlineUsers, setOnlineUsers] = useState([]);
 
   const { currentUser } = useAuthentication();
-  const { setReloadCircuit } = useChatView();
 
   useEffect(() => {
     if (!currentUser) return;
@@ -22,10 +21,11 @@ export const SocketProvider = ({ children }) => {
     newSocket.emit('setup', currentUser._id);
     setSocket(newSocket);
     newSocket.on('logged in user change', users => {
-      const onlineUserArr = users.map(([userId, socketId]) => [
-        userId,
+      const onlineUserArr = users.map(([socketId, userId]) => [
         socketId,
+        userId,
       ]);
+      console.log(users, 'the users');
       setOnlineUsers(onlineUserArr);
     });
     return () => {

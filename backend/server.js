@@ -128,9 +128,11 @@ io.on('connection', socket => {
     });
   });
 
-  socket.on('log out', userId => {
+  socket.on('log out', (userId, loggedOutSocketId) => {
     socket.leave(userId);
-    global.onlineUsers.delete(socket.id);
+    console.log(loggedOutSocketId, 'the logged out socket id');
+    global.onlineUsers.delete(loggedOutSocketId);
+    console.log('the online users', global.onlineUsers);
     for (const [
       _onlineSocketId,
       onlineUserId,
