@@ -32,6 +32,9 @@ const MessageView = () => {
   const [typing, setTyping] = useState(false);
   const [typers, setTypers] = useState([]);
   const [showFlag, setShowFlag] = useState(false);
+  const [circuit, setCircuit] = useState(false);
+
+  console.log('the show flag is', showFlag);
 
   const newRef = useRef();
 
@@ -165,7 +168,7 @@ const MessageView = () => {
             }
           );
           const notification = await response.json();
-          setNotifications(prevState => [notification, ...prevState]);
+          setNotifications(prevState => [...prevState, notification]);
         } catch (error) {
           defaultToast(TOAST_TYPE.error, 'Error setting notifications');
         }
@@ -213,10 +216,13 @@ const MessageView = () => {
     const bottom =
       e.target.scrollHeight - Math.round(e.target.scrollTop) ===
       e.target.clientHeight;
-    if (bottom && showFlag) {
+    if (circuit) {
+      setShowFlag(true);
+      setCircuit(false);
+    } else if (bottom && showFlag) {
       setUnreadMessages([]);
+      setShowFlag(false);
     }
-    setShowFlag(true);
   };
 
   const setRef = useCallback(
@@ -226,8 +232,9 @@ const MessageView = () => {
       } else if (node && !isTyping) {
         node.scrollIntoView({ smooth: true });
       }
+      setCircuit(true);
     },
-    [isTyping]
+    [isTyping, setCircuit]
   );
 
   const isScrolledIntoView = el => {
@@ -260,7 +267,7 @@ const MessageView = () => {
                   sameSenderAndNotCurrentUser(i, messages, currentUser);
                 const firstUnreadMessage =
                   unreadMessages.length > 0 &&
-                  unreadMessages.at(-1).message._id === message._id;
+                  unreadMessages[0].message._id === message._id;
 
                 return (
                   <Fragment key={i}>

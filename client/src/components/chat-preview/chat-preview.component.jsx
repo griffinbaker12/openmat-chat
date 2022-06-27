@@ -41,6 +41,7 @@ const ChatPreview = () => {
     const unreadNotificationsInChat = notifications.filter(
       notification => notification.chat._id === chatId
     );
+
     setUnreadMessages(unreadNotificationsInChat);
 
     try {

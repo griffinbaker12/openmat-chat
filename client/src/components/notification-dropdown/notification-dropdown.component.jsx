@@ -66,6 +66,7 @@ const NotificationDropdown = forwardRef(
       const unreadNotificationsInChat = notifications.filter(
         notification => notification.chat._id === chatId
       );
+      console.log(unreadNotificationsInChat, 'unread in chat');
       setUnreadMessages(unreadNotificationsInChat);
 
       try {
