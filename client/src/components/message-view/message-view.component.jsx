@@ -22,13 +22,8 @@ let typingTimer;
 const MessageView = () => {
   // Somehow we are going to have to get all of the message in a conversation potentially and then mark whether or not they are your messages or someone else's to style accordingly;
   const { currentUser } = useAuthentication();
-  const {
-    activeChat,
-    setNotifications,
-    setReloadCircuit,
-    unreadMessages,
-    setUnreadMessages,
-  } = useChatView();
+  const { activeChat, setNotifications, unreadMessages, setUnreadMessages } =
+    useChatView();
   const { socket, onlineUsers } = useSocket();
 
   const [messages, setMessages] = useState([]);
@@ -41,11 +36,12 @@ const MessageView = () => {
   const newRef = useRef();
 
   useEffect(() => {
-    const handleKeyPress = e => {
+    const handleKeyDownForNewMessages = e => {
       if (e.key === 'Escape') setUnreadMessages([]);
     };
-    window.addEventListener('keypress', handleKeyPress);
-    return () => window.addEventListener('keypress', handleKeyPress);
+    window.addEventListener('keydown', handleKeyDownForNewMessages);
+    return () =>
+      window.addEventListener('keydown', handleKeyDownForNewMessages);
   }, [setUnreadMessages]);
 
   const handleKeyDown = async e => {

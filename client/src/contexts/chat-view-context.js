@@ -49,7 +49,6 @@ export const ChatViewProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
   const [reloadCircuit, setReloadCircuit] = useState(false);
   const [unreadMessages, setUnreadMessages] = useState([]);
-  // const [chatHasUnreadMessages, setChatHasUnreadMessages] =
 
   const { currentUser, setCurrentUser, setIsLoading } = useAuthentication();
   const navigate = useNavigate();
@@ -165,7 +164,7 @@ export const ChatViewProvider = ({ children }) => {
     if (!search) return;
 
     try {
-      setIsChatViewLoading(true);
+      // setIsChatViewLoading(true);
 
       // I almost like the feature where you keep the search text there so that you know what you searched, and then once you hit the x then the results unfilter and are based off of the time the last message was sent
       // setSearch('');
@@ -178,7 +177,7 @@ export const ChatViewProvider = ({ children }) => {
         }
       );
       const { messages, users } = await response.json();
-      setIsChatViewLoading(false);
+      // setIsChatViewLoading(false);
       setSearchResults([{ messages, users }]);
     } catch (e) {
       toast.error('Error fetching results', {
@@ -261,6 +260,7 @@ export const ChatViewProvider = ({ children }) => {
         fetchNotifications,
         unreadMessages,
         setUnreadMessages,
+        searchResults,
       }}
     >
       {children}

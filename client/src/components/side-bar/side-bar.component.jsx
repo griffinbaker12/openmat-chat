@@ -1,20 +1,16 @@
-import { useEffect, useState } from 'react';
-import { ReactComponent as SearchIcon } from '../../assets/search.svg';
+import { useEffect } from 'react';
+// import { ReactComponent as SearchIcon } from '../../assets/search.svg';
 import ChatPreview from '../chat-preview/chat-preview.component';
 import './side-bar.styles.scss';
 import ContactPreview from '../contact-preview/contact-preview.component';
 import Spinner from '../spinner/spinner.component';
 import { useChatView, MODAL_TYPE } from '../../contexts/chat-view-context';
 import { useSocket } from '../../contexts/socket-context';
-import { defaultToast, TOAST_TYPE } from '../../utils/utils';
 
 const SideBar = () => {
   const { socket } = useSocket();
   const {
-    search,
     isChatViewLoading,
-    updateSearchValue,
-    handleSearchSubmit,
     handleModal,
     sideBarCategory,
     activeView,
@@ -24,9 +20,10 @@ const SideBar = () => {
     activeChat,
     setActiveChat,
     chats,
+    searchResults,
   } = useChatView();
 
-  console.log('chats', chats);
+  console.log(searchResults);
 
   useEffect(() => {
     if (!socket) return;
@@ -39,8 +36,6 @@ const SideBar = () => {
         checkForDuplicate = null
       ) => {
         setReloadCircuit(true);
-
-        console.log(updatedChat, removeFlag, updateFlag);
 
         if (!removeFlag && !updateFlag) {
           setChats(prevState => {
@@ -69,13 +64,6 @@ const SideBar = () => {
         const updatedChatUserNames = [...updatedChat.users]
           .map(user => user.userName)
           .sort();
-
-        console.log(
-          priorChatUserNamesAndId,
-          'mpwns',
-          updatedChatUserNames,
-          'scps'
-        );
 
         const existingChatUsersAndId = priorChatUserNamesAndId.find(chat => {
           if (chat[0].length !== updatedChatUserNames.length) return false;
@@ -147,16 +135,8 @@ const SideBar = () => {
       }
       className="side-bar-container"
     >
-      <div className="side-bar-search-container">
-        <form onSubmit={handleSearchSubmit}>
-          <input
-            onChange={updateSearchValue}
-            value={search}
-            type="search"
-            placeholder="Search conversations and friends ..."
-          />
-          <SearchIcon className="search-icon" />
-        </form>
+      <div className="side-bar-header-title-container">
+        <p>My Chats</p>
       </div>
 
       <div style={{ flex: '1' }}>

@@ -73,6 +73,9 @@ const ChatPreview = () => {
             users,
             currentUser
           );
+          const chatHasUnreadMessages = notifications.some(
+            notification => notification.chat._id === _id
+          );
 
           return (
             <div
@@ -80,8 +83,13 @@ const ChatPreview = () => {
               name={_id}
               className={`chat-preview-list ${
                 _id === activeChat[0]?._id ? 'active' : ''
-              }`}
+              } ${chatHasUnreadMessages ? 'unread-messages' : ''}`}
             >
+              {chatHasUnreadMessages ? (
+                <div className="chat-has-unread-messages-container"></div>
+              ) : (
+                ''
+              )}
               <div className="chat-preview-list-item">
                 <p className="chat-preview-list-name-container">
                   {!isGroupChat
