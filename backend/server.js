@@ -88,27 +88,48 @@ io.on('connection', socket => {
         userId = currentUser._id;
       }
 
-      if (updateFlag) {
+      if (updateFlag && !removeFlag) {
         chat.users.forEach(user => {
           if (user._id === userId) {
             socket.emit('updated chat', chat, null, updateFlag);
           } else {
+            console.log('2');
             socket.to(user._id).emit('updated chat', chat, null, updateFlag);
           }
         });
-      } else {
+      } else if (updateFlag && removeFlag) {
         chat.users.forEach(user => {
-          if (user._id === userId) {
-            socket.emit('updated chat', chat);
-          } else {
-            socket.to(user._id).emit('updated chat', chat);
-          }
+          socket
+            .to(user._id)
+            .emit('updated chat', chat, null, updateFlag, true);
         });
-      }
-
-      if (removeFlag) {
         socket.emit('updated chat', chat, true);
       }
+
+      // else if (updateFlag && removeFlag) {
+      //   chat.users.forEach(user => {
+      //     if (user._id !== userId) {
+      //       socket.emit('updated chat', chat, null, updateFlag);
+      //     } else {
+      //       socket.to(user._id).emit('updated chat', chat, null, updateFlag);
+      //     }
+      //   });
+      // }
+
+      // else {
+      //   console.log('when does this run?');
+      //   chat.users.forEach(user => {
+      //     if (user._id === userId) {
+      //       socket.emit('updated chat', chat);
+      //     } else {
+      //       socket.to(user._id).emit('updated chat', chat);
+      //     }
+      //   });
+      // }
+
+      // if (removeFlag) {
+      //   socket.emit('updated chat', chat, true);
+      // }
     }
   );
 

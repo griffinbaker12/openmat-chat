@@ -23,34 +23,93 @@ const SideBar = () => {
     setReloadCircuit,
     activeChat,
     setActiveChat,
+    chats,
   } = useChatView();
+
+  console.log('chats', chats);
 
   useEffect(() => {
     if (!socket) return;
     socket.on(
       'updated chat',
-      (updatedChat, removeFlag = null, updateFlag = null) => {
+      (
+        updatedChat,
+        removeFlag = null,
+        updateFlag = null,
+        checkForDuplicate = null
+      ) => {
         setReloadCircuit(true);
+        console.log('remove flag', removeFlag, 'update flag', updateFlag);
         if (removeFlag) {
           setChats(prevState => {
             return prevState.filter(chat => chat._id !== updatedChat._id);
           });
           return;
         }
+
+        const priorChatUserNamesAndId = chats.map(chat => [
+          chat.users.map(({ userName }) => userName).sort(),
+          chat._id,
+        ]);
+
+        const updatedChatUserNames = [...updatedChat.users]
+          .map(user => user.userName)
+          .sort();
+
+        console.log(
+          priorChatUserNamesAndId,
+          'mpwns',
+          updatedChatUserNames,
+          'scps'
+        );
+
+        console.log('cfd', checkForDuplicate);
+
+        const existingChatUsersAndId = priorChatUserNamesAndId.find(chat => {
+          if (chat[0].length !== updatedChatUserNames.length) return false;
+          return chat[0].every((user, i) => user === updatedChatUserNames[i]);
+        });
+
+        console.log(existingChatUsersAndId, 'existing chat user and id');
+
+        if (existingChatUsersAndId && checkForDuplicate) {
+          const existingChat = chats.find(
+            chat => chat._id === existingChatUsersAndId[1]
+          );
+          setActiveChat([existingChat]);
+          setChats(prevState => {
+            return prevState.filter(chat => chat._id !== updatedChat._id);
+          });
+          return;
+        }
+
         if (
           updateFlag &&
           activeChat[0] &&
           updatedChat._id === activeChat[0]._id
         ) {
           setActiveChat([updatedChat]);
-          setChats(prevState =>
-            prevState.map(chat => {
+          setChats(prevState => {
+            const arr = prevState.map(chat => {
               if (chat._id === updatedChat._id) {
-                console.log(updatedChat);
                 return updatedChat;
               } else return chat;
-            })
-          );
+            });
+            return arr;
+          });
+          return;
+        } else if (
+          updateFlag &&
+          chats.some(chat => chat._id === updatedChat._id)
+        ) {
+          setChats(prevState => {
+            const arr = prevState.map(chat => {
+              if (chat._id === updatedChat._id) {
+                return updatedChat;
+              } else return chat;
+            });
+            return arr;
+          });
           return;
         }
         setChats(prevState => [updatedChat, ...prevState]);
@@ -58,7 +117,7 @@ const SideBar = () => {
       }
     );
     return () => socket.off('updated chat');
-  }, [socket, setChats, setReloadCircuit, activeChat, setActiveChat]);
+  }, [socket, setChats, setReloadCircuit, activeChat, setActiveChat, chats]);
 
   useEffect(() => {
     if (!socket) return;

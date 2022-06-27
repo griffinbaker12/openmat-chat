@@ -11,6 +11,7 @@ import {
   TOAST_TYPE,
   userSent,
   getTyperString,
+  generateChatNameForSoloChats,
 } from '../../utils/utils';
 import { useSocket } from '../../contexts/socket-context';
 
@@ -333,7 +334,11 @@ const MessageView = () => {
 
           <div
             className="send-message-editable"
-            data-text={`Message `}
+            data-text={`Message ${
+              activeChat[0].isGroupChat
+                ? activeChat[0].chatName
+                : generateChatNameForSoloChats(activeChat[0].users, currentUser)
+            }`}
             contentEditable
             onKeyDown={handleKeyDown}
           />
