@@ -6,6 +6,7 @@ import ContactPreview from '../contact-preview/contact-preview.component';
 import Spinner from '../spinner/spinner.component';
 import { useChatView, MODAL_TYPE } from '../../contexts/chat-view-context';
 import { useSocket } from '../../contexts/socket-context';
+import { defaultToast, TOAST_TYPE } from '../../utils/utils';
 
 const SideBar = () => {
   const { socket } = useSocket();
@@ -42,30 +43,18 @@ const SideBar = () => {
           updatedChat._id === activeChat[0]._id
         ) {
           setActiveChat([updatedChat]);
+          setChats(prevState =>
+            prevState.map(chat => {
+              if (chat._id === updatedChat._id) {
+                console.log(updatedChat);
+                return updatedChat;
+              } else return chat;
+            })
+          );
+          return;
         }
-
-        // if (updatedChat._id !== activeChat[0]?._id) {
-        //   setLatestMessages(prevState => {
-        //     const filteredState = prevState.filter(
-        //       ({ message }) => message.chat._id !== updatedChat._id
-        //     );
-        //     return [
-        //       { message: updatedChat.latestMessage, read: false },
-        //       ...filteredState,
-        //     ];
-        //   });
-        // }
-
-        setChats(prevState => {
-          if (prevState.length === 0) {
-            return [updatedChat];
-          } else {
-            return prevState.map(chat => {
-              if (chat._id !== updatedChat._id) return chat;
-              else return updatedChat;
-            });
-          }
-        });
+        setChats(prevState => [updatedChat, ...prevState]);
+        defaultToast(TOAST_TYPE.success, 'You have been added to a chat');
       }
     );
     return () => socket.off('updated chat');

@@ -71,6 +71,12 @@ const AddUserDropdown = ({ wasSoloChat }) => {
       user => user._id === selectedId
     );
 
+    const newSearchResults = userSearchResults.filter(
+      user => user._id !== selectedUser._id
+    );
+
+    setUserSearchResults(newSearchResults);
+
     const sortedChatUsers = [...activeChat[0].users, selectedUser]
       .map(user => user.userName)
       .sort();
@@ -79,8 +85,6 @@ const AddUserDropdown = ({ wasSoloChat }) => {
       if (chat[0].length !== sortedChatUsers.length) return false;
       return chat[0].every((user, i) => user === sortedChatUsers[i]);
     });
-
-    console.log(existingChatUsersAndId);
 
     if (existingChatUsersAndId) {
       const existingChat = chats.find(

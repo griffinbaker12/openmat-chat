@@ -118,16 +118,13 @@ const ChatInfoModal = ({ userFlag }) => {
       const updatedChat = await response.json();
       closeModal();
 
-      console.log(updatedChat);
       if (!updatedChat.latestMessage) {
         socket.emit('chat update', updatedChat, currentUser, true, true);
       } else {
         socket.emit('chat update', updatedChat, null, true, true);
       }
 
-      if (chats.length === 1) {
-        setActiveChat([]);
-      }
+      setActiveChat([]);
       defaultToast(TOAST_TYPE.success, 'You have left the chat');
     } catch (error) {
       defaultToast(TOAST_TYPE.failure, 'Error leaving chat');

@@ -137,6 +137,7 @@ const MessageView = () => {
 
   useEffect(() => {
     fetchMessages();
+    setShowFlag(false);
   }, [fetchMessages, activeChat]);
 
   useEffect(() => {
@@ -210,10 +211,8 @@ const MessageView = () => {
   }, [socket, typers]);
 
   const handleScroll = e => {
-    console.log(unreadMessages);
     const bottom =
       e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
-    console.log(bottom, 'bottom');
     if (bottom && showFlag) {
       setUnreadMessages([]);
     }
@@ -222,7 +221,6 @@ const MessageView = () => {
 
   const setRef = useCallback(
     node => {
-      console.log('this is running, why?', node, unreadMessages);
       if (node && isTyping && isScrolledIntoView(node)) {
         node.scrollIntoView({ smooth: true });
       } else if (node && !isTyping) {

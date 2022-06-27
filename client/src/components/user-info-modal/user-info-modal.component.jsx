@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAuthentication } from '../../contexts/authentication-context';
 import { useChatView } from '../../contexts/chat-view-context';
-import Tooltip from '../tooltip/tooltip.component';
-import UserInfoDropdown from '../user-info-dropdown/user-info-dropdown.component';
-import { getMutualFriends } from '../../utils/utils';
+import { defaultToast, TOAST_TYPE } from '../../utils/utils';
 import './user-info-modal.styles.scss';
 
 // This could easily be made more generalizable by saying activeUser and then whatever user you click on will have the same profile
@@ -14,9 +12,12 @@ const UserInfoModal = () => {
     showModal,
     closeModal,
     isActiveUserCurrentUser,
-    chats,
     setShowActiveUserWithinChatInfo,
     showActiveUserWithinChatInfo,
+    chats,
+    setActiveChat,
+    setChats,
+    activeChat,
   } = useChatView();
 
   const { currentUser } = useAuthentication();
@@ -29,9 +30,53 @@ const UserInfoModal = () => {
 
   const goBackToChatInfo = () => setShowActiveUserWithinChatInfo(false);
 
-  const handleDropdown = () => {
-    setShowDropdown(prevState => !prevState);
+  const handleChatCreation = async e => {
+    e.stopPropagation();
+
+    const soloChats = chats.filter(chat => !chat.isGroupChat);
+
+    const existingChat = soloChats.find(chat =>
+      chat.users.some(user => user._id === activeUserInfo._id)
+    );
+
+    if (existingChat) {
+      closeModal();
+      closeDropdown();
+      if (activeChat[0]?._id === existingChat._id) return;
+      setActiveChat([existingChat]);
+    } else {
+      const otherParticipantId = [activeUserInfo._id];
+      const payload = {
+        chatName: null,
+        users: otherParticipantId,
+      };
+
+      try {
+        const response = await fetch(
+          `http://localhost:4000/api/chat/createChat`,
+          {
+            method: 'post',
+            headers: {
+              Authorization: `Bearer ${currentUser.token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+          }
+        );
+        const newChat = await response.json();
+        setChats(prevState => [newChat, ...prevState]);
+        closeModal();
+        closeDropdown();
+        defaultToast(TOAST_TYPE.success, 'Chat creation successful');
+      } catch (e) {
+        defaultToast(TOAST_TYPE.failure, 'Error creating chat');
+      }
+    }
   };
+
+  // const handleDropdown = () => {
+  //   setShowDropdown(prevState => !prevState);
+  // };
 
   const handleModalClick = e => {
     e.stopPropagation();
@@ -99,16 +144,13 @@ const UserInfoModal = () => {
                     ? { visibility: 'hidden' }
                     : {
                         fontSize: '24px',
-                        paddingLeft: '4px',
-                        paddingRight: '12px',
-                        marginBottom: '6px',
                       }
                 }
               >
                 &#8592;
               </div>
               <p className="user-info-modal-name">{activeUserInfo.name}</p>
-              <div
+              {/* <div
                 onClick={handleDropdown}
                 className="user-info-modal-back-ellipsis"
                 style={
@@ -127,7 +169,7 @@ const UserInfoModal = () => {
               </div>
               {showDropdown && (
                 <UserInfoDropdown closeDropdown={closeDropdown} />
-              )}
+              )} */}
             </div>
             <div className="user-info-modal-username-email">
               <p>@{activeUserInfo.userName}</p>
@@ -135,17 +177,22 @@ const UserInfoModal = () => {
             <div className="user-info-modal-picture-container">
               <img height="100%" src={activeUserInfo.picture} alt="profile" />
             </div>
-            <div className="user-info-modal-additional-user-info-container">
-              {/* If the user is not the current user, then calculate the number of mutual friends and mutual conversations */}
-              <p>{`${getMutualFriends(
+
+            {/* <div className="user-info-modal-additional-user-info-container"> */}
+            {/* If the user is not the current user, then calculate the number of mutual friends and mutual conversations
+            <p>{`${getMutualFriends(
                 activeUserInfo.friends,
                 currentUser.friends
-              )} ${isActiveUserCurrentUser ? '' : 'Mutual'} Friends`}</p>
-              {/* Insert a little chevron to see a dropdown of all of their friends, remove them as a friend in red, can make this more generalizable just as any user profie that you click on with the if friend then delete or add friend */}
-              {/* Could do the same but with conversations, mutual servers / convos. And then when you are looking at this from the perspective of the current user, it would lead you to the left side, either the conversations, or to your frineds, not even sure if that is necessary tbh */}
-            </div>
+              )} ${isActiveUserCurrentUser ? '' : 'Mutual'} Friends`}</p> */}
+            {/* Insert a little chevron to see a dropdown of all of their friends, remove them as a friend in red, can make this more generalizable just as any user profie that you click on with the if friend then delete or add friend */}
+            {/* Could do the same but with conversations, mutual servers / convos. And then when you are looking at this from the perspective of the current user, it would lead you to the left side, either the conversations, or to your frineds, not even sure if that is necessary tbh */}
           </div>
+          <button onClick={handleChatCreation} className="user-info-button">
+            Send Message
+          </button>
         </div>
+
+        {/* </div> */}
       </div>
     )
   );
