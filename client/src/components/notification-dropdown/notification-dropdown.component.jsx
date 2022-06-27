@@ -13,8 +13,13 @@ const NotificationDropdown = forwardRef(
     { handleDropdown, closeAccountDropdown, closeNotificationDropdown },
     ref
   ) => {
-    const { notifications, setActiveChat, chats, setNotifications } =
-      useChatView();
+    const {
+      notifications,
+      setActiveChat,
+      chats,
+      setNotifications,
+      setUnreadMessages,
+    } = useChatView();
     const { currentUser } = useAuthentication();
     const [groupedNotifications, setGroupedNotifications] = useState([]);
     const dropDownRef = useRef();
@@ -58,6 +63,10 @@ const NotificationDropdown = forwardRef(
         .getAttribute('name');
       const chat = chats.find(chat => chat._id === chatId);
       setActiveChat([chat]);
+      const unreadNotificationsInChat = notifications.filter(
+        notification => notification.chat._id === chatId
+      );
+      setUnreadMessages(unreadNotificationsInChat);
 
       try {
         const response = await fetch(

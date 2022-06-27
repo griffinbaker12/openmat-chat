@@ -106,18 +106,23 @@
 .first-unread-message-container {
   scroll-margin: 20px;
   display: flex;
-  width: 98%;
-  margin: 4px 0px;
+  width: 100%;
+  margin: 8px 0px;
   border: 1px solid rgb(199, 119, 133);
   position: relative;
 
   p {
     position: absolute;
-    right: -17px;
-    top: -13px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    left: 50%;
+    top: -12px;
+    margin-left: -25px;
     font-size: 16px;
     background-color: rgb(199, 119, 133);
     border-radius: 12px;
-    padding: 4px 8px;
+    height: 25px;
+    width: 50px;
   }
 }

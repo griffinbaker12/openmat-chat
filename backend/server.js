@@ -30,7 +30,6 @@ const io = require('socket.io')(server, {
   },
 });
 
-// global.loggedInUserId;
 global.onlineUsers = new Map();
 io.on('connection', socket => {
   socket.on('setup', userId => {
@@ -77,7 +76,6 @@ io.on('connection', socket => {
     socket.to(room).emit('stop typing', user.userName)
   );
 
-  // Need to do something similar up top where I send the update to all of the people in the chat when there is a new message so that it can show in the chat view, as well as if they need to update the users or the name of the chat REGARDLESS of which chat is currently being viewed
   socket.on(
     'chat update',
     (chat, currentUser = null, removeFlag = null, updateFlag = null) => {
@@ -88,12 +86,19 @@ io.on('connection', socket => {
         userId = currentUser._id;
       }
 
-      if (updateFlag && !removeFlag) {
+      if (!removeFlag && !updateFlag) {
+        chat.users.forEach(user => {
+          if (user._id === userId) {
+            socket.emit('updated chat', chat);
+          } else {
+            socket.to(user._id).emit('updated chat', chat);
+          }
+        });
+      } else if (updateFlag && !removeFlag) {
         chat.users.forEach(user => {
           if (user._id === userId) {
             socket.emit('updated chat', chat, null, updateFlag);
           } else {
-            console.log('2');
             socket.to(user._id).emit('updated chat', chat, null, updateFlag);
           }
         });
@@ -104,32 +109,15 @@ io.on('connection', socket => {
             .emit('updated chat', chat, null, updateFlag, true);
         });
         socket.emit('updated chat', chat, true);
+      } else {
+        chat.users.forEach(user => {
+          if (user._id === userId) {
+            socket.emit('updated chat', chat, null, true);
+          } else {
+            socket.to(user._id).emit('updated chat', chat, null, true);
+          }
+        });
       }
-
-      // else if (updateFlag && removeFlag) {
-      //   chat.users.forEach(user => {
-      //     if (user._id !== userId) {
-      //       socket.emit('updated chat', chat, null, updateFlag);
-      //     } else {
-      //       socket.to(user._id).emit('updated chat', chat, null, updateFlag);
-      //     }
-      //   });
-      // }
-
-      // else {
-      //   console.log('when does this run?');
-      //   chat.users.forEach(user => {
-      //     if (user._id === userId) {
-      //       socket.emit('updated chat', chat);
-      //     } else {
-      //       socket.to(user._id).emit('updated chat', chat);
-      //     }
-      //   });
-      // }
-
-      // if (removeFlag) {
-      //   socket.emit('updated chat', chat, true);
-      // }
     }
   );
 

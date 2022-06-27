@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useAuthentication } from '../../contexts/authentication-context';
 import { useChatView } from '../../contexts/chat-view-context';
 import './chat-preview.styles.scss';
@@ -42,7 +41,6 @@ const ChatPreview = () => {
     const unreadNotificationsInChat = notifications.filter(
       notification => notification.chat._id === chatId
     );
-    console.log(unreadNotificationsInChat);
     setUnreadMessages(unreadNotificationsInChat);
 
     try {

@@ -39,7 +39,21 @@ const SideBar = () => {
         checkForDuplicate = null
       ) => {
         setReloadCircuit(true);
-        console.log('remove flag', removeFlag, 'update flag', updateFlag);
+
+        console.log(updatedChat, removeFlag, updateFlag);
+
+        if (!removeFlag && !updateFlag) {
+          setChats(prevState => {
+            const arr = prevState.map(chat => {
+              if (chat._id === updatedChat._id) {
+                return updatedChat;
+              } else return chat;
+            });
+            return arr;
+          });
+          return;
+        }
+
         if (removeFlag) {
           setChats(prevState => {
             return prevState.filter(chat => chat._id !== updatedChat._id);
@@ -63,14 +77,10 @@ const SideBar = () => {
           'scps'
         );
 
-        console.log('cfd', checkForDuplicate);
-
         const existingChatUsersAndId = priorChatUserNamesAndId.find(chat => {
           if (chat[0].length !== updatedChatUserNames.length) return false;
           return chat[0].every((user, i) => user === updatedChatUserNames[i]);
         });
-
-        console.log(existingChatUsersAndId, 'existing chat user and id');
 
         if (existingChatUsersAndId && checkForDuplicate) {
           const existingChat = chats.find(
@@ -112,8 +122,6 @@ const SideBar = () => {
           });
           return;
         }
-        setChats(prevState => [updatedChat, ...prevState]);
-        defaultToast(TOAST_TYPE.success, 'You have been added to a chat');
       }
     );
     return () => socket.off('updated chat');

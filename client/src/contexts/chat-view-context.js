@@ -49,6 +49,7 @@ export const ChatViewProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
   const [reloadCircuit, setReloadCircuit] = useState(false);
   const [unreadMessages, setUnreadMessages] = useState([]);
+  // const [chatHasUnreadMessages, setChatHasUnreadMessages] =
 
   const { currentUser, setCurrentUser, setIsLoading } = useAuthentication();
   const navigate = useNavigate();
@@ -209,6 +210,7 @@ export const ChatViewProvider = ({ children }) => {
   }, [currentUser, fetchChats, setIsLoading, fetchNotifications]);
 
   useEffect(() => {
+    console.log(reloadCircuit);
     if (chats.length === 0 || reloadCircuit) {
       return;
     } else {

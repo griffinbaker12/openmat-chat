@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, Fragment } from 'react';
+import { useCallback, useEffect, useState, Fragment, useRef } from 'react';
 import Lottie from 'lottie-react';
 import { useChatView } from '../../contexts/chat-view-context';
 import Spinner from '../spinner/spinner.component';
@@ -38,6 +38,8 @@ const MessageView = () => {
   const [typers, setTypers] = useState([]);
   const [showFlag, setShowFlag] = useState(false);
 
+  const newRef = useRef();
+
   useEffect(() => {
     const handleKeyPress = e => {
       if (e.key === 'Escape') setUnreadMessages([]);
@@ -52,7 +54,6 @@ const MessageView = () => {
     if (e.key === 'Enter' && newMessage) {
       e.preventDefault();
       e.target.innerHTML = '';
-      setReloadCircuit(true);
       try {
         const response = await fetch(`http://localhost:4000/api/message`, {
           method: 'post',
@@ -123,6 +124,7 @@ const MessageView = () => {
   const fetchMessages = useCallback(async () => {
     if (!socket) return;
     if (!activeChat) return;
+
     setIsLoading(true);
     const response = await fetch(
       `http://localhost:4000/api/message/${activeChat[0]._id}`,
@@ -213,7 +215,14 @@ const MessageView = () => {
 
   const handleScroll = e => {
     const bottom =
-      e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+      e.target.scrollHeight - Math.round(e.target.scrollTop) ===
+      e.target.clientHeight;
+    console.log(
+      e.target.scrollHeight,
+      e.target.scrollTop,
+      e.target.clientHeight
+    );
+    console.log(bottom, showFlag);
     if (bottom && showFlag) {
       setUnreadMessages([]);
     }
@@ -270,7 +279,12 @@ const MessageView = () => {
                         ref={setRef}
                         className="first-unread-message-container"
                       >
-                        <p>New</p>
+                        <p
+                          ref={newRef}
+                          style={{ marginLeft: `-${newRef.current?.width}` }}
+                        >
+                          New
+                        </p>
                       </div>
                     )}
 

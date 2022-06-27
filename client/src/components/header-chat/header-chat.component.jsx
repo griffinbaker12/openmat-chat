@@ -42,7 +42,9 @@ const HeaderChat = ({ logo }) => {
         >
           <NotificationBell />
           {notifications && notifications.length > 0 ? (
-            <div className="notification-count">{notifications.length}</div>
+            <div className="notification-count">
+              {notifications.length > 9 ? '9+' : notifications.length}
+            </div>
           ) : (
             ''
           )}
