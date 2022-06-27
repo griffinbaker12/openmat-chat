@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
-import { io } from 'socket.io-client';
+import { useCallback, useEffect, useState, Fragment } from 'react';
 import Lottie from 'lottie-react';
 import { useChatView } from '../../contexts/chat-view-context';
 import Spinner from '../spinner/spinner.component';
@@ -22,8 +21,13 @@ let typingTimer;
 const MessageView = () => {
   // Somehow we are going to have to get all of the message in a conversation potentially and then mark whether or not they are your messages or someone else's to style accordingly;
   const { currentUser } = useAuthentication();
-  const { activeChat, setNotifications, setReloadCircuit, unreadMessages } =
-    useChatView();
+  const {
+    activeChat,
+    setNotifications,
+    setReloadCircuit,
+    unreadMessages,
+    setUnreadMessages,
+  } = useChatView();
   const { socket, onlineUsers } = useSocket();
 
   const [messages, setMessages] = useState([]);
@@ -31,6 +35,15 @@ const MessageView = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [typing, setTyping] = useState(false);
   const [typers, setTypers] = useState([]);
+  const [showFlag, setShowFlag] = useState(false);
+
+  useEffect(() => {
+    const handleKeyPress = e => {
+      if (e.key === 'Escape') setUnreadMessages([]);
+    };
+    window.addEventListener('keypress', handleKeyPress);
+    return () => window.addEventListener('keypress', handleKeyPress);
+  }, [setUnreadMessages]);
 
   const handleKeyDown = async e => {
     if (!socket) return;
@@ -54,6 +67,7 @@ const MessageView = () => {
         const message = await response.json();
         socket.emit('send-msg', message);
         setMessages(prevState => [...prevState, message]);
+        setUnreadMessages([]);
         setTyping(false);
         socket.emit('chat update', message.chat);
 
@@ -161,7 +175,13 @@ const MessageView = () => {
       }
     });
     return () => socket.off('msg-received');
-  }, [socket, activeChat, setNotifications, currentUser.token]);
+  }, [
+    socket,
+    activeChat,
+    setNotifications,
+    currentUser.token,
+    setUnreadMessages,
+  ]);
 
   useEffect(() => {
     setIsTyping(false);
@@ -188,8 +208,21 @@ const MessageView = () => {
       socket.off('stop typing');
     };
   }, [socket, typers]);
+
+  const handleScroll = e => {
+    console.log(unreadMessages);
+    const bottom =
+      e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+    console.log(bottom, 'bottom');
+    if (bottom && showFlag) {
+      setUnreadMessages([]);
+    }
+    setShowFlag(true);
+  };
+
   const setRef = useCallback(
     node => {
+      console.log('this is running, why?', node, unreadMessages);
       if (node && isTyping && isScrolledIntoView(node)) {
         node.scrollIntoView({ smooth: true });
       } else if (node && !isTyping) {
@@ -199,7 +232,7 @@ const MessageView = () => {
     [isTyping]
   );
 
-  function isScrolledIntoView(el) {
+  const isScrolledIntoView = el => {
     var rect = el.getBoundingClientRect();
     var elemTop = rect.top;
     var elemBottom = rect.bottom;
@@ -209,7 +242,7 @@ const MessageView = () => {
     // Partially visible elements return true:
     //isVisible = elemTop < window.innerHeight && elemBottom >= 0;
     return isVisible;
-  }
+  };
 
   return (
     <div className="message-view-container">
@@ -217,31 +250,37 @@ const MessageView = () => {
         <Spinner type="search" />
       ) : (
         <>
-          <div className="message-view-active-chat-container">
+          <div
+            onScroll={handleScroll}
+            className="message-view-active-chat-container"
+          >
             {messages.length > 0 &&
               messages.map((message, i) => {
                 const lastMessageBool = messages.length - 1 === i + 1;
                 const userSentBool = userSent(currentUser, message);
                 const sameSenderAndNotCurrentUserBool =
                   sameSenderAndNotCurrentUser(i, messages, currentUser);
-                console.log('the unread message', unreadMessages);
                 const firstUnreadMessage =
                   unreadMessages.length > 0 &&
                   unreadMessages.at(-1).message._id === message._id;
 
-                console.log(firstUnreadMessage);
-
                 return (
-                  <>
+                  <Fragment key={i}>
                     {firstUnreadMessage && (
-                      <div className="first-unread-message-container">
+                      <div
+                        ref={setRef}
+                        className="first-unread-message-container"
+                      >
                         <p>New</p>
                       </div>
                     )}
 
                     <div
-                      key={i}
-                      ref={lastMessageBool ? setRef : null}
+                      ref={
+                        lastMessageBool && unreadMessages.length === 0
+                          ? setRef
+                          : null
+                      }
                       style={i === 0 ? { paddingTop: '6px' } : {}}
                       className={`message-view-message-container ${
                         userSentBool ? 'user-sent' : ''
@@ -277,7 +316,7 @@ const MessageView = () => {
                         </div>
                       </div>
                     </div>
-                  </>
+                  </Fragment>
                 );
               })}
           </div>
