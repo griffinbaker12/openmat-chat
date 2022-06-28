@@ -64,7 +64,8 @@ export const sameSenderAndNotCurrentUser = (i, messages, currentUser) => {
 
 export const getTyperString = typers => {
   if (typers.length === 1) return typers[0] + ' is typing';
-  if (typers.length === 2) return typers[0] + typers[1] + ' are typing';
+  if (typers.length === 2)
+    return typers[0] + ' and ' + typers[1] + ' are typing';
   if (typers.length === 3)
     return typers
       .slice(0, 2)

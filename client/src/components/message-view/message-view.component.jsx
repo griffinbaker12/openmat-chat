@@ -19,16 +19,15 @@ import { useSocket } from '../../contexts/socket-context';
 
 let typingTimer;
 
-const MessageView = () => {
+const MessageView = ({ isTyping, setIsTyping, messages, setMessages }) => {
   // Somehow we are going to have to get all of the message in a conversation potentially and then mark whether or not they are your messages or someone else's to style accordingly;
   const { currentUser } = useAuthentication();
   const { activeChat, setNotifications, unreadMessages, setUnreadMessages } =
     useChatView();
   const { socket, onlineUsers } = useSocket();
 
-  const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isTyping, setIsTyping] = useState(false);
+  // const [isTyping, setIsTyping] = useState(false);
   const [typing, setTyping] = useState(false);
   const [typers, setTypers] = useState([]);
   const [showFlag, setShowFlag] = useState(false);
@@ -92,6 +91,7 @@ const MessageView = () => {
               body: JSON.stringify({
                 message,
                 userId: user._id,
+                test: 'hey',
               }),
             }
           );
@@ -147,46 +147,47 @@ const MessageView = () => {
     return () => socket.emit('leave room', activeChat[0]._id);
   }, [activeChat, socket, currentUser]);
 
-  useEffect(() => {
-    if (!socket) return;
-    socket.on('msg-received', async message => {
-      if (!activeChat[0]._id || message.chat._id !== activeChat[0]._id) {
-        try {
-          const response = await fetch(
-            `http://localhost:4000/api/notification/addNotification`,
-            {
-              method: 'post',
-              headers: {
-                Authorization: `Bearer ${currentUser.token}`,
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                message,
-              }),
-            }
-          );
-          const notification = await response.json();
-          setNotifications(prevState => [...prevState, notification]);
-        } catch (error) {
-          defaultToast(TOAST_TYPE.error, 'Error setting notifications');
-        }
-      } else {
-        setIsTyping(false);
-        setMessages(prevState => [...prevState, message]);
-      }
-    });
-    return () => socket.off('msg-received');
-  }, [
-    socket,
-    activeChat,
-    setNotifications,
-    currentUser.token,
-    setUnreadMessages,
-  ]);
+  // useEffect(() => {
+  //   if (!socket) return;
+  //   socket.on('msg-received', async message => {
+  //     if (!activeChat[0]._id || message.chat._id !== activeChat[0]._id) {
+  //       try {
+  //         const response = await fetch(
+  //           `http://localhost:4000/api/notification/addNotification`,
+  //           {
+  //             method: 'post',
+  //             headers: {
+  //               Authorization: `Bearer ${currentUser.token}`,
+  //               'Content-Type': 'application/json',
+  //             },
+  //             body: JSON.stringify({
+  //               message,
+  //             }),
+  //           }
+  //         );
+  //         const notification = await response.json();
+  //         setNotifications(prevState => [...prevState, notification]);
+  //       } catch (error) {
+  //         defaultToast(TOAST_TYPE.error, 'Error setting notifications');
+  //       }
+  //     } else {
+  //       setIsTyping(false);
+  //       setMessages(prevState => [...prevState, message]);
+  //     }
+  //   });
+  //   return () => socket.off('msg-received');
+  // }, [
+  //   socket,
+  //   activeChat,
+  //   setNotifications,
+  //   currentUser.token,
+  //   setUnreadMessages,
+  // ]);
 
   useEffect(() => {
     setIsTyping(false);
-  }, [activeChat]);
+    if (typingTimer) clearTimeout(typingTimer);
+  }, [activeChat, setIsTyping]);
 
   useEffect(() => {
     if (!socket) return;
@@ -209,6 +210,10 @@ const MessageView = () => {
       socket.off('stop typing');
     };
   }, [socket, typers]);
+
+  useEffect(() => {
+    setTypers([]);
+  }, [activeChat]);
 
   const handleScroll = e => {
     const bottom =

@@ -6,7 +6,7 @@ const SocketContext = createContext();
 
 export const useSocket = () => useContext(SocketContext);
 
-const ENDPOINT = 'https://openmat-chat.herokuapp.com';
+const ENDPOINT = 'http://localhost:4000';
 
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState();

@@ -51,6 +51,7 @@ io.on('connection', socket => {
     if (!onlineUserIdArr.includes(userId)) {
       global.onlineUsers.set(socket.id, userId);
     }
+    console.log('online users', global.onlineUsers);
     for (const [
       _onlineSocketId,
       onlineUserId,

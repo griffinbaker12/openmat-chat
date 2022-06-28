@@ -6,9 +6,12 @@ import ContactPreview from '../contact-preview/contact-preview.component';
 import Spinner from '../spinner/spinner.component';
 import { useChatView, MODAL_TYPE } from '../../contexts/chat-view-context';
 import { useSocket } from '../../contexts/socket-context';
+import { useAuthentication } from '../../contexts/authentication-context';
+import { defaultToast, TOAST_TYPE } from '../../utils/utils';
 
 const SideBar = () => {
   const { socket } = useSocket();
+  const { currentUser } = useAuthentication();
   const {
     isChatViewLoading,
     handleModal,
@@ -19,6 +22,7 @@ const SideBar = () => {
     activeChat,
     setActiveChat,
     chats,
+    setNotifications,
   } = useChatView();
 
   useEffect(() => {
@@ -40,7 +44,6 @@ const SideBar = () => {
             });
             return arr;
           });
-          return;
         }
 
         if (removeFlag) {
@@ -107,7 +110,17 @@ const SideBar = () => {
       }
     );
     return () => socket.off('updated chat');
-  }, [socket, setChats, activeChat, setActiveChat, chats]);
+  }, [
+    socket,
+    setChats,
+    activeChat,
+    setActiveChat,
+    chats,
+    windowDimensions.width,
+    currentUser?.token,
+    setNotifications,
+    currentUser,
+  ]);
 
   useEffect(() => {
     if (!socket) return;

@@ -28,10 +28,7 @@ const getNotifications = asyncHandler(async (req, res) => {
 });
 
 const addNotification = asyncHandler(async (req, res) => {
-  const { message, userId } = req.body;
-
-  console.log('hey');
-
+  const { message, userId, test } = req.body;
   let newNotification;
 
   if (userId) {

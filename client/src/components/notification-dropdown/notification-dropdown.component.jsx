@@ -19,6 +19,9 @@ const NotificationDropdown = forwardRef(
       chats,
       setNotifications,
       setUnreadMessages,
+      windowDimensions,
+      activeView,
+      setActiveView,
     } = useChatView();
     const { currentUser } = useAuthentication();
     const [groupedNotifications, setGroupedNotifications] = useState([]);
@@ -67,6 +70,9 @@ const NotificationDropdown = forwardRef(
         notification => notification.chat._id === chatId
       );
       setUnreadMessages(unreadNotificationsInChat);
+      if (windowDimensions.width <= 900 && activeView === 'chat-preview') {
+        setActiveView('chat');
+      }
 
       // Should remove all notifications for a certain user in a chat; test this with postman
       try {
