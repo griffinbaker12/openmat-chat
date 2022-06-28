@@ -1,11 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import SideBar from '../../components/side-bar/side-bar.component';
 import ChatView from '../../components/chat-view/chat-view.component';
 import Modal from '../../components/modal/modal.component';
 import './application-view.styles.scss';
 import { useChatView } from '../../contexts/chat-view-context';
-import { useAuthentication } from '../../contexts/authentication-context';
-import { useSocket } from '../../contexts/socket-context';
 
 const ApplicationView = () => {
   const { setWindowDimensions, windowDimensions, setActiveView } =

@@ -34,8 +34,6 @@ const MessageView = () => {
   const [showFlag, setShowFlag] = useState(false);
   const [circuit, setCircuit] = useState(false);
 
-  console.log('the show flag is', showFlag);
-
   const newRef = useRef();
 
   useEffect(() => {
@@ -273,6 +271,7 @@ const MessageView = () => {
                   <Fragment key={i}>
                     {firstUnreadMessage && (
                       <div
+                        style={i === 0 ? { marginTop: '16px' } : {}}
                         ref={setRef}
                         className="first-unread-message-container"
                       >

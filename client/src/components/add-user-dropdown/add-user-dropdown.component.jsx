@@ -10,7 +10,6 @@ import './add-user-dropdown.styles.scss';
 
 const AddUserDropdown = ({ wasSoloChat }) => {
   const [userSearchResults, setUserSearchResults] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const addUserToChatRef = useRef();
 
   const { currentUser } = useAuthentication();
@@ -30,7 +29,6 @@ const AddUserDropdown = ({ wasSoloChat }) => {
       return;
     }
     try {
-      setIsLoading(true);
       const response = await fetch(
         `http://localhost:4000/api/user?search=${query}`,
         {
@@ -45,8 +43,6 @@ const AddUserDropdown = ({ wasSoloChat }) => {
           chatUser => returnedUser.userName === chatUser.userName
         );
       });
-
-      setIsLoading(false);
 
       setUserSearchResults(usersNotAlreadyInChat);
     } catch (e) {

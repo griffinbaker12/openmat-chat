@@ -1,5 +1,3 @@
-import { forwardRef, useRef, useState } from 'react';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import './chat-participant.styles.scss';
 
 const ChatParticipant = ({ chatParticipant, handleRemoveUser }) => {

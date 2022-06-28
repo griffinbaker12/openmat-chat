@@ -7,8 +7,6 @@ const Chat = require('../models/chatModel');
 const getNotifications = asyncHandler(async (req, res) => {
   const { user } = req;
 
-  console.log(user, 'the user is');
-
   try {
     let notifications = await Notification.find({ user: user._id })
       .populate('message')
@@ -59,7 +57,6 @@ const addNotification = asyncHandler(async (req, res) => {
     notification = await notification.populate('message.chat.users');
     notification = await notification.populate('user', '-hash');
     notification = await notification.populate('chat');
-    console.log('added notification', notification._id);
     res.json(notification);
   } catch (error) {
     res.status(400);

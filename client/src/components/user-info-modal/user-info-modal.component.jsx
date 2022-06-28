@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useAuthentication } from '../../contexts/authentication-context';
 import { useChatView } from '../../contexts/chat-view-context';
+import Spinner from '../spinner/spinner.component';
 import { defaultToast, TOAST_TYPE } from '../../utils/utils';
 import './user-info-modal.styles.scss';
 
@@ -20,9 +21,12 @@ const UserInfoModal = () => {
     activeChat,
   } = useChatView();
 
-  const { currentUser } = useAuthentication();
+  const { currentUser, setCurrentUser } = useAuthentication();
+
+  const hiddenInputRef = useRef();
 
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isPicLoading, setIsPicLoading] = useState(false);
 
   // When you look at their profile, you should be able to chat them, remove or add them as a friend, see their friends...TOMORROW!
 
@@ -74,10 +78,6 @@ const UserInfoModal = () => {
     }
   };
 
-  // const handleDropdown = () => {
-  //   setShowDropdown(prevState => !prevState);
-  // };
-
   const handleModalClick = e => {
     e.stopPropagation();
     if (showDropdown) {
@@ -96,6 +96,65 @@ const UserInfoModal = () => {
     if (!ellipsisPress) {
       setShowDropdown(false);
     }
+  };
+
+  const handleFileInputChange = e => {
+    const picture = e.target.files[0];
+    if (e.target.files) {
+      postImageDetails(picture);
+    } else return;
+  };
+
+  const handleImageUpload = () => {
+    hiddenInputRef.current.click();
+  };
+
+  const postImageDetails = picture => {
+    setIsPicLoading(true);
+    if (!picture) {
+      setIsPicLoading(false);
+      return;
+    }
+
+    const data = new FormData();
+    data.append('file', picture);
+    data.append('upload_preset', 'chat-app');
+
+    fetch('https://api.cloudinary.com/v1_1/dhogrpl6c/image/upload', {
+      method: 'post',
+      body: data,
+    })
+      .then(res => res.json())
+      .then(data => {
+        updateUserPicture(data);
+      })
+      .catch(err => {
+        defaultToast(TOAST_TYPE.error, 'Error uploading image');
+      });
+  };
+
+  const updateUserPicture = async pictureDetails => {
+    fetch('http://localhost:4000/api/user/changeProfilePicture', {
+      method: 'put',
+      headers: {
+        Authorization: `Bearer ${currentUser.token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        url: pictureDetails.url,
+        token: currentUser.token,
+      }),
+    })
+      .then(res => res.json())
+      .then(updatedUser => {
+        setCurrentUser(updatedUser);
+        setIsPicLoading(false);
+        defaultToast(TOAST_TYPE.success, 'Profile photo updated');
+      })
+      .catch(err => {
+        setIsPicLoading(false);
+        defaultToast(TOAST_TYPE.error, 'Error updating account');
+      });
   };
 
   useEffect(() => {
@@ -134,7 +193,14 @@ const UserInfoModal = () => {
               &#x2715;
             </button>
           </div>
-          <div className="user-info-modal-user-detail-container">
+          <div
+            style={
+              isActiveUserCurrentUser
+                ? { paddingTop: '20px' }
+                : { paddingTop: '12px' }
+            }
+            className="user-info-modal-user-detail-container"
+          >
             <div className="user-info-modal-user-detail-header-with-buttons">
               <div
                 onClick={goBackToChatInfo}
@@ -149,50 +215,56 @@ const UserInfoModal = () => {
               >
                 &#8592;
               </div>
-              <p className="user-info-modal-name">{activeUserInfo.name}</p>
-              {/* <div
-                onClick={handleDropdown}
-                className="user-info-modal-back-ellipsis"
-                style={
-                  isActiveUserCurrentUser
-                    ? { visibility: 'hidden' }
-                    : {
-                        visibility: 'visible',
-                        paddingRight: '4px',
-                        paddingLeft: '12px',
-                        marginTop: '4px',
-                        fontWeight: 'bold',
-                      }
-                }
-              >
-                &#8942;
-              </div>
-              {showDropdown && (
-                <UserInfoDropdown closeDropdown={closeDropdown} />
-              )} */}
+              <p className="user-info-modal-name">
+                {isActiveUserCurrentUser
+                  ? currentUser.name
+                  : activeUserInfo.name}
+              </p>
             </div>
             <div className="user-info-modal-username-email">
-              <p>@{activeUserInfo.userName}</p>
+              <p>
+                @
+                {isActiveUserCurrentUser
+                  ? currentUser.userName
+                  : activeUserInfo.userName}
+              </p>
             </div>
             <div className="user-info-modal-picture-container">
-              <img height="100%" src={activeUserInfo.picture} alt="profile" />
+              <img
+                height="100%"
+                src={
+                  isActiveUserCurrentUser
+                    ? currentUser.picture
+                    : activeUserInfo.picture
+                }
+                alt="profile"
+              />
             </div>
-
-            {/* <div className="user-info-modal-additional-user-info-container"> */}
-            {/* If the user is not the current user, then calculate the number of mutual friends and mutual conversations
-            <p>{`${getMutualFriends(
-                activeUserInfo.friends,
-                currentUser.friends
-              )} ${isActiveUserCurrentUser ? '' : 'Mutual'} Friends`}</p> */}
-            {/* Insert a little chevron to see a dropdown of all of their friends, remove them as a friend in red, can make this more generalizable just as any user profie that you click on with the if friend then delete or add friend */}
-            {/* Could do the same but with conversations, mutual servers / convos. And then when you are looking at this from the perspective of the current user, it would lead you to the left side, either the conversations, or to your frineds, not even sure if that is necessary tbh */}
           </div>
-          <button onClick={handleChatCreation} className="user-info-button">
-            Send Message
-          </button>
+          {isActiveUserCurrentUser ? (
+            <>
+              <input
+                ref={hiddenInputRef}
+                type="file"
+                accept="image/jpeg, image/png"
+                id="profile-picture"
+                onChange={handleFileInputChange}
+                hidden
+              />
+              <button
+                onClick={handleImageUpload}
+                type="button"
+                className="user-info-button"
+              >
+                {isPicLoading ? <Spinner /> : 'Change Profile Picture'}
+              </button>
+            </>
+          ) : (
+            <button onClick={handleChatCreation} className="user-info-button">
+              Send Message
+            </button>
+          )}
         </div>
-
-        {/* </div> */}
       </div>
     )
   );

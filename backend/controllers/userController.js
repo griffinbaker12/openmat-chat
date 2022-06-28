@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt-nodejs');
 const User = require('../models/userModel');
 const Message = require('../models/messageModel');
 const generateToken = require('../config/generateToken');
+var cloudinary = require('cloudinary');
 
 const validateUserName = asyncHandler(async (req, res) => {
   const { userName } = req.body;
@@ -30,7 +31,6 @@ const registerUser = asyncHandler(async (req, res) => {
 
   if (userExists) {
     res.status(400);
-    console.log(userExists);
     throw new Error('User already exists');
   }
 
@@ -169,6 +169,49 @@ const removeFriend = asyncHandler(async (req, res) => {
   res.json(userWithFriendRemoved);
 });
 
+const changeProfilePicture = asyncHandler(async (req, res) => {
+  const { url, token } = req.body;
+  const { user } = req;
+
+  try {
+    let updatedUser = await User.findByIdAndUpdate(
+      user._id,
+      {
+        picture: `${url}`,
+      },
+      { new: true }
+    ).populate('name email userName picture');
+
+    res.json({ ...updatedUser._doc, token });
+  } catch (error) {
+    res.status(404);
+    throw new Error('Could not change profile picture');
+  }
+
+  // let updatedChat = await User.findByIdAndUpdate(
+  //   user._id,
+  //   { chatName },
+  //   { new: true }
+  // )
+  //   .populate('users', '-password')
+  //   .populate('latestMessage');
+
+  // updatedChat = await Chat.populate(updatedChat, {
+  //   path: 'latestMessage.sender',
+  // });
+
+  // updatedChat = await Chat.populate(updatedChat, {
+  //   path: 'latestMessage.chat',
+  // });
+
+  // if (!updatedChat) {
+  //   res.status(404);
+  //   throw new Error('Chat not found');
+  // } else {
+  //   res.json(updatedChat);
+  // }
+});
+
 module.exports = {
   validateUserName,
   registerUser,
@@ -177,4 +220,5 @@ module.exports = {
   addFriend,
   removeFriend,
   getUserInfo,
+  changeProfilePicture,
 };

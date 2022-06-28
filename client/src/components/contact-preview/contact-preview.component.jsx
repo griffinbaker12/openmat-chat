@@ -1,6 +1,4 @@
-import { useState } from 'react';
 import { useChatView, MODAL_TYPE } from '../../contexts/chat-view-context';
-import Contact from '../contact/contact.component';
 import './contact-preview.styles.scss';
 
 const ContactPreview = () => {

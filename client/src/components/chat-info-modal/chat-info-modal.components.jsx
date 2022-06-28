@@ -19,7 +19,6 @@ const ChatInfoModal = ({ userFlag }) => {
   const {
     activeChat,
     setActiveChat,
-    chats,
     showModal,
     closeModal,
     showAddUserInfoDropdown,

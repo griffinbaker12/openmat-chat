@@ -330,19 +330,6 @@ const Register = () => {
           <p onClick={changeAuth} className="sign-in-text">
             Back to Sign In
           </p>
-          {/* <Toast
-            ref={toastRef}
-            message={
-              toastType === TOAST_TYPE.success
-                ? 'Image upload successful'
-                : 'Error uploading image'
-            }
-            type={
-              toastType === TOAST_TYPE.success
-                ? TOAST_TYPE.success
-                : TOAST_TYPE.failure
-            }
-          /> */}
         </div>
       </main>
     </article>

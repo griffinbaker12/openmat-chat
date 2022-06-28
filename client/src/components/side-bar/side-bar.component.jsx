@@ -16,7 +16,6 @@ const SideBar = () => {
     activeView,
     windowDimensions,
     setChats,
-    setReloadCircuit,
     activeChat,
     setActiveChat,
     chats,
@@ -32,8 +31,6 @@ const SideBar = () => {
         updateFlag = null,
         checkForDuplicate = null
       ) => {
-        setReloadCircuit(true);
-
         if (!removeFlag && !updateFlag) {
           setChats(prevState => {
             const arr = prevState.map(chat => {
@@ -110,16 +107,15 @@ const SideBar = () => {
       }
     );
     return () => socket.off('updated chat');
-  }, [socket, setChats, setReloadCircuit, activeChat, setActiveChat, chats]);
+  }, [socket, setChats, activeChat, setActiveChat, chats]);
 
   useEffect(() => {
     if (!socket) return;
     socket.on('chat creation', newChat => {
-      setReloadCircuit(true);
       setChats(prevState => [newChat, ...prevState]);
     });
     return () => socket.off('chat creation');
-  }, [socket, setChats, setReloadCircuit]);
+  }, [socket, setChats]);
 
   return (
     <div

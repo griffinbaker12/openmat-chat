@@ -7,6 +7,7 @@ const {
   removeFriend,
   validateUserName,
   getUserInfo,
+  changeProfilePicture,
 } = require('../controllers/userController');
 const { decodeToken } = require('../middleware/authMiddleware');
 
@@ -20,5 +21,7 @@ router.post('/login', loginUser);
 
 router.route('/addFriend').put(decodeToken, addFriend);
 router.route('/removeFriend').put(decodeToken, removeFriend);
+
+router.route('/changeProfilePicture').put(decodeToken, changeProfilePicture);
 
 module.exports = router;

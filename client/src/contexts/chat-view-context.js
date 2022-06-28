@@ -47,7 +47,6 @@ export const ChatViewProvider = ({ children }) => {
     width: window.innerWidth,
   });
   const [notifications, setNotifications] = useState([]);
-  const [reloadCircuit, setReloadCircuit] = useState(false);
   const [unreadMessages, setUnreadMessages] = useState([]);
 
   const { currentUser, setCurrentUser, setIsLoading } = useAuthentication();
@@ -137,7 +136,6 @@ export const ChatViewProvider = ({ children }) => {
           },
         });
         const notifications = await response.json();
-        console.log(notifications);
         setNotifications(notifications);
       } catch (error) {
         toast.error('Error fetching notifications', {
@@ -209,21 +207,6 @@ export const ChatViewProvider = ({ children }) => {
     return;
   }, [currentUser, fetchChats, setIsLoading, fetchNotifications]);
 
-  useEffect(() => {
-    console.log(reloadCircuit);
-    if (chats.length === 0 || reloadCircuit) {
-      return;
-    } else {
-      const activeChat = chats[0];
-      setActiveChat([activeChat]);
-    }
-  }, [chats, reloadCircuit]);
-
-  // useEffect(() => {
-  //   if (!currentUser) return;
-  //   setFriends(currentUser.friends);
-  // }, [currentUser]);
-
   return (
     <ChatViewContext.Provider
       value={{
@@ -257,7 +240,6 @@ export const ChatViewProvider = ({ children }) => {
         notifications,
         setNotifications,
         setWindowDimensions,
-        setReloadCircuit,
         fetchNotifications,
         unreadMessages,
         setUnreadMessages,

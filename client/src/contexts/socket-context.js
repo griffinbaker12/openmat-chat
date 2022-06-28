@@ -1,13 +1,12 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { useAuthentication } from './authentication-context';
-import { useChatView } from './chat-view-context';
 
 const SocketContext = createContext();
 
 export const useSocket = () => useContext(SocketContext);
 
-const ENDPOINT = 'http://localhost:4000';
+const ENDPOINT = 'https://openmat-chat.herokuapp.com';
 
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState();
@@ -25,7 +24,6 @@ export const SocketProvider = ({ children }) => {
         socketId,
         userId,
       ]);
-      console.log(users, 'the users');
       setOnlineUsers(onlineUserArr);
     });
     return () => {

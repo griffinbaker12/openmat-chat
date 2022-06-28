@@ -25,7 +25,7 @@
   display: flex;
   flex-direction: column;
   min-width: 300px;
-
+  position: relative;
   width: auto;
   border: 1px solid white;
   background-color: rgb(30, 30, 30);
@@ -34,24 +34,29 @@
   gap: 8px;
 
   .user-info-modal-button-container {
-    display: flex;
-    justify-content: flex-end;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    cursor: pointer;
+    filter: brightness(0.8);
+    z-index: 1000;
 
     button {
       border: none;
       background-color: transparent;
       font-size: 14px;
+      font-weight: bold;
     }
 
     button:hover {
       cursor: pointer;
-      font-weight: bold;
+      filter: brightness(0.8);
     }
   }
 }
 
 .user-info-modal-user-detail-container {
-  padding: 12px 10px;
+  padding: 0px 10px 18px 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -100,11 +105,6 @@
   // justify-content: space-between;
 
   .user-info-modal-back-arrow {
-    // border: 1px solid white;
-    // display: flex;
-    // align-items: center;
-    // justify-content: center;
-
     position: absolute;
     bottom: 8px;
     &:hover {

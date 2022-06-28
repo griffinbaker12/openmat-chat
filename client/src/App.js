@@ -3,7 +3,6 @@ import { Route, Routes, useNavigate } from 'react-router-dom';
 import ApplicationView from './routes/application-view/application-view.component';
 import Header from './routes/header/header.component';
 import Authentication from './routes/authentication/authentication.component';
-import { useAuthentication } from './contexts/authentication-context';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
