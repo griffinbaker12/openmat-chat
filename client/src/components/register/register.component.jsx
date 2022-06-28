@@ -163,7 +163,7 @@ const Register = () => {
     })
       .then(res => res.json())
       .then(data => {
-        setPicCloudUrl(data.url.toString());
+        setPicCloudUrl(data.secure_url.toString());
         setIsPicLoading(false);
         toast.success('Profile picture upload successful', {
           position: 'bottom-center',

@@ -96,6 +96,7 @@
 
   img {
     object-fit: cover;
+    min-width: 100%;
   }
 }
 
@@ -107,7 +108,7 @@
 
   .user-info-modal-back-arrow {
     position: absolute;
-    bottom: 8px;
+    bottom: 12px;
     &:hover {
       cursor: pointer;
       filter: brightness(0.8);

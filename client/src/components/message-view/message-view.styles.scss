@@ -13,7 +13,7 @@
 .message-view-active-chat-container {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
   flex: 1;
   overflow: auto;
 
@@ -43,6 +43,11 @@
     overflow: hidden;
     border-radius: 50%;
     background: white;
+
+    img {
+      min-width: 100%;
+      object-fit: cover;
+    }
   }
 }
 

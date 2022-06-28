@@ -51,8 +51,10 @@ export const areFriends = (user1, user2) => {
   return user1.friends.some(friend => friend.userName === user2.userName);
 };
 
-export const userSent = (currentUser, message) =>
-  currentUser._id === message.sender._id;
+export const userSent = (currentUser, message) => {
+  if (!message) return;
+  return currentUser._id === message.sender._id;
+};
 
 export const sameSenderAndNotCurrentUser = (i, messages, currentUser) => {
   return (

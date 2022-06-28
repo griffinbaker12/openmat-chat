@@ -167,6 +167,10 @@
   border-radius: 50%;
   overflow: hidden;
   justify-content: center;
+  img {
+    min-width: 100%;
+    object-fit: cover;
+  }
 }
 
 .user-name-user-userName-container {

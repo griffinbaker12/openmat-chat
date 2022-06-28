@@ -22,8 +22,7 @@ let typingTimer;
 const MessageView = ({ isTyping, setIsTyping, messages, setMessages }) => {
   // Somehow we are going to have to get all of the message in a conversation potentially and then mark whether or not they are your messages or someone else's to style accordingly;
   const { currentUser } = useAuthentication();
-  const { activeChat, setNotifications, unreadMessages, setUnreadMessages } =
-    useChatView();
+  const { activeChat, unreadMessages, setUnreadMessages } = useChatView();
   const { socket, onlineUsers } = useSocket();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -133,7 +132,7 @@ const MessageView = ({ isTyping, setIsTyping, messages, setMessages }) => {
     const messages = await response.json();
     setMessages(messages);
     setIsLoading(false);
-  }, [activeChat, currentUser.token, socket]);
+  }, [activeChat, currentUser.token, setMessages, socket]);
 
   useEffect(() => {
     fetchMessages();
@@ -295,7 +294,16 @@ const MessageView = ({ isTyping, setIsTyping, messages, setMessages }) => {
                           ? setRef
                           : null
                       }
-                      style={i === 0 ? { paddingTop: '6px' } : {}}
+                      style={
+                        i === 0
+                          ? { paddingTop: '6px' }
+                          : sameSenderAndNotCurrentUserBool ||
+                            userSentBool ||
+                            userSent(currentUser, messages[i + 1]) ||
+                            i === messages.length - 1
+                          ? {}
+                          : { marginBottom: '6px' }
+                      }
                       className={`message-view-message-container ${
                         userSentBool ? 'user-sent' : ''
                       }`}

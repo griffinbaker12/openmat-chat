@@ -134,6 +134,7 @@ const UserInfoModal = () => {
   };
 
   const updateUserPicture = async pictureDetails => {
+    console.log(pictureDetails);
     fetch('http://localhost:4000/api/user/changeProfilePicture', {
       method: 'put',
       headers: {
@@ -141,7 +142,7 @@ const UserInfoModal = () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        url: pictureDetails.url,
+        url: pictureDetails.secure_url,
         token: currentUser.token,
       }),
     })

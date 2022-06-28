@@ -3,7 +3,8 @@ body {
   font-family: 'Courier New', Courier, monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: url('./assets/universe.jpg');
+  /* background: url('./assets/universe.jpg'); */
+  background: rgb(56, 56, 56);
   background-size: cover;
   background-position: center center;
 }
