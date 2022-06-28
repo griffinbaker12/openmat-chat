@@ -209,7 +209,7 @@ const MessageView = ({ isTyping, setIsTyping, messages, setMessages }) => {
       socket.off('typing');
       socket.off('stop typing');
     };
-  }, [socket, typers]);
+  }, [socket, typers, setIsTyping]);
 
   useEffect(() => {
     setTypers([]);
