@@ -66,9 +66,9 @@ const NotificationDropdown = forwardRef(
       const unreadNotificationsInChat = notifications.filter(
         notification => notification.chat._id === chatId
       );
-      console.log(unreadNotificationsInChat, 'unread in chat');
       setUnreadMessages(unreadNotificationsInChat);
 
+      // Should remove all notifications for a certain user in a chat; test this with postman
       try {
         const response = await fetch(
           `http://localhost:4000/api/notification/removeNotification`,

@@ -2,11 +2,24 @@ import MessageView from '../message-view/message-view.component';
 import TextHeader from '../text-header/text-header.component';
 import Spinner from '../spinner/spinner.component';
 import { useChatView } from '../../contexts/chat-view-context';
+import BackArrow from '../back-arrow/back-arrow.component';
 import './chat-view.styles.scss';
 
 const ChatView = () => {
-  const { activeChat, isChatViewLoading, activeView, windowDimensions, chats } =
-    useChatView();
+  const {
+    setActiveView,
+    setActiveChat,
+    activeChat,
+    isChatViewLoading,
+    activeView,
+    windowDimensions,
+    chats,
+  } = useChatView();
+
+  const handleBackArrowClick = () => {
+    setActiveView('chat-preview');
+    setActiveChat([]);
+  };
 
   return (
     <div
@@ -29,11 +42,23 @@ const ChatView = () => {
           <MessageView />
         </>
       ) : (
-        <p>
-          {chats.length === 0
-            ? 'Create a chat to get started!'
-            : 'Select a chat to view!'}
-        </p>
+        <div className="create-or-select-chat-container">
+          <p>
+            {chats.length === 0
+              ? 'Create a chat to get started!'
+              : 'Select a chat to view!'}
+          </p>
+          <div
+            style={
+              windowDimensions.width > 900
+                ? { display: 'none' }
+                : { display: 'flex' }
+            }
+            onClick={handleBackArrowClick}
+          >
+            <BackArrow />
+          </div>
+        </div>
       )}
     </div>
   );
