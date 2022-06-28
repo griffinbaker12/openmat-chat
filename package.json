@@ -15,8 +15,7 @@
   },
   "scripts": {
     "server-start": "nodemon server.js",
-    "start": "node server.js",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm build --prefix frontend"
+    "start": "node server.js"
   },
   "name": "server",
   "version": "1.0.0",
