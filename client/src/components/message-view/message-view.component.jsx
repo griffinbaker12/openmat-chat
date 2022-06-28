@@ -219,12 +219,6 @@ const MessageView = ({ isTyping, setIsTyping, messages, setMessages }) => {
       e.target.scrollHeight - Math.round(e.target.scrollTop) ===
         e.target.clientHeight ||
       e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight + 1;
-    console.log(
-      bottom,
-      e.target.scrollHeight - Math.round(e.target.scrollTop),
-      e.target.scrollHeight - e.target.scrollTop,
-      e.target.clientHeight
-    );
     if (circuit) {
       setShowFlag(true);
       setCircuit(false);
